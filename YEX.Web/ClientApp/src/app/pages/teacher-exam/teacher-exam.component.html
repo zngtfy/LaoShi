@@ -1,0 +1,638 @@
+<div class="animated fadeIn">
+    <div class="card border-success">
+        <div *ngIf="subjects.totalRecords==0" class="card-body">
+            <p class="text-danger">Bạn không có môn học nào !</p>
+        </div>
+        <div *ngIf="subjects.totalRecords>0" class="card-body">
+            <div *ngFor="let item of subjects.data; index as i;" class="row">
+                <div class="col-md-1">
+                    {{getSTT(i,'subject')}}
+                </div>
+                <div class="col-md-6">
+                    <strong>{{item.subjectName}}</strong> <br />
+                    <i class="fa fa-check-circle-o text-primary"></i> Mã môn: {{item.subjectCode}} <br />
+                    <i class="fa fa-check-circle-o text-primary"></i> Tổng số tín chỉ: {{item.totalCredit}}
+                    ({{item.theoryCredit}} LT, {{item.practiceCredit}} TH)<br />
+                    <i class="fa fa-check-circle-o text-primary"></i> Khoa phụ trách: {{item.department}}
+                    <p class="small">
+                        {{item.description}}
+                    </p>
+                </div>
+                <div class="col-md-4">
+                    <img src="{{item.logoUrl}}" height="60">
+                    <p class="small">
+                        <strong>{{item.schoolName}}</strong> <br />
+                        <i class="fa fa-home text-success"></i> {{item.schoolAddress}} <br />
+                        <i class="fa fa-phone text-success"></i> {{item.schoolPhone}} <br />
+                        <i class="fa fa-globe text-success"></i> {{item.webSite}}
+                    </p>
+                </div>
+                <div class="col-md-1">
+                    <button *ngIf="!selectSub" type="button" class="btn btn-block btn-outline-success"
+                        (click)="selectSubject(i)">
+                        Chọn
+                    </button>
+                    <button *ngIf="selectSub" type="button" class="btn btn-block btn-outline-danger"
+                        (click)="unSelectSubject()">
+                        Hủy
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div *ngIf="subjects.totalPages>1" class="card-footer">
+            <div *ngIf="!selectSub" class="col-xs-12 col-12">
+                <pagination [totalItems]="subjects.totalRecords" [(ngModel)]="subjects.page"
+                    (pageChanged)="pageChanged($event,'subject')" [itemsPerPage]="subjects.size" [maxSize]="3"
+                    previousText="&lsaquo;" nextText="&rsaquo;" firstText="&laquo;" lastText="&raquo;">
+                </pagination>
+                <pre
+                    class="card card-body card-header mb-3">Bạn đang ở trang: {{subjects.page}}/{{subjects.totalPages}}</pre>
+            </div>
+        </div>
+    </div>
+</div>
+<div *ngIf="selectSub" class="animated fadeOutUp">
+    <tabset>
+        <tab>
+            <ng-template tabHeading>
+                <i class="icon-list text-primary"></i> Đề thi
+                <span class="badge badge-success">{{exams.totalRecords}}</span>
+            </ng-template>
+            <p *ngIf="exams.totalRecords==0" class="text-danger">Môn học này chưa có đề thi ONLINE nào!</p>
+            <div *ngIf="exams.totalRecords>0">
+                <table class="table table-sm table-bordered">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Đề thi</th>
+                            <th>Thông số</th>
+                            <th>Thông tin</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let item of exams.data; index as i;">
+                            <td>{{getSTT(i,'exam')}}</td>
+                            <td style="width: 45%;">
+                                <ng-template #popTemplateHtml>
+                                    <div>
+                                        <strong>{{item.examTitle}}</strong>
+                                        <br /><i class="fa fa-check-square-o text-info"></i> {{item.examDepartment}}
+                                        <br /><i class="fa fa-check-square-o text-info"></i> {{item.examSchool}}
+                                        <br /><span class="small">{{item.note}}</span>
+                                    </div>
+                                </ng-template>
+                                <a href="javascript:void(0)" [popover]="popTemplateHtml"
+                                    popoverTitle="{{item.fullname}}" placement="top">
+                                    {{item.examTitle}}
+                                </a>
+                            </td>
+                            <td>
+                                <span class="badge badge-light">Trắc nghiệm</span><br />
+                                Mức độ: {{item.examLevel}} (1:dễ - 5:khó)<br />
+                                Tổng thời gian: {{item.totMinutes}} phút<br />
+                                Tổng số câu hỏi: {{item.totalQuestion}} câu<br />
+                                Tổng điểm: {{item.totalScore}}
+                            </td>
+                            <td>
+                                <p *ngIf="item.createdOn!=null">
+                                    <i class="fa fa-user-o text-success"></i> Người tạo: {{item.createdByName}}<br />
+                                    <i class="fa fa-clock-o text-success"></i> Ngày tạo: {{formatDate1(item.createdOn)}}
+                                </p>
+                                <p *ngIf="item.modifiedOn!=null">
+                                    <i class="fa fa-user-o text-success"></i> Người cập nhật:
+                                    {{item.modifiedByName}}<br />
+                                    <i class="fa fa-clock-o text-success"></i> Ngày cập nhật:
+                                    {{formatDate1(item.modifiedOn)}}
+                                </p>
+                            </td>
+                            <td>
+                                <button (click)="deleteExam(i,item.id)" type="button"
+                                    popover="Xóa đề thi [{{item.examTitle}}] khỏi lớp !"
+                                    triggers="mouseenter:mouseleave" class="btn btn-sm btn-outline-danger">
+                                    <i class="fa fa-times"></i>
+                                </button>
+                                <button (click)="openExamModal(i,item.id)" style="margin-left: 5px;" type="button"
+                                    popover="Chỉnh sửa thông tin đề thi [{{item.examTitle}}] !"
+                                    triggers="mouseenter:mouseleave" class="btn btn-sm btn-outline-info">
+                                    <i class="fa fa-edit"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div *ngIf="exams.totalPages>1" class="col-xs-12 col-12">
+                    <pagination [totalItems]="exams.totalRecords" [(ngModel)]="exams.page"
+                        (pageChanged)="pageChanged($event,'exam')" [itemsPerPage]="exams.size" [maxSize]="3"
+                        previousText="&lsaquo;" nextText="&rsaquo;" firstText="&laquo;" lastText="&raquo;">
+                    </pagination>
+                    <pre
+                        class="card card-body card-header mb-3">Bạn đang ở trang: {{exams.page}}/{{exams.totalPages}}</pre>
+                </div>
+            </div>
+            <div class="pull-right">
+                <button type="button" class="btn btn-outline-success active" aria-pressed="true"
+                    (click)="openExamModal(null,null)">
+                    <i class="fa fa-plus"></i> Thêm đề thi
+                </button>
+            </div>
+            <div class="clearfix"></div>
+        </tab>
+        <tab>
+            <ng-template tabHeading>
+                <i class="icon-calculator text-success"></i> Câu hỏi
+                <span class="badge badge-pill badge-danger">{{questions.totalRecords}}</span>
+            </ng-template>
+            <p *ngIf="questions.totalRecords==0" class="text-danger">Môn học này chưa có câu hỏi thi ONLINE nào!</p>
+            <div *ngIf="questions.totalRecords>0">
+                <table class="table table-sm table-bordered">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Câu hỏi</th>
+                            <th>Thông số</th>
+                            <th>Thông tin</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let item of questions.data; index as i;">
+                            <td>{{getSTT(i,'question')}}</td>
+                            <td style="width: 55%;">
+                                {{item.questionContent}}
+                                <p class="small">{{item.questionInstruction}}</p>
+                                <p class="small">{{item.note}}</p>
+                            </td>
+                            <td>
+                                <span *ngIf="item.questionType=='Text-TF-Choice'" class="badge badge-success">Đúng
+                                    sai</span>
+                                <span *ngIf="item.questionType=='Text-1-Choice'" class="badge badge-primary">Lựa chọn 1
+                                    đáp án đúng</span>
+                                <span *ngIf="item.questionType=='Text-n-Choice'" class="badge badge-danger">Lựa chọn
+                                    nhiều đáp án đúng</span>
+                                <br />
+                                Tổng thời gian: {{item.totMinutes}} phút<br />
+                                Tổng điểm: {{item.totScore}}
+                            </td>
+                            <td>
+                                <p *ngIf="item.createdOn!=null">
+                                    <i class="fa fa-user-o text-success"></i> Người tạo: {{item.createdByName}}<br />
+                                    <i class="fa fa-clock-o text-success"></i> Ngày tạo: {{formatDate1(item.createdOn)}}
+                                </p>
+                                <p *ngIf="item.modifiedOn!=null">
+                                    <i class="fa fa-user-o text-success"></i> Người cập nhật:
+                                    {{item.modifiedByName}}<br />
+                                    <i class="fa fa-clock-o text-success"></i> Ngày cập nhật:
+                                    {{formatDate1(item.modifiedOn)}}
+                                </p>
+                            </td>
+                            <td>
+                                <button (click)="deleteQuestion(i,item.id)" type="button"
+                                    popover="Xóa câu hỏi id#[{{item.id}}] khỏi lớp !" triggers="mouseenter:mouseleave"
+                                    class="btn btn-sm btn-outline-danger">
+                                    <i class="fa fa-times"></i>
+                                </button>
+                                <button (click)="openQuestionModal(i,item.id)" style="margin-left: 5px;" type="button"
+                                    popover="Chỉnh sửa thông tin câu hỏi id#[{{item.id}}] !"
+                                    triggers="mouseenter:mouseleave" class="btn btn-sm btn-outline-info">
+                                    <i class="fa fa-edit"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div *ngIf="questions.totalPages>1" class="col-xs-12 col-12">
+                    <pagination [totalItems]="questions.totalRecords" [(ngModel)]="questions.page"
+                        (pageChanged)="pageChanged($event,'question')" [itemsPerPage]="questions.size" [maxSize]="3"
+                        previousText="&lsaquo;" nextText="&rsaquo;" firstText="&laquo;" lastText="&raquo;">
+                    </pagination>
+                    <pre
+                        class="card card-body card-header mb-3">Bạn đang ở trang: {{questions.page}}/{{questions.totalPages}}</pre>
+                </div>
+            </div>
+            <div class="pull-right">
+                <button type="button" class="btn btn-outline-success active" aria-pressed="true"
+                    (click)="openQuestionModal(null, null)">
+                    <i class="fa fa-plus"></i> Thêm câu hỏi
+                </button>
+            </div>
+            <div class="clearfix"></div>
+        </tab>
+    </tabset>
+    <br />
+</div>
+
+<div bsModal #examModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-success" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 *ngIf="isEditExam" class="modal-title">
+                    <i class="fa fa-edit"></i> Chỉnh sửa thông tin ĐỀ THI
+                </h5>
+                <h5 *ngIf="!isEditExam" class="modal-title">
+                    <i class="fa fa-plus"></i> Thêm mới ĐỀ THI
+                </h5>
+                <button type="button" class="close" (click)="examModal.hide()" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <tabset>
+                    <tab>
+                        <ng-template tabHeading>
+                            <i class="icon-info text-primary"></i> Thông tin đề thi
+                        </ng-template>
+                        <div *ngIf="editingExam.exam!=null">
+                            <div class="row">
+                                <div class="form-group col-sm-4">
+                                    <label for="examType">Loại đề thi</label>
+                                    <select [disabled]="true" [(ngModel)]="editingExam.exam.examType" id="examType"
+                                        name="examType" class="form-control">
+                                        <option value="TracNghiem">Trắc nghiệm khách quan</option>
+                                    </select>
+                                </div>
+                                <div class="form-group col-sm-8">
+                                    <label for="examTitle">Tên đề thi</label>
+                                    <input [(ngModel)]="editingExam.exam.examTitle" type="text" id="examTitle"
+                                        name="examTitle" class="form-control">
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="form-group col-sm-6">
+                                    <label for="examDepartment">Khoa phụ trách</label>
+                                    <input [(ngModel)]="editingExam.exam.examDepartment" type="text" id="examDepartment"
+                                        name="examDepartment" class="form-control">
+                                </div>
+                                <div class="form-group col-sm-6">
+                                    <label for="examSchool">Trường</label>
+                                    <input [(ngModel)]="editingExam.exam.examSchool" type="text" id="examSchool"
+                                        name="examSchool" class="form-control">
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="form-group col-sm-3">
+                                    <label for="examLevel">Mức độ (1-5)</label>
+                                    <select [(ngModel)]="editingExam.exam.examLevel" id="examLevel" name="examLevel"
+                                        class="form-control" (change)="examLevelChange($event)">
+                                        <option value=""> ----- Please select ---- </option>
+                                        <option value="1">Độ khó 1</option>
+                                        <option value="2">Độ khó 2</option>
+                                        <option value="3">Độ khó 3</option>
+                                        <option value="4">Độ khó 4</option>
+                                        <option value="5">Độ khó 5</option>
+                                    </select>
+                                </div>
+                                <div class="form-group col-sm-3">
+                                    <label for="totMinutes">Tổng thời gian (Phút)</label>
+                                    <input [(ngModel)]="editingExam.exam.totMinutes" type="number" id="totMinutes"
+                                        name="totMinutes" class="form-control">
+                                </div>
+                                <div class="form-group col-sm-3">
+                                    <label for="totalQuestion">Tổng số câu</label>
+                                    <input [(ngModel)]="editingExam.exam.totalQuestion" type="number" id="totalQuestion"
+                                        name="totalQuestion" class="form-control">
+                                </div>
+                                <div class="form-group col-sm-3">
+                                    <label for="totalScore">Tổng điểm</label>
+                                    <input [(ngModel)]="editingExam.exam.totalScore" type="number" id="totMinutes"
+                                        name="examSchool" class="form-control">
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="form-group col-sm-12">
+                                    <label for="examnote">Ghi chú</label>
+                                    <input [(ngModel)]="editingExam.exam.note" type="text" id="examnote" name="examnote"
+                                        class="form-control">
+                                </div>
+                            </div>
+                            <div *ngIf="editingExam.exam.id > 0" class="row text-muted small">
+                                <div class="col-sm-3">
+                                    Ngày tạo: {{formatDate1(editingExam.exam.createdOn)}}
+                                </div>
+                                <div class="col-sm-3">
+                                    Người tạo: {{editingExam.exam.createdByName}}
+                                </div>
+                                <div *ngIf="editingExam.exam.modifiedOn!=null" class="col-sm-3">
+                                    Ngày cập nhật: {{formatDate1(editingExam.exam.modifiedOn)}}
+                                </div>
+                                <div *ngIf="editingExam.exam.modifiedOn!=null" class="col-sm-3">
+                                    Người cập nhật: {{editingExam.exam.modifiedByName}}
+                                </div>
+                            </div>
+                            <br />
+                            <div>
+                                <button *ngIf="isEditExam" type="button" class="btn btn-primary"
+                                    (click)="saveExamInfo()">Lưu</button>
+                                <button *ngIf="!isEditExam" style="margin-left: 5px;" type="button"
+                                    class="btn btn-success" (click)="createNewExam()">Thêm mới</button>
+                            </div>
+                        </div>
+                    </tab>
+                    <tab>
+                        <ng-template tabHeading>
+                            <i class="icon-list text-success"></i> danh sách câu hỏi
+                            <span class="badge badge-pill badge-danger">{{editingExam.examDetail.length}}</span>
+                        </ng-template>
+                        <p *ngIf="!isEditExam" class="text-danger">Chưa tạo đề thi nên chưa có câu hỏi !</p>
+                        <div *ngIf="isEditExam" class="row">
+                            <div class="form-group col-sm-9">
+                                <div class="ng-autocomplete">
+                                    <ng-autocomplete [data]="dataQuest" searchKeyword="name"
+                                        placeHolder="Tìm câu hỏi ở đây...." debounceTime="1300"
+                                        [(ngModel)]="searchQuestion" (selected)='selectEvent($event)'
+                                        (inputChanged)='onChangeSearch($event)' (inputFocused)='onFocused($event)'
+                                        [itemTemplate]="itemTemplate" [notFoundTemplate]="notFoundTemplate"
+                                        [isLoading]="isLoadQuestion" [minQueryLength]="2">
+                                    </ng-autocomplete>
+
+                                    <ng-template #itemTemplate let-item>
+                                        <a [innerHTML]="item.name" class="text-success"></a>
+                                    </ng-template>
+
+                                    <ng-template #notFoundTemplate let-notFound>
+                                        <div class="text-danger">Không tìm thấy!</div>
+                                    </ng-template>
+                                </div>
+                            </div>
+                            <div class="form-group col-sm-3">
+                                <button type="button" class="btn btn-block btn-outline-warning active"
+                                    (click)="addQuestionForExam()" aria-pressed="true">
+                                    <i class="fa fa-plus"></i> Thêm câu hỏi
+                                </button>
+                            </div>
+                        </div>
+                        <table *ngIf="editingExam.examDetail.length>0" class="table table-sm table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Câu hỏi</th>
+                                    <th>Điểm</th>
+                                    <th>Thời gian</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let item of editingExam.examDetail; index as i;">
+                                    <td>{{i+1}}</td>
+                                    <td style="width: 70%;">
+                                        <span *ngIf="item.questionType=='Text-TF-Choice'"
+                                            class="badge badge-success">Đúng
+                                            sai</span>
+                                        <span *ngIf="item.questionType=='Text-1-Choice'" class="badge badge-primary">Lựa
+                                            chọn 1
+                                            đáp án đúng</span>
+                                        <span *ngIf="item.questionType=='Text-n-Choice'" class="badge badge-danger">Lựa
+                                            chọn
+                                            nhiều đáp án đúng</span>
+                                        <br />{{item.questionContent}}
+                                        <p class="small">
+                                            {{item.questionInstruction}}
+                                            <br />{{item.note}}
+                                        </p>
+                                    </td>
+                                    <td>
+                                        {{item.totScore}}
+                                    </td>
+                                    <td>
+                                        {{item.totMinutes}}
+                                    </td>
+                                    <td>
+                                        <button (click)="deleteQuestionOfExam(i)" style="margin-left: 5px;"
+                                            type="button" popover="Xóa câu hỏi này [{{item.id}}] !"
+                                            triggers="mouseenter:mouseleave" class="btn btn-sm btn-outline-danger">
+                                            <i class="fa fa-times"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </tab>
+                </tabset>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" (click)="examModal.hide()">Đóng</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<div bsModal #questionModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-primary" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 *ngIf="isEditQuest" class="modal-title">
+                    <i class="fa fa-edit"></i> Chỉnh sửa thông tin CÂU HỎI
+                </h5>
+                <h5 *ngIf="!isEditQuest" class="modal-title">
+                    <i class="fa fa-plus"></i> Thêm mới CÂU HỎI
+                </h5>
+                <button type="button" class="close" (click)="questionModal.hide()" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <tabset>
+                    <tab>
+                        <ng-template tabHeading>
+                            <i class="icon-info text-primary"></i> Thông tin CÂU HỎI
+                        </ng-template>
+                        <div *ngIf="editingQuestion.question!=null">
+                            <div class="row">
+                                <div class="form-group col-sm-6">
+                                    <label for="questionType">Loại câu hỏi</label>
+                                    <select [(ngModel)]="editingQuestion.question.questionType" id="questionType"
+                                        name="questionType" class="form-control">
+                                        <option value="">----- Please select ------</option>
+                                        <option value="Text-1-Choice">Chọn 1 câu đúng nhất</option>
+                                        <option value="Text-TF-Choice">Lựa chọn đúng sai</option>
+                                        <option value="Text-n-Choice">Chọn 1 hoặc nhiều câu đúng</option>
+                                    </select>
+                                </div>
+                                <div class="form-group col-sm-3">
+                                    <label for="totMinutesQ">Tổng thời gian (Phút)</label>
+                                    <input [(ngModel)]="editingQuestion.question.totMinutes" type="number"
+                                        id="totMinutesQ" name="totMinutesQ" class="form-control">
+                                </div>
+                                <div class="form-group col-sm-3">
+                                    <label for="totScore">Tổng điểm</label>
+                                    <input [disabled]="true" [(ngModel)]="editingQuestion.question.totScore"
+                                        type="number" id="totScore" name="totScore" class="form-control">
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="form-group col-sm-8">
+                                    <label for="questionContent">Nội dung câu hỏi</label>
+                                    <textarea [(ngModel)]="editingQuestion.question.questionContent" rows="3"
+                                        id="questionContent" name="questionContent" class="form-control">
+                                    </textarea>
+                                </div>
+                                <div class="form-group col-sm-4">
+                                    <div class="preview-image-choose" (click)="uploader.click()"
+                                        *ngIf="editingQuestion.question.questionImage == null"></div>
+                                    <img class="preview-image" (click)="uploader.click()"
+                                        [src]="editingQuestion.question.questionImage"
+                                        *ngIf="editingQuestion.question.questionImage != null" />
+                                    <input hidden type="file" #uploader (change)="handlerUpload($event,'question', null)" />
+                                    <a *ngIf="editingQuestion.question.questionImage != null" href="javascript:void(0)"
+                                        (click)="clearImage('question',null)">Xóa hình</a>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="form-group col-sm-12">
+                                    <label for="questionInstruction">Hướng dẫn</label>
+                                    <input [(ngModel)]="editingQuestion.question.questionInstruction" type="text"
+                                        id="questionInstruction" name="questionInstruction" class="form-control">
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="form-group col-sm-12">
+                                    <label for="questionnote">Ghi chú</label>
+                                    <input [(ngModel)]="editingQuestion.question.note" type="text" id="questionnote"
+                                        name="questionnote" class="form-control">
+                                </div>
+                            </div>
+                            <div *ngIf="editingQuestion.question.id > 0" class="row text-muted small">
+                                <div class="col-sm-3">
+                                    Ngày tạo: {{formatDate1(editingQuestion.question.createdOn)}}
+                                </div>
+                                <div class="col-sm-3">
+                                    Người tạo: {{editingQuestion.question.createdByName}}
+                                </div>
+                                <div *ngIf="editingQuestion.question.modifiedOn!=null" class="col-sm-3">
+                                    Ngày cập nhật: {{formatDate1(editingQuestion.question.modifiedOn)}}
+                                </div>
+                                <div *ngIf="editingQuestion.question.modifiedOn!=null" class="col-sm-3">
+                                    Người cập nhật: {{editingQuestion.question.modifiedByName}}
+                                </div>
+                            </div>
+                            <br />
+                            <div>
+                                <button *ngIf="isEditQuest" type="button" class="btn btn-primary"
+                                    (click)="saveQuestionInfo()">Lưu</button>
+                                <button *ngIf="!isEditQuest" type="button" class="btn btn-success"
+                                    (click)="createNewQuestion()">Thêm mới</button>
+                            </div>
+                        </div>
+                    </tab>
+                    <tab>
+                        <ng-template tabHeading>
+                            <i class="icon-list text-success"></i> danh sách CÂU TRẢ LỜI
+                            <span class="badge badge-pill badge-danger">{{editingQuestion.answers.length}}</span>
+                        </ng-template>
+                        <p *ngIf="!isEditQuest" class="text-danger">Chưa tạo CÂU HỎI nên chưa có CÂU TRẢ LỜI !</p>
+                        <div *ngIf="isEditQuest">
+                        </div>
+                        <table *ngIf="editingQuestion.answers.length>0" class="table table-sm table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Kết quả</th>
+                                    <th>Nội dung</th>
+                                    <th>Hình</th>
+                                    <th>Điểm</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let item of editingQuestion.answers; index as i;">
+                                    <td>{{i+1}}</td>
+                                    <td>
+                                        <input [(ngModel)]="item.isCorrect" class="form-control" type="checkbox"
+                                            id="isCorrect_{{item.id}}" (change)="isCorrectChange($event, i)" />
+                                    </td>
+                                    <td style="width: 60%; font-size: 0.85em;">
+                                        <textarea rows="2" id="answerContent_{{item.id}}"
+                                            name="answerContent_{{item.id}}" [(ngModel)]="item.answerContent"
+                                            class="form-control">
+                                        </textarea>
+                                    </td>
+                                    <td>
+                                        <div class="preview-image-choose-an" (click)="uploader_click(i)"
+                                            *ngIf="item.answerImage == null"></div>
+                                        <img class="preview-image-an" (click)="uploader_click(i)"
+                                            [src]="item.answerImage"
+                                            *ngIf="item.answerImage != null" />
+                                        <input hidden type="file" #elem id="uploader_{{i}}"
+                                            (change)="handlerUpload($event,'answer', i)" />
+                                        <a *ngIf="item.answerImage != null"
+                                            href="javascript:void(0)" (click)="clearImage('answer',i)">Xóa hình</a>
+                                    </td>
+                                    <td>
+                                        <input [disabled]="true" [(ngModel)]="item.score" type="number"
+                                            id="totScore_{{item.id}}" name="totScore_{{item.id}}"
+                                            class="form-control" />
+                                    </td>
+                                    <td>
+                                        <button (click)="deleteAnswerOfQuest(i)" style="margin-left: 5px;" type="button"
+                                            popover="Xóa câu trả lời này [{{i+1}}] !" triggers="mouseenter:mouseleave"
+                                            class="btn btn-sm btn-outline-danger">
+                                            <i class="fa fa-times"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <br />
+                        <div>
+                            <button type="button" class="btn btn-success" (click)="addAnswerToQuestion()">Thêm</button>
+                            <button type="button" style="margin-left: 5px;" class="btn btn-primary" (click)="saveQuestAnswers()">Lưu</button>
+                        </div>
+                    </tab>
+                </tabset>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" (click)="questionModal.hide()">Đóng</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<div bsModal #confirmModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="confirmModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-md modal-warning" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-2">
+                        <i class="fa fa-warning font-5xl text-danger"></i>
+                    </div>
+                    <div *ngIf="editingExam.exam!=null" class="col-md-10">
+                        <p class="text-info font-2xl">
+                            Bạn có chắc xóa Đề thi <strong>[{{editingExam.exam.examTitle}}]</strong> ??
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn  btn-secondary" (click)="confirmModal.hide()">Hủy</button>
+                <button type="button" class="btn btn-primary" (click)="deleteThisExam()">Đồng ý</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<div bsModal #confirmModal1="bs-modal" class="modal fade" tabindex="-1" role="dialog"
+    aria-labelledby="confirmModal1Label" aria-hidden="true">
+    <div class="modal-dialog modal-md modal-warning" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-2">
+                        <i class="fa fa-warning font-5xl text-danger"></i>
+                    </div>
+                    <div *ngIf="editingQuestion.question!=null" class="col-md-10">
+                        <p class="text-info font-2xl">
+                            Bạn có chắc xóa Câu hỏi <strong>[{{editingQuestion.question.questionContent}}]</strong> ??
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn  btn-secondary" (click)="confirmModal1.hide()">Hủy</button>
+                <button type="button" class="btn btn-primary" (click)="deleteThisQuestion()">Đồng ý</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->

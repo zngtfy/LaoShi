@@ -1,0 +1,82 @@
+<div class="card card-accent-info">
+    <div class="card-header">
+        <i class="fa fa-call-in fa-lg text-success"></i> Type management
+        <button type="button" class="btn btn-outline-info btn-sm pull-right" data-toggle="modal" (click)="openAdd()">Add
+            new</button>
+    </div>
+    <div class="card-body">
+        <table class="table table-responsive-sm table-hover table-outline mb-0">
+            <thead class="thead-light">
+                <tr>
+                    <th>#</th>
+                    <th>Code</th>
+                    <th>Display as</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let item of types; index as i;">
+                    <td>{{i + 1}}</td>
+                    <td>
+                        {{item.code}}
+                    </td>
+                    <td>
+                        {{item.displayAs}}
+                    </td>
+                    <td>
+                        <button type="button" class="btn btn-outline-info btn-sm pull-right" data-toggle="modal"
+                            (click)="openEdit(item)">Edit</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <br />
+        <ul class="pagination pull-right">
+            <li class="page-item" [class.disabled]="currentPage == 1">
+                <a class="page-link" href="javascript:void(0);" (click)="search(currentPage - 1)">Trước</a>
+            </li>
+            <li *ngFor="let page of getPages(); index as i;">
+                <div class="page-item" [class.active]="currentPage == i + 1">
+                    <a class="page-link" href="javascript:void(0);" (click)="search(i + 1)">{{ i + 1 }}</a>
+                </div>
+            </li>
+            <li class="page-item" [class.disabled]="currentPage == totalPages">
+                <a class="page-link" href="javascript:void(0);" (click)="search(currentPage + 1)">Sau</a>
+            </li>
+        </ul>
+    </div>
+</div>
+
+<div bsModal #addModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-md modal-info" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" *ngIf="!isEdit">Add new type</h4>
+                <h4 class="modal-title" *ngIf="isEdit">Edit type</h4>
+                <button type="button" class="close" (click)="addModal.hide()" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group" *ngIf="!isEdit">
+                    <label for="code">Code</label>
+                    <input id="code" type="text" class="form-control" [(ngModel)]="code">
+                </div>
+                <div class="form-group" *ngIf="isEdit">
+                    <label for="code">Code</label>
+                    <input id="code" type="text" class="form-control-plaintext" [(ngModel)]="code" readonly>
+                </div>
+                <div class="form-group">
+                    <label for="displayAs">Display as</label>
+                    <input id="displayAs" type="text" class="form-control" [(ngModel)]="displayAs">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" (click)="addModal.hide()">Cancel</button>
+                <button type="button" *ngIf="!isEdit" class="btn btn-primary" (click)="add()">Add</button>
+                <button type="button" *ngIf="isEdit" class="btn btn-primary" (click)="update()">Update</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->

@@ -1,0 +1,98 @@
+<div class="my-form">
+    <div class="form-create text-center">
+        <h3>THÊM LỚP HỌC</h3>
+    </div>
+    <form class="content-form-create">
+        <div class="form-row">
+            <div class="form-group col-md-6">
+                <label for="name">Tên lớp học</label>
+                <input type="text" class="form-control" type="text" placeholder="Tện lớp học" required maxlength="64">
+            </div>
+            <div class="form-group col-md-6">
+                <label for="schoolName">Mã lớp học<span class="text-danger">*</span></label>
+                <input type="className" class="form-control" type="text" placeholder="Tên trường">
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col-md-6">
+                <label for="nameSubject">Tên môn học</label>
+                <input type="text" class="form-control" type="text" placeholder="Tên môn học" required maxlength="64">
+            </div>
+            <div class="form-group col-md-6">
+                <label for="idSubject">Mã môn học<span class="text-danger">*</span></label>
+                <input type="text" class="form-control" type="text" placeholder="Mã môn học" required maxlength="64">
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col-md-6">
+                <label for="timeStudy">Thời gian học</label>
+                <input class="text" class="form-control" placeholder="Thời gian học">
+            </div>
+            <div class="form-group col-md-6">
+                <label for="prerequisition">Môn tiên quyết</label>
+                <input type="text" class="form-control" type="tel" placeholder="Môn tiên quyết">
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col-md-6">
+                <label for="totalSession">Số lượng tiết học</label>
+                <input type="number" class="form-control" placeholder="Số lượng tiết học">
+            </div>
+            <div class="form-group col-md-6">
+                <label for="note">Ghi chú tiết học</label>
+                <input type="text" class="form-control" placeholder="Ghi chú tiết học">
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col-md-6">
+                <label for="teacher">Giáo viên dạy học</label>
+                <input type="text" class="form-control" placeholder="Giáo viên dạy học">
+            </div>
+            <div class="form-group col-md-6">
+                <label for="address">Địa chỉ giảng dạy</label>
+                <input type="text" class="form-control" type="text" placeholder="Địa chỉ giảng dạy">
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col-md-6">
+                <label for="semester">Học kỳ</label>
+                <input type="number" class="form-control" placeholder="Học kỳ">
+            </div>
+            <div class="form-group col-md-6">
+                <label for="schoolYear">Năm học</label>
+                <input type="text" class="form-control" placeholder="Năm học">
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col-md-6">
+                <label for="startDate">Ngày bắt đầu</label>
+                <input class="form-control" id="date-input" type="date" name="date-input" placeholder="Ngày bắt đầu">
+            </div>
+            <div class="form-group col-md-6">
+                <label for="endDate">Ngày kết thúc</label>
+                <input class="form-control" id="date-input" type="date" name="date-input" placeholder="Ngày bắt đầu">
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col-md-6">
+                <label for="image">Hình ảnh môn học</label>
+                <div class="form-group col-md-6">
+                    <input type="file" id="file-input" name="file-input">
+                </div>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col-md-12">
+                <label for="phoneNumber">Giới thiệu môn học</label>
+                <textarea id="textarea-input" name="textarea-input" rows="9" class="form-control"
+                    placeholder="Giới thiệu.."></textarea>
+            </div>
+        </div>
+    </form>
+    <div class="form-row">
+        <div class="form-group col-md-6"></div>
+        <div class="button-submit col-md-6 align-right">
+            <button type="submit" class="btn btn-success">Tạo lớp học</button>
+        </div>
+    </div>
+</div>

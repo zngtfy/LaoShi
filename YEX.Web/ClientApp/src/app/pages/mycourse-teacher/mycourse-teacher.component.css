@@ -1,0 +1,208 @@
+tm-border {
+    border: 5px solid #fff;
+    box-shadow: 2px 2px #000;
+}
+
+.shadow {
+    text-shadow: 1px 1px #000;
+}
+
+.tm-title {
+    color: #CFCFCF;
+}
+
+.white {
+    color: #fff;
+}
+
+.about, .skills, .education, .languages, .contact, .experience {
+    padding: 40px;
+    min-height: 330px;
+}
+
+.education, .languages, .contact, .experience {
+    margin-top: 30px;
+}
+
+/* preloader section */
+
+.preloader {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 99999;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-flex-flow: row nowrap;
+    -ms-flex-flow: row nowrap;
+    flex-flow: row nowrap;
+    -webkit-justify-content: center;
+    -ms-flex-pack: center;
+    justify-content: center;
+    -webkit-align-items: center;
+    -ms-flex-align: center;
+    align-items: center;
+    background: none repeat scroll 0 0 #fff;
+    background: none repeat scroll 0 0 #f9f9f9;
+}
+
+.sk-spinner-wordpress.sk-spinner {
+    background-color: #666666;
+    width: 30px;
+    height: 30px;
+    border-radius: 30px;
+    position: relative;
+    -webkit-animation: sk-innerCircle 1s linear infinite;
+    animation: sk-innerCircle 1s linear infinite;
+}
+
+.sk-spinner-wordpress .sk-inner-circle {
+    display: block;
+    background-color: #fff;
+    width: 8px;
+    height: 8px;
+    position: absolute;
+    border-radius: 8px;
+    top: 5px;
+    left: 5px;
+}
+
+@-webkit-keyframes sk-innerCircle {
+    0% {
+        -webkit-transform: rotate(0);
+        transform: rotate(0);
+    }
+    100% {
+        -webkit-transform: rotate(360deg);
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes sk-innerCircle {
+    0% {
+        -webkit-transform: rotate(0);
+        transform: rotate(0);
+    }
+    100% {
+        -webkit-transform: rotate(360deg);
+        transform: rotate(360deg);
+    }
+}
+
+/* about section */
+
+.about {
+    background: #fff;
+    box-shadow: 0px 1px 5px rgba(50, 50, 50, 0.08);
+}
+
+/* skills section */
+
+.skills {
+    background: radial-gradient(circle at 50% 0, rgba(255, 0, 0, .5), rgba(255, 0, 0, 0) 70.71%), radial-gradient(circle at 6.7% 75%, rgba(0, 0, 255, .5), rgba(0, 0, 255, 0) 70.71%), radial-gradient(circle at 93.3% 75%, rgba(0, 255, 0, .5), rgba(0, 255, 0, 0) 70.71%) beige;
+    color: #f5f5f5;
+}
+
+.skills .progress {
+    border-radius: 0px;
+    height: 4px;
+}
+
+.skills .progress .progress-bar-primary {
+    background: #383838
+}
+
+.skills strong {
+    display: inline-block;
+    font-weight: normal;
+    padding-bottom: 6px;
+}
+
+/* education section */
+
+.education {
+    
+background: rgb(250,255,173); /* Old browsers */
+background: -moz-linear-gradient(top,  rgba(250,255,173,0.5) 0%, rgba(255,237,175,1) 100%); /* FF3.6-15 */
+background: -webkit-linear-gradient(top,  rgba(250,255,173,0.5) 0%,rgba(255,237,175,1) 100%); /* Chrome10-25,Safari5.1-6 */
+background: linear-gradient(to bottom,  rgba(250,255,173,0.5) 0%,rgba(255,237,175,1) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#faffad', endColorstr='#ffedaf',GradientType=0 ); /* IE6-9 */
+
+    color: #1d1616;
+}
+
+.education .education-content {
+    padding-bottom: 14px;
+}
+
+.education h5 {
+    display: inline-block;
+}
+
+.education span {
+    padding-right: 10px;
+    padding-left: 20px;
+}
+
+/* languages section */
+
+.languages {
+    background: #fff;
+    box-shadow: 0px 1px 5px rgba(50, 50, 50, 0.08);
+}
+
+.languages ul {
+    padding: 10px;
+}
+
+.languages ul li {
+    padding-bottom: 6px;
+}
+
+/* contact section */
+
+.contact {
+    background: #fff;
+    box-shadow: 0px 1px 5px rgba(50, 50, 50, 0.08);
+}
+
+.contact .fa {
+    padding-right: 6px;
+}
+
+/* experience section */
+
+.experience {
+    /* Permalink - use to edit and share this gradient: https://colorzilla.com/gradient-editor/#1e5799+0,7db9e8+100 */
+    background: #1e5799;
+    /* Old browsers */
+    background: -moz-linear-gradient(top, #1e5799 0%, #7db9e8 100%);
+    /* FF3.6-15 */
+    background: -webkit-linear-gradient(top, #1e5799 0%, #7db9e8 100%);
+    /* Chrome10-25,Safari5.1-6 */
+    background: linear-gradient(to bottom, #1e5799 0%, #7db9e8 100%);
+    /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#1e5799', endColorstr='#7db9e8', GradientType=0);
+    /* IE6-9 */
+    color: #f5f5f5;
+}
+
+.experience .experience-content {
+    padding-bottom: 14px;
+}
+
+.experience h5 {
+    display: inline-block;
+}
+
+.experience span {
+    padding-right: 10px;
+    padding-left: 20px;
+}
+
+.imgLogo {
+    max-height: 60px;
+}

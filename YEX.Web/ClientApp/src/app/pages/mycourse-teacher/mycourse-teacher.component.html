@@ -1,0 +1,73 @@
+<div class="row">
+    <div class="col-md-6 col-sm-12">
+        <div *ngIf="teacherInfo.teacher != null" class="about">
+            <h4 class="accent">Thông tin giảng viên</h4>
+            <h3>{{teacherInfo.teacher.fullName}}</h3>
+            <p>
+                <i class="fa fa-home text-primary"></i> {{teacherInfo.teacher.schoolCode}} - {{teacherInfo.teacher.schoolName}} <br/>
+                <i class="fa fa-address-book-o text-danger"></i> {{teacherInfo.teacher.schoolAddress}} <br/>
+                <i class="fa fa-eercast text-success"></i> {{teacherInfo.teacher.webSite}} <br/>
+            </p>
+            <img src="{{teacherInfo.teacher.logoUrl}}" class="imgLogo" />
+        </div>
+    </div>
+    <div class="col-md-6 col-sm-12">
+        <div *ngIf="teacherInfo.skills.length > 0" class="skills">
+            <h2 class="white">Kỹ năng / Skills</h2>
+            <div *ngFor="let item of teacherInfo.skills; index as i;">
+                <strong>{{item.name}}</strong>
+                <span class="pull-right">{{item.seftEvaluate}} %</span>
+                <div class="progress">
+                    <div class="progress-bar progress-bar-primary" role="progressbar" (aria-valuenow)="item.seftEvaluate" aria-valuemin="0"
+                        aria-valuemax="100" style="width: 70%;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-8 col-sm-12">
+        <div *ngIf="teacherInfo.education.length > 0" class="education">
+            <h4 class="text-gray">Nền tảng giáo dục</h4>
+            <div *ngFor="let item of teacherInfo.education; index as i;" class="education-content">
+                <h4 class="education-title accent">{{item.title}}</h4>
+                <div class="education-school">
+                    <h5>{{item.schoolName}}</h5> - 
+                    <h5>{{item.duration}}</h5>
+                </div>
+                <p class="education-description">{{item.degree}}</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 col-sm-12">
+        <div *ngIf="teacherInfo.languages.length > 0" class="languages">
+            <h3>Ngôn ngữ</h3>
+            <ul>
+                <li *ngFor="let item of teacherInfo.languages; index as i;">{{item.name}} / {{item.description}}</li>
+            </ul>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-4 col-sm-12">
+        <div *ngIf="teacherInfo.teacher != null" class="contact">
+            <h3 class="text-gray">Liên hệ</h3>
+            <p><i class="fa fa-map-marker text-success"></i> {{teacherInfo.teacher.address}}</p>
+            <p><i class="fa fa-phone text-primary"></i> {{teacherInfo.teacher.phoneNumber}}</p>
+            <p><i class="fa fa-envelope text-danger"></i>  {{teacherInfo.teacher.email}}</p>
+           
+        </div>
+    </div>
+    <div class="col-md-8 col-sm-12">
+        <div *ngIf="teacherInfo.experiences.length > 0" class="experience">
+            <h4 class="white">Kinh nghiệm làm việc</h4>
+            <div *ngFor="let item of teacherInfo.experiences; index as i;" class="experience-content">
+                <h5 class="experience-title accent">{{item.workTitle}}</h5>
+                <h6>{{item.workLocation}}</h6>
+                <h6>{{item.workingTime}}</h6>
+                <p class="education-description">{{item.description}}</p>
+            </div>
+        </div>
+    </div>
+</div>
+<br/>

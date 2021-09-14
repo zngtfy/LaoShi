@@ -1,0 +1,28 @@
+.margin {
+    margin: 10px;
+}
+
+.margin-bottom {
+    margin-bottom: 20px;
+}
+
+.inline {
+    display: inline;
+}
+
+.description-block {
+    display: block;
+    margin: 10px 0;
+    text-align: center;
+}
+
+.description-block.margin-bottom {
+    margin-bottom: 25px;
+}
+
+.description-block>.description-header {
+    margin: 0;
+    padding: 0;
+    font-weight: 600;
+    font-size: 16px;
+}

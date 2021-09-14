@@ -1,0 +1,181 @@
+.container1 {
+    width: 100%;
+    padding-right: 15px;
+    padding-left: 15px;
+    margin-right: auto;
+    margin-left: auto;
+}
+
+@media (min-width: 576px) {
+    .container1 {
+        max-width: 540px;
+    }
+}
+
+@media (min-width: 768px) {
+    .container1 {
+        max-width: 720px;
+    }
+}
+
+@media (min-width: 992px) {
+    .container1 {
+        max-width: 960px;
+    }
+}
+
+@media (min-width: 1200px) {
+    .container {
+        max-width: 1140px;
+    }
+}
+
+.middlebar_content_inner {
+    display: inline;
+    padding: 25px 15px 20px;
+}
+
+.middlebar_nav {
+    padding: 0;
+    margin: 0
+}
+
+.middlebar_nav li {
+    display: block;
+    float: left;
+    margin-bottom: 15px;
+    width: 100%
+}
+
+.mbar_thubnail {
+    display: block;
+    float: left;
+    height: auto;
+    margin-right: 10px;
+    width: 30%
+}
+
+.mbar_thubnail>img {
+    max-width: 100%
+}
+
+.mbar_title {
+    color: #666;
+    display: block;
+    font-size: 15px;
+    margin-top: 5px;
+    width: 65%;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis
+}
+.mbar_title1 {
+    color: #666;
+    display: block;
+    margin-top: 5px;
+    width: 65%;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis
+}
+
+.popular_categori {
+    display: inline;
+    border-left: 1px solid #bebebd;
+    border-right: 1px solid #bebebd
+}
+
+.popular_categori>h2 {
+    border-bottom: 1px solid #e3e3e3;
+    border-top: 1px solid #e3e3e3;
+    color: #fff;
+    float: left;
+    font-size: 16px;
+    font-weight: bold;
+    line-height: 32px;
+    margin: 0;
+    padding: 5px 25px;
+    width: 100%
+}
+
+.poplr_catgnva {
+    float: left;
+    padding: 20px 15px;
+    width: 100%
+}
+
+.poplr_catgnva li {
+    display: block;
+    width: 100%;
+    margin-bottom: 10px
+}
+
+.poplr_catgnva li a {
+    display: block;
+    font-size: 15px;
+    text-decoration: none;
+    font-family: arial
+}
+
+.poplr_catgnva li a:hover {
+    color: #7dc34d
+}
+
+.single_blog_sidebar {
+    display: inline;
+    padding: 0 25px
+}
+
+.single_blog_sidebar>h2 {
+    background: none repeat scroll 0 0 white;
+    font-size: 16px;
+    font-weight: bold;
+    line-height: 32px;
+    margin: 0 0 25px -25px;
+    padding: 5px 25px;
+    width: 116%
+}
+
+.single_stuff {
+    display: inline;
+}
+
+.single_stuff_img {
+    display: inline;
+}
+
+.single_stuff_img img {
+    max-width: 100%;
+}
+
+.single_stuff_article {
+    display: inline;
+    background-color: #fff;
+}
+
+.author {
+    display: inline;
+}
+
+.author>a {
+    border-radius: 50%;
+    display: block;
+    float: left;
+    height: 100px;
+    margin-right: 20px;
+    width: 100px
+}
+
+.author a>img {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%
+}
+
+.author>a:hover {
+    opacity: 0.75
+}
+
+.author_details {
+    display: inline;
+}

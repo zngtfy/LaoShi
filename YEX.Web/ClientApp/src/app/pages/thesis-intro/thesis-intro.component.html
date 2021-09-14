@@ -1,0 +1,213 @@
+<div class="animated fadeIn">
+    <div class="pad margin no-print">
+        <div class="callout callout-info" style="margin-bottom: 0!important;">
+            <h4><i class="fa fa-info"></i> Lưu ý:</h4>
+            Đây là trang thông tin về khóa luận / luận văn tốt nghiệp!
+        </div>
+    </div>
+    <br />
+    <div class="row">
+        <div class="col-sm-6 col-md-9">
+            <div *ngIf="curThesis!=null">
+                <div class="card">
+                    <div class="card-header">
+                        <span *ngIf="curThesis.ThesisType=='Master-Thesis'" class="display-6">
+                            <i class="fa fa-graduation-cap text-primary"></i>
+                            Luận văn Thạc sĩ
+                        </span>
+                        <span *ngIf="curThesis.ThesisType=='Bachelor-Thesis'" class="display-6">
+                            <i class="fa fa-graduation-cap text-danger"></i>
+                            Khóa luận tốt nghiệp đại học
+                        </span>
+                        <span *ngIf="curThesis.ThesisType=='Engineer-Thesis'" class="display-6">
+                            <i class="fa fa-graduation-cap text-danger"></i>
+                            ĐATN Kỹ sư đại học
+                        </span>
+                        <span *ngIf="curThesis.ThesisType=='Doctor-Thesis'" class="display-6">
+                            <i class="fa fa-graduation-cap text-success"></i>
+                            Luận án tiến sĩ
+                        </span>
+                    </div>
+                    <div class="card-body">
+                        <h5>{{curThesis.ThesisTitle}}</h5>
+                        <div class="bd-example">
+                            <p>{{curThesis.Description}}</p>
+                        </div>
+                        <div class="bd-example">
+                            <dl class="row">
+                                <dt class="col-sm-3">
+                                    <i class="fa fa-check-circle-o text-success"></i> Chuyên ngành
+                                </dt>
+                                <dd class="col-sm-9">
+                                    <p>
+                                        {{curThesis.ThesisCategory}} <br />
+                                        {{curThesis.StudyField}}
+                                    </p>
+                                </dd>
+                                <dt class="col-sm-3">
+                                    <i class="fa fa-check-circle-o text-success"></i> Mã ngành
+                                </dt>
+                                <dd class="col-sm-9">
+                                    {{curThesis.StudyCode}}
+                                </dd>
+                                <dt class="col-sm-3">
+                                    <i class="fa fa-check-circle-o text-success"></i> Học viên
+                                </dt>
+                                <dd class="col-sm-9">
+                                    <dl class="row">
+                                        <dt class="col-sm-4">{{curThesis.FullName}}</dt>
+                                        <dd class="col-sm-8">Mã số: {{curThesis.OfficialStudentId}}</dd>
+                                    </dl>
+                                </dd>
+                                <dt class="col-sm-3 text-truncate">
+                                    <i class="fa fa-check-circle-o text-success"></i> Lớp
+                                </dt>
+                                <dd class="col-sm-9">{{curThesis.Class}} - {{curThesis.CourseName}}</dd>
+                            </dl>
+                        </div>
+                        <tabset>
+                            <tab *ngIf="intro.students.length>0">
+                                <ng-template tabHeading>
+                                    <i class="icon-people text-danger"></i> Thành viên nhóm &nbsp;
+                                    <span class="badge badge-success">{{intro.students.length}}</span>
+                                </ng-template>
+                                <table class="table table-responsive-sm table-hover table-outline mb-0">
+                                    <thead class="thead-light">
+                                        <tr>
+                                            <th class="text-center"><i class="icon-people"></i></th>
+                                            <th>Thành viên</th>
+                                            <th>Vai trò</th>
+                                            <th>Lớp / Trường</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr *ngFor="let item of intro.students; index as i;">
+                                            <td class="text-center">
+                                                <div class="avatar">
+                                                    <img src="{{item.avatar}}" class="img-avatar"
+                                                        alt="{{item.fullName}}">
+                                                    <span class="avatar-status badge-success"></span>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div>{{item.fullName}}</div>
+                                                <div class="small text-muted">
+                                                    <i class="fa fa-envelope-open-o"></i> {{item.email}} <br/>
+                                                    <i class="fa fa-phone"></i> {{item.phone}}
+                                                </div>
+                                            </td>
+                                            <td>
+                                                {{item.role}}
+                                            </td>
+                                            <td>
+                                                <div>Mã số: {{item.officialStudentId}}</div>
+                                                <div class="small text-muted">
+                                                    <span>Lớp: {{item.class}}</span> | {{item.courseName}} <br/>
+                                                    {{item.schoolCode}} - {{item.schoolName}}
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </tab>
+                            <tab *ngIf="intro.teachers.length>0">
+                                <ng-template tabHeading>
+                                    <i class="icon-people text-success"></i> Giảng viên hướng dẫn &nbsp;
+                                    <span class="badge badge-pill badge-danger">{{intro.teachers.length}}</span>
+                                </ng-template>
+                                <table class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Giảng viên</th>
+                                            <th colspan="2">Thông tin</th>
+                                            <th>Vai trò</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr *ngFor="let item of intro.teachers; index as i;">
+                                            <td>{{i+1}}</td>
+                                            <td>
+                                                <strong>{{item.title}} {{item.fullName}}</strong> <br/>
+                                                <div class="small text-muted">
+                                                    <i class="fa fa-envelope-open-o"></i> {{item.email}} <br/>
+                                                    <i class="fa fa-phone"></i> {{item.phoneNumber}}
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <img src="{{item.logoUrl}}" width="50px" />
+                                            </td>
+                                            <td>
+                                                <div class="small text-muted">
+                                                    <i class="fa fa-home"></i> {{item.schoolCode}} <br/>
+                                                    <i class="fa fa-home"></i> {{item.schoolName}}
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <span *ngIf="item.role=='Main-Supervisor'" class="badge badge-danger">{{item.note}}</span>
+                                                <span *ngIf="item.role=='Sub-Supervisor'" class="badge badge-warning">{{item.note}}</span>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </tab>
+                            <tab *ngIf="intro.publications.length>0">
+                                <ng-template tabHeading>
+                                    <i class="icon-globe text-warning"></i> Công bố khoa học &nbsp;
+                                    <span class="badge badge-pill badge-danger">{{intro.publications.length}}</span>
+                                </ng-template>
+                                <table class="table">
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Năm</th>
+                                            <th>Công bố</th>
+                                            <th>Từ khóa</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr *ngFor="let item of intro.publications; index as i;">
+                                            <td>{{i+1}}</td>
+                                            <td>{{item.year}}</td>
+                                            <td>
+                                                <div class="small text-muted">
+                                                    <strong> {{item.title}}</strong><br/>
+                                                    Tác giả: {{item.coAuthors}} <br/>
+                                                    Nơi công bố: <a href="{{item.publisherUrl}}" target="_blank">{{item.publisher}}</a><br/>
+                                                    Được chỉ mục bởi: {{item.indexedBy}}
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="small text-muted">
+                                                    {{item.keywords}}
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </tab>
+                        </tabset>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6 col-md-3">
+            <div *ngIf="curThesis!=null" class="card">
+                <div class="card-body">
+                    <img src="{{curThesis.LogoUrl}}" height="60px" />
+                    <address>
+                        <strong *ngIf="curThesis.ThesisType=='Master-Thesis'">Luận văn thạc sĩ</strong>
+                        <strong *ngIf="curThesis.ThesisType=='Bachelor-Thesis'">Khóa luận tốt nghiệp ĐH</strong>
+                        <strong *ngIf="curThesis.ThesisType=='Engineer-Thesis'">ĐATN Kỹ sư</strong>
+                        <strong *ngIf="curThesis.ThesisType=='Doctor-Thesis'">Luận án tiến sĩ</strong>
+                        <br>
+                        <i class="fa fa-check-square-o text-primary"></i> Lớp: {{curThesis.Class}}<br>
+                        <i class="fa fa-check-square-o text-primary"></i> {{curThesis.ThesisCategory}}<br>
+                        <i class="fa fa-check-square-o text-primary"></i> {{curThesis.SchoolName}}<br>
+                        <i class="fa fa-check-square-o text-primary"></i> Năm: {{curThesis.ThesisYear}}
+                    </address>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

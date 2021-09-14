@@ -1,0 +1,9 @@
+.bg {
+    background: url(../../../assets/img/photo-1550399105-05c4a7641b02.jfif);
+    background-position: center;
+    background-size: cover;
+}
+.public-list
+{
+    overflow-x: scroll !important;
+}

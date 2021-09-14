@@ -1,0 +1,329 @@
+<div class="animated fadeIn">
+    <div class="card card-accent-primary">
+        <div class="card-body">
+            <div class="form-group row">
+                <label class="col-md-3 col-form-label" for="select1">
+                    <i class="icon-home text-primary"></i> Vui lòng chọn lớp / Khóa học
+                </label>
+                <div *ngIf="classes.length>0" class="col-md-9">
+                    <select [disabled]="show" id="select1" name="select1" class="form-control"
+                        (change)="changeClass($event)">
+                        <option value="">---- Please select ----</option>
+                        <option *ngFor="let c of classes; index as i;" value="{{i+1}}">{{c.classCode}} - {{c.className}}
+                            ({{c.schoolName}})</option>
+                    </select>
+                    <hr *ngIf="curClass!=null" />
+                    <div *ngIf="curClass!=null" class="row">
+                        <div class="col-sm-6 col-md-6">
+                            {{curClass.className}} <br />
+                            <div class="small text-muted">
+                                <i class="fa fa-check-square-o text-info"></i> {{curClass.classCode}} <br />
+                                <i class="fa fa-check-square-o text-info"></i> {{curClass.classDesc}} <br />
+                                <i class="fa fa-check-square-o text-info"></i> {{formatDate(curClass.startDate)}} -
+                                {{formatDate(curClass.endDate)}} <br />
+                                <i class="fa fa-check-square-o text-info"></i> {{curClass.venue}} <br />
+                                <i class="fa fa-check-square-o text-info"></i> Học kỳ {{curClass.semester}}, năm học:
+                                {{curClass.schoolYear}}
+                            </div>
+                        </div>
+                        <div class="col-sm-6 col-md-6">
+                            <img src="{{curClass.logoUrl}}" height="45px" /><br />
+                            {{curClass.schoolName}} <br />
+                            {{curClass.department}}
+                            <div class="small text-muted">
+                                <i class="fa fa-check-square-o text-secondary"></i> {{curClass.subjectCode}} -
+                                {{curClass.subjectName}}<br />
+                                <i class="fa fa-check-square-o text-secondary"></i> Số tín chỉ:
+                                {{curClass.totalCredit}} ({{curClass.theoryCredit}} LT, {{curClass.practiceCredit}}
+                                TH)<br />
+                                <i class="fa fa-check-square-o text-secondary"></i> {{curClass.schoolAddress}}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div *ngIf="curClass!=null" class="card-footer">
+            <div class="pull-right">
+                <button [ngStyle]="selectStyleBtn" type="button" class="btn btn-primary" (click)="selectClass()">
+                    <i class="icon-check"></i> Chọn
+                </button>
+                <button style="margin-left: 10px;" type="reset" class="btn btn-danger" (click)="unSelectClass()">
+                    <i class="fa fa-ban"></i> Reset
+                </button>
+            </div>
+            <div class="clearfix"></div>
+        </div>
+    </div>
+</div>
+<div *ngIf="curClass!=null  && show" class="animated fadeOut">
+    <div class="card border-success">
+        <div class="card-header">
+            <i class="fa fa-check-circle"></i> Tìm kiếm buổi học
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <div *ngIf="campuses.length>0" class="form-group row">
+                        <label class="col-md-3 col-form-label" for="sessionId">Chọn cơ sở / Campus</label>
+                        <div class="col-md-9">
+                            <select [disabled]="query.showStudent" [(ngModel)]="query.campusId" id="campus"
+                                name="campus" class="form-control" (change)="campusChange($event)">
+                                <option value="">------ Please select ------ </option>
+                                <option *ngFor="let s of campuses; index as i;" [value]="s.id">{{s.campusName}} -
+                                    {{s.address}} </option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-md-3 col-form-label" for="sessionType">Chọn loại buổi học</label>
+                        <div class="col-md-9">
+                            <select [disabled]="query.showStudent" [(ngModel)]="query.type" id="sessionType"
+                                name="sessionType" class="form-control" (change)="typeChange($event)">
+                                <option value="">------ Please select ------ </option>
+                                <option value="LT">Lý thuyết</option>
+                                <option value="TH">Thực hành</option>
+                                <option value="LT-TH">Lý thuyết và thực hành</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div *ngIf="query.type!=''" class="form-group row">
+                        <label class="col-md-3 col-form-label" for="sessionId">Chọn buổi học tìm thấy</label>
+                        <div class="col-md-9">
+                            <select [disabled]="query.showStudent" [(ngModel)]="query.sessionId" id="sessionId"
+                                name="sessionId" class="form-control" (change)="sessionChange($event)">
+                                <option value="">------ Please select ------ </option>
+                                <option *ngFor="let s of sessions; index as i;" [value]="s.id">{{s.session}} -
+                                    {{s.brief}} -
+                                    {{formatDate(s.dateOfClass)}} - [từ {{s.fromTime}} đến {{s.toTime}}]</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <agm-map (mapReady)="mapReady()" [latitude]="lat" [longitude]="lng" [zoom]="17">
+                        <agm-marker [latitude]="lat" [longitude]="lng" (markerClick)="selectMarker($event)">
+                        </agm-marker>
+                    </agm-map>
+                    <p *ngIf="selectedMarker">
+                        Lat: {{ selectedMarker.lat }} Lng: {{ selectedMarker.lng }}
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div *ngIf="query.type!='' && query.sessionId!='' && query.classSession!=null && query.campusId!=''"
+            class="card-footer">
+            <div class="pull-right">
+                <button *ngIf="query.showStudent==false" type="button" class="btn btn-primary" (click)="showStudent()">
+                    <i class="icon-check"></i> Điểm danh lớp
+                </button>
+                <button *ngIf="query.showStudent==true" style="margin-left: 10px;" type="reset" class="btn btn-danger"
+                    (click)="unShowStudent()">
+                    <i class="fa fa-ban"></i> Reset
+                </button>
+                <button *ngIf="query.showStudent==true" style="margin-left: 10px;" type="button" class="btn btn-success"
+                    (click)="completeSession()">
+                    <i class="fa fa-check"></i> Hoàn tất buổi học
+                </button>
+            </div>
+            <div class="clearfix"></div>
+        </div>
+    </div>
+</div>
+<div *ngIf="curClass!=null && students.totalRecords>0  && query.showStudent" class="animated fadeOut">
+    <table class="table table-sm table-bordered">
+        <thead>
+            <tr>
+                <th>#</th>
+                <th>MSSV</th>
+                <th>Họ Tên</th>
+                <th>Ngày sinh</th>
+                <th>Vai trò</th>
+                <th>Trạng thái</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let item of students.data; index as i;">
+                <td>{{getSTT(i)}}</td>
+                <td>{{item.officialStudentId}}</td>
+                <td>
+                    <ng-template #popTemplateHtml>
+                        <div>
+                            <img src="{{item.avatar}}" height="80px" />
+                            <br /><i class="fa fa-check-square-o text-info"></i> Họ tên: {{item.fullname}}
+                            <br /><i class="fa fa-check-square-o text-info"></i> MSSV:
+                            {{item.officialStudentId}}
+                            <br /><i class="fa fa-check-square-o text-info"></i> Ngày sinh:
+                            {{formatDate(item.birthday)}}
+                            <br /><i class="fa fa-check-square-o text-info"></i> Trường: {{item.schoolName}}
+                            <br /><i class="fa fa-check-square-o text-info"></i> Lớp: {{item.className}}
+                            <br /><i class="fa fa-check-square-o text-info"></i> {{item.courseName}}
+                        </div>
+                    </ng-template>
+                    <button type="button" class="btn btn-default btn-light btn-sm" [popover]="popTemplateHtml"
+                        popoverTitle="{{item.fullname}}" placement="top">
+                        {{item.fullname}}
+                    </button>
+                </td>
+                <td>{{formatDate(item.birthday)}}</td>
+                <td>
+                    <span class="badge badge-light">{{item.studentRole}}</span>
+                </td>
+                <td>
+                    <span *ngIf="item.attendanceStatus == 0" class="badge badge-pill badge-danger">Chưa điểm
+                        danh</span>
+                    <span *ngIf="item.attendanceStatus > 0" class="badge badge-pill badge-success">Đã điểm danh
+                        ({{item.attendanceStatus}} lần)</span>
+                </td>
+                <td>
+                    <button (click)="openInfoModal(i)" style="margin-left: 5px;" type="button"
+                        popover="Xem thông tin lịch sử điểm danh của sinh viên [{{item.fullname}}] !"
+                        triggers="mouseenter:mouseleave" class="btn btn-sm btn-outline-info">
+                        <i class="fa fa-info-circle"></i>
+                    </button>
+                    <button (click)="checkAttendanceStudent(i)" style="margin-left: 5px;" type="button"
+                        popover="Điểm danh cho sinh viên [{{item.fullname}}] !" triggers="mouseenter:mouseleave"
+                        class="btn btn-sm btn-outline-primary">
+                        <i class="fa fa-check-square-o"></i>
+                    </button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <div *ngIf="students.totalPages>1" class="col-xs-12 col-12">
+        <pagination [totalItems]="students.totalRecords" [(ngModel)]="students.page" (pageChanged)="pageChanged($event)"
+            [itemsPerPage]="students.size" [maxSize]="3" previousText="&lsaquo;" nextText="&rsaquo;" firstText="&laquo;"
+            lastText="&raquo;">
+        </pagination>
+        <pre class="card card-body card-header mb-3">Bạn đang ở trang: {{students.page}}/{{students.totalPages}}</pre>
+    </div>
+</div>
+
+<div bsModal #infoModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="confirmModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-info" role="document">
+        <div *ngIf="curClass!=null" class="modal-content">
+            <div *ngIf="curStudent!=null" class="modal-header">
+                <h5 class="modal-title">
+                    <i class="fa fa-clock-o"></i> Thông tin điểm danh của sinh viên [{{curStudent.officialStudentId}}] -
+                    {{curStudent.fullname}}
+                </h5>
+                <button type="button" class="close" (click)="infoModal.hide()" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div *ngIf="curStudent!=null" class="modal-body">
+                <p *ngIf="attendanceInfo.length==0" class="text-danger">Chưa có thông tin điểm danh của sinh viên!</p>
+                <table *ngIf="attendanceInfo.length>0" class="table table-bordered table-sm">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Thời gian</th>
+                            <th>Địa điểm</th>
+                            <th>Ghi chú</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let item of attendanceInfo; index as i;">
+                            <td>{{i+1}}</td>
+                            <td>
+                                {{formatDate1(item.createdOn)}} <br />
+                                {{item.deviceId}}
+                            </td>
+                            <td>
+                                <p class="small">
+                                    <i class="fa fa-location-arrow text-primary"></i> {{item.address}} <br />
+                                    <i class="fa fa-check text-secondary"></i> Lat: {{item.latitude}} <br />
+                                    <i class="fa fa-check text-secondary"></i> Long: {{item.longtitude}} <br />
+                                </p>
+                            </td>
+                            <td>
+                                <p class="small text-muted">
+                                    {{item.note}} <br />
+                                    Người thực hiện: {{item.createdByName}}
+                                </p>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" (click)="infoModal.hide()">Đóng</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<div bsModal #caModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="confirmModalLabel"
+    aria-hidden="true">
+    <div *ngIf="curClass!=null" class="modal-dialog modal-warning" role="document">
+        <div *ngIf="curStudent!=null" class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    <i class="fa fa-check-circle-o"></i> Điểm danh cho sinh viên [{{curStudent.officialStudentId}}] -
+                    {{curStudent.fullname}}
+                </h5>
+                <button type="button" class="close" (click)="caModal.hide()" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-3">
+                        <img src="{{curStudent.avatar}}" height="80px" />
+                    </div>
+                    <div class="col-md-9">
+                        <p class="small">Bạn có chắc điểm danh cho sinh viên <strong>{{curStudent.fullname}}</strong>
+                            với các thông tin sau:
+                            <br /><i class="fa fa-check-square-o text-success"></i> Họ tên: {{curStudent.fullname}}
+                            <br /><i class="fa fa-check-square-o text-success"></i> MSSV:
+                            {{curStudent.officialStudentId}}
+                            <br /><i class="fa fa-check-square-o text-success"></i> Ngày sinh:
+                            {{formatDate(curStudent.birthday)}}
+                            <br /><i class="fa fa-check-square-o text-success"></i> Trường: {{curStudent.schoolName}}
+                            <br /><i class="fa fa-check-square-o text-success"></i> Lớp: {{curStudent.className}}
+                            <br /><i class="fa fa-check-square-o text-success"></i> {{curStudent.courseName}}
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" (click)="caModal.hide()">Đóng</button>
+                <button type="button" class="btn btn-primary" (click)="toBePresent()">Có mặt</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<div bsModal #confirmModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="confirmModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-md modal-warning" role="document">
+        <div class="modal-content">
+            <div *ngIf="query.classSession!=null" class="modal-body">
+                <div class="row">
+                    <div class="col-md-2">
+                        <br/>
+                        <i class="fa fa-warning font-5xl text-danger"></i>
+                    </div>
+                    <div class="col-md-10">
+                        <p class="small">
+                            <i class="fa fa-check text-success"></i> {{query.classSession.session}} <br/>
+                            <i class="fa fa-check text-success"></i> {{query.classSession.brief}} - {{query.classSession.classContent}}<br/>
+                            <i class="fa fa-check text-success"></i> Ngày học: {{formatDate(query.classSession.dateOfClass)}} <br/>
+                            <i class="fa fa-check text-success"></i> Thời gian: {{formatDate(query.classSession.fromTime)}} - {{formatDate(query.classSession.toTime)}} <br/>
+                            <i class="fa fa-check text-success"></i> Địa điểm: {{query.classSession.location}}
+                        </p>
+                        <p class="text-info font-2xl">
+                            Bạn có chắc hoàn tất buổi học, chuyển qua trạng thái <strong>đã học</strong> ??
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn  btn-secondary" (click)="confirmModal.hide()">Hủy</button>
+                <button type="button" class="btn btn-primary" (click)="completeSessionNext()">Đồng ý</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->

@@ -1,0 +1,73 @@
+<div class="animated fadeIn">
+    <div class="pad margin no-print">
+        <div class="callout callout-danger" style="margin-bottom: 0!important;">
+            <h4><i class="fa fa-info"></i> Lưu ý:</h4>
+            Đây là trang lưu trữ các văn bản liên quan khóa luận / luận văn tốt nghiệp!
+        </div>
+    </div>
+    <br />
+    <div class="row">
+        <div class="col-sm-6 col-md-9">
+            <div class="card border-success">
+                <div class="card-header">
+                    <i class="icon-graduation text-danger font-2xl"></i> Các văn bản liên quan
+                </div>
+                <div class="card-body">
+                    <table *ngIf="documents.data.length > 0" class="table table-bordered table-striped table-sm">
+                        <thead>
+                            <tr>
+                                <th style="width:25px">#</th>
+                                <th>Văn bản liên quan</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let item of documents.data; index as i;">
+                                <td>{{getSTT(i)}}</td>
+                                <td>
+                                    <strong>{{item.docName}}</strong><br />
+                                    <div class="small text-muted">
+                                        {{item.description}}
+                                    </div>
+                                    <i class="fa fa-clock-o text-primary"></i> {{formatDate(item.createdOn)}}
+                                </td>
+                                <td>
+                                    <button (click)="downloadMaterial(item.id)" type="button"
+                                        class="btn btn-brand btn-sm btn-openid mr-1 pull-right"
+                                        style="margin-bottom: 4px">
+                                        <i class="fa fa-download"></i>
+                                        <span>Tải về</span>
+                                    </button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div *ngIf="documents.totalPages>1" class="col-xs-12 col-12">
+                        <pagination [totalItems]="documents.totalRecords" [(ngModel)]="documents.page" (pageChanged)="pageChanged($event)"
+                        [itemsPerPage]="documents.size" [maxSize]="3" previousText="&lsaquo;" nextText="&rsaquo;" firstText="&laquo;" lastText="&raquo;">
+                        </pagination>
+                        <pre class="card card-body card-header mb-3">Bạn đang ở trang: {{documents.page}}/{{documents.totalPages}}</pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6 col-md-3">
+            <div *ngIf="curThesis!=null" class="card">
+                <div class="card-body">
+                    <img src="{{curThesis.LogoUrl}}" height="60px" />
+                    <address>
+                        <strong *ngIf="curThesis.ThesisType=='Master-Thesis'">Luận văn thạc sĩ</strong>
+                        <strong *ngIf="curThesis.ThesisType=='Bachelor-Thesis'">Khóa luận tốt nghiệp ĐH</strong>
+                        <strong *ngIf="curThesis.ThesisType=='Engineer-Thesis'">ĐATN Kỹ sư</strong>
+                        <strong *ngIf="curThesis.ThesisType=='Doctor-Thesis'">Luận án tiến sĩ</strong>
+                        <br>
+                        <i class="fa fa-check-square-o text-primary"></i> Lớp: {{curThesis.Class}}<br>
+                        <i class="fa fa-check-square-o text-primary"></i> {{curThesis.ThesisCategory}}<br>
+                        <i class="fa fa-check-square-o text-primary"></i> {{curThesis.SchoolName}}<br>
+                        <i class="fa fa-check-square-o text-primary"></i> Năm: {{curThesis.ThesisYear}}
+                    </address>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

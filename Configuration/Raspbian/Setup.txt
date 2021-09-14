@@ -1,0 +1,58 @@
+** Raspbian 10 **
+
+1. View all port
+sudo netstat -peanut
+
+2. Publish MSIL code
+dotnet publish -c Release -o E:\Publish\LaoShi
+
+3. Run MSIL code
+cd LaoShi
+dotnet YEX.Web.dll
+
+4. Publish native code
+dotnet publish -c Release -o E:\Publish\LaoShiNative -r linux-arm
+
+5. Run native code
+cd LaoShiNative
+chmod 755 ./YEX.Web
+./YEX.Web
+
+6. Add service
+sudo cp LaoShi.service /lib/systemd/system/LaoShi.service
+sudo systemctl enable LaoShi
+sudo systemctl start LaoShi
+sudo systemctl stop LaoShi
+
+7. Setup nginx
+sudo apt install nginx
+sudo service nginx start
+sudo nano /etc/nginx/sites-available/default
+        proxy_pass         http://localhost:5000;
+        proxy_http_version 1.1;
+        proxy_set_header   Upgrade $http_upgrade;
+        proxy_set_header   Connection keep-alive;
+        proxy_set_header   Host $host;
+        proxy_cache_bypass $http_upgrade;
+        proxy_set_header   X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header   X-Forwarded-Proto $scheme;
+sudo cp default /etc/nginx/sites-available/default
+sudo nginx -t
+sudo nginx -s reload
+
+8. NET Core
+wget https://download.visualstudio.microsoft.com/download/pr/8ddb8193-f88c-4c4b-82a3-39fcced27e91/b8e0b9bf4cf77dff09ff86cc1a73960b/dotnet-sdk-3.0.100-linux-arm.tar.gz
+wget https://download.visualstudio.microsoft.com/download/pr/e9d4b012-a877-443c-8344-72ef910c86dd/b5e729b532d7b3b5488c97764bd0fb8e/aspnetcore-runtime-3.0.0-linux-arm.tar.gz
+mkdir -p $HOME/dotnet && tar zxf dotnet-sdk-3.0.100-linux-arm.tar.gz -C $HOME/dotnet
+tar zxf aspnetcore-runtime-3.0.0-linux-arm.tar.gz -C $HOME/dotnet
+export DOTNET_ROOT=$HOME/dotnet
+export PATH=$PATH:$HOME/dotnet
+
+9. NodeJS
+wget https://nodejs.org/dist/v12.13.0/node-v12.13.0-linux-armv7l.tar.xz
+tar -xvf node-v12.13.0-linux-armv7l.tar.xz
+cd node-v12.13.0-linux-armv7l
+sudo cp -R * /usr/local/
+cd ~
+rm -R node-v12.13.0-linux-armv7l
+node -v

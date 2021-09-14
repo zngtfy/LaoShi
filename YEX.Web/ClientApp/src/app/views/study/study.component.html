@@ -1,0 +1,86 @@
+<div class="bg">
+    <div class="blck"></div>
+</div>
+<div class="container1 bb">
+    <div class="search">
+        <h1>Nghiên cứu khoa học</h1>
+    </div>
+    <div class="card">
+        <div class="card-body">
+            <p class="text-center">Đây là trang giới thiệu các nghiên cứu khoa học của thầy tham gia về các vấn đề liên
+                quan đến môn học và ngành học.
+                Các bài viết được công bố trên các trang nghiên cứu mà thầy tham gia.
+            </p>
+        </div>
+    </div>
+    <div *ngIf="TeacherStudy.totalRecords > 0" class="row">
+        <div class="col-lg-12">
+            <div class="card">
+                <div class="card-body">
+                    <div class="public-list">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Vấn đề nghiên cứu</th>
+                                    <th>Ngày bắt đầu</th>
+                                    <th>Vai trò</th>
+                                    <th>Nhóm</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let item of TeacherStudy.data; index as i;">
+                                    <td style="min-width: 250px;">
+                                        {{item.title}} <br />
+                                        <small>Keywords: {{item.keywords}}</small>
+                                    </td>
+                                    <td style="min-width: 120px;"> {{item.time}} - {{item.city}}</td>
+                                    <td style="min-width: 80px;">{{item.teacherRole}}</td>
+                                    <td>
+                                        <span class="badge {{item.color}}">{{item.type}}</span>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <br/>
+                    <nav *ngIf="TeacherStudy.totalPages > 1">
+                        <ul class="pagination">
+                            <li class="page-item">
+                                <a class="page-link" href="javascript:void(0);" (click)="loadPrevStudy();">Trước</a>
+                            </li>
+                            <li class="page-item active">
+                                <a class="page-link" href="javascript:void(0);">{{TeacherStudy.page}}</a>
+                            </li>
+                            <li class="page-item">
+                                <a class="page-link" href="javascript:void(0);" (click)="loadNextStudy();">Sau</a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </div>
+        <!--/.col-->
+    </div>
+    <div class="row">
+        <div *ngIf="TeacherPublicProfile.length == 0" class="col-sm-12 col-lg-12">
+            <div *ngIf="TeacherPublicProfile.length == 0" class="d-flex align-items-center">
+                <strong>Loading teacher public profile...</strong>
+                <div class="spinner-border text-primary ml-auto" role="status" aria-hidden="true"></div>
+            </div>
+        </div>
+        <div *ngFor="let item of TeacherPublicProfile; index as i;" class="col-sm-6 col-lg-6">
+            <div class="card">
+                <div class="card-body">
+                    <div class="h5 m-0">{{item.sourceName}}</div>
+                    <img src="{{item.sourceLogoUrl}}" class="schoolLogo1" />
+                    <div class="divDes">{{item.description}}</div>
+                    <div class="progress progress-xs my-3">
+                        <div class="progress-bar bg-success" role="progressbar" style="width: 25%" aria-valuenow="25"
+                            aria-valuemin="0" aria-valuemax="100"></div>
+                    </div>
+                    <a href="{{item.refUrl}}" target="_blank"><small class="text-muted">{{item.refUrl}}</small></a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

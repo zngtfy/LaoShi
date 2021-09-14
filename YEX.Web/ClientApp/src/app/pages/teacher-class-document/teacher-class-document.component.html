@@ -1,0 +1,254 @@
+<div class="animated fadeIn">
+    <div class="card card-accent-primary">
+        <div class="card-body">
+            <div class="form-group row">
+                <label class="col-md-3 col-form-label" for="select1">
+                    <i class="icon-home text-primary"></i> Vui lòng chọn lớp / Khóa học
+                </label>
+                <div *ngIf="classes.length>0" class="col-md-9">
+                    <select [disabled]="show" id="select1" name="select1" class="form-control"
+                        (change)="changeClass($event)">
+                        <option value="">---- Please select ----</option>
+                        <option *ngFor="let c of classes; index as i;" value="{{i+1}}">{{c.classCode}} - {{c.className}}
+                            ({{c.schoolName}})</option>
+                    </select>
+                    <hr *ngIf="curClass!=null" />
+                    <div *ngIf="curClass!=null" class="row">
+                        <div class="col-sm-6 col-md-6">
+                            {{curClass.className}} <br />
+                            <div class="small text-muted">
+                                <i class="fa fa-check-square-o text-info"></i> {{curClass.classCode}} <br />
+                                <i class="fa fa-check-square-o text-info"></i> {{curClass.classDesc}} <br />
+                                <i class="fa fa-check-square-o text-info"></i> {{formatDate(curClass.startDate)}} -
+                                {{formatDate(curClass.endDate)}} <br />
+                                <i class="fa fa-check-square-o text-info"></i> {{curClass.venue}} <br />
+                                <i class="fa fa-check-square-o text-info"></i> Học kỳ {{curClass.semester}}, năm học:
+                                {{curClass.schoolYear}}
+                            </div>
+                        </div>
+                        <div class="col-sm-6 col-md-6">
+                            <img src="{{curClass.logoUrl}}" height="45px" /><br />
+                            {{curClass.schoolName}} <br />
+                            {{curClass.department}}
+                            <div class="small text-muted">
+                                <i class="fa fa-check-square-o text-secondary"></i> {{curClass.subjectCode}} -
+                                {{curClass.subjectName}}<br />
+                                <i class="fa fa-check-square-o text-secondary"></i> Số tín chỉ:
+                                {{curClass.totalCredit}} ({{curClass.theoryCredit}} LT, {{curClass.practiceCredit}}
+                                TH)<br />
+                                <i class="fa fa-check-square-o text-secondary"></i> {{curClass.schoolAddress}}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div *ngIf="curClass!=null" class="card-footer">
+            <div class="pull-right">
+                <button [ngStyle]="selectStyleBtn" type="button" class="btn btn-primary" (click)="selectClass()">
+                    <i class="icon-check"></i> Chọn
+                </button>
+                <button style="margin-left: 10px;" type="reset" class="btn btn-danger" (click)="unSelectClass()">
+                    <i class="fa fa-ban"></i> Reset
+                </button>
+            </div>
+            <div class="clearfix"></div>
+        </div>
+    </div>
+</div>
+<div *ngIf="curClass!=null  && show" class="animated fadeOut">
+    <div class="card border-success">
+        <div class="card-header">
+            <i class="icon-docs icons font-2xl mt-4"></i>
+            Tài liệu học tập của lớp !
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-9">
+                    <div class="form-group row">
+                        <label class="col-md-3 col-form-label" for="select1">Chọn loại tài liệu</label>
+                        <div class="col-md-9">
+                            <select [disabled]="selectType" [(ngModel)]="docType" id="select1" name="select1"
+                                class="form-control">
+                                <option value="">-----Please select------</option>
+                                <option value="DCMH">Đề cương môn học</option>
+                                <option value="Book">Sách giáo khoa</option>
+                                <option value="DocThem">Tài liệu đọc thêm</option>
+                                <option value="BaiGiang">Bài giảng (SLIDE)</option>
+                                <option value="BaiTap">Bài tập rèn luyện</option>
+                                <option value="DeThiMau">Đề thi mẫu</option>
+                                <option value="SourceCode">Source-code </option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <button *ngIf="docType!='' && !selectType" type="button" class="btn btn-primary"
+                        (click)="selectDocType()">
+                        <i class="icon-check"></i> Chọn
+                    </button>
+                    <button *ngIf="docType!='' && selectType" style="margin-left: 10px;" type="reset"
+                        class="btn btn-danger" (click)="unSelectDocType()">
+                        <i class="fa fa-ban"></i> Reset
+                    </button>
+                </div>
+            </div>
+            <div *ngIf="docType!='' && selectType">
+                <table *ngIf="documents.length>0" class="table table-sm table-bordered">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Tài liệu</th>
+                            <th>Trạng thái</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let item of documents; index as i;">
+                            <td>{{i+1}}</td>
+                            <td style="width: 50%;">
+                                <p class="small">
+                                    <strong>{{item.title}}</strong> <br />
+                                    {{item.description}}
+                                </p>
+                                <a href="javascript:void(0);" (click)="downloadMaterial(i)"><i
+                                        class="fa fa-download"></i> Tải về </a>
+                            </td>
+                            <td>
+                                <span class="badge badge-light">{{item.type}}</span><br />
+                                <i class="fa fa-check text-primary"></i> Người tạo: {{item.createdByName}} <br />
+                                <i class="fa fa-check text-primary"></i> Ngày tạo: {{formatDate1(item.createdOn)}}
+                            </td>
+                            <td>
+                                <button (click)="openEditModal(i)" type="button"
+                                    popover="Chỉnh sửa thông tin tài liệu [{{item.title}}] !"
+                                    triggers="mouseenter:mouseleave" class="btn btn-sm btn-outline-info">
+                                    <i class="fa fa-edit"></i>
+                                </button>
+                                <button (click)="deleteDoc(i)" style="margin-left: 5px;" type="button"
+                                    popover="Xóa tài liệu [{{item.title}}] !" triggers="mouseenter:mouseleave"
+                                    class="btn btn-sm btn-outline-danger">
+                                    <i class="fa fa-times"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <p>Tìm thấy {{documents.length}} tài liệu !</p>
+            </div>
+        </div>
+        <div *ngIf="docType!='' && selectType" class="card-footer">
+            <div class="pull-right">
+                <button type="button" class="btn btn-success" (click)="openEditModal(null)">
+                    <i class="fa fa-plus"></i> Thêm tài liệu
+                </button>
+            </div>
+            <div class="clearfix"></div>
+        </div>
+    </div>
+</div>
+
+<div bsModal #editModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-info" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 *ngIf="!isEdit" class="modal-title">
+                    <i class="icon icon-plus"></i> Thêm mới tài liệu
+                </h5>
+                <h5 *ngIf="isEdit" class="modal-title">
+                    <i class="icon icon-note"></i> Cập nhật tài liệu
+                </h5>
+                <button type="button" class="close" (click)="editModal.hide()" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="form-group col-sm-5">
+                        <label for="doctitle">Tên tài liệu</label>
+                        <input [(ngModel)]="editingDoc.title" type="text" id="doctitle" name="doctitle"
+                            class="form-control">
+                    </div>
+                    <div class="form-group col-sm-7">
+                        <label for="docdescription">Mô tả</label>
+                        <input [(ngModel)]="editingDoc.description" type="text" id="docdescription" name="docdescription"
+                            class="form-control">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col-sm-12">
+                        <label for="docContent">Nội dung bài tập</label>
+                        <textarea [(ngModel)]="editingDoc.content" id="docContent"
+                            name="docContent" rows="3" class="form-control">
+                        </textarea>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-md-3 col-form-label" for="docFile">Tập tin</label>
+                    <div class="col-md-7">
+                        <input type="file" id="docFile" name="docFile" multiple="false" />
+                    </div>
+                    <div *ngIf="editingDoc.linkUrl!=null && editingDoc.linkUrl.length>0"
+                        class="col-md-2">
+                        <p class="small">
+                            Bạn đã tải file lên !
+                            <br />
+                            <a href="javascript:void(0);"
+                                (click)="downloadDocument(editingDoc.id)">
+                                <i class="fa fa-download"></i> Tải xuống
+                            </a>
+                        </p>
+                    </div>
+                </div>
+                <div *ngIf="editingDoc.id > 0" class="row text-muted small">
+                    <div class="col-sm-3">
+                        Ngày tạo: {{formatDate1(editingDoc.createdOn)}}
+                    </div>
+                    <div class="col-sm-3">
+                        Người tạo: {{editingDoc.createdByName}}
+                    </div>
+                    <div *ngIf="editingDoc.modifiedOn!=null" class="col-sm-3">
+                        Ngày cập nhật: {{formatDate1(editingDoc.modifiedOn)}}
+                    </div>
+                    <div *ngIf="editingDoc.modifiedOn!=null" class="col-sm-3">
+                        Người cập nhật: {{editingDoc.modifiedByName}}
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" (click)="editModal.hide()">Đóng</button>
+                <button *ngIf="isEdit" type="button" class="btn btn-primary" (click)="saveDocument()">
+                    <i class="fa fa-save"></i>  Lưu tài liệu
+                </button>
+                <button *ngIf="!isEdit" type="button" class="btn btn-success" (click)="createDocument()">
+                    <i class="fa fa-plus"></i> Thêm tài liệu
+                </button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<div bsModal #confirmModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="confirmModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-md modal-warning" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-2">
+                        <i class="fa fa-warning font-5xl text-danger"></i>
+                    </div>
+                    <div class="col-md-10">
+                        <p class="text-info font-2xl">
+                            Bạn có chắc xóa tài liệu <strong>[{{editingDoc.title}}]</strong> ??
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn  btn-secondary" (click)="confirmModal.hide()">Hủy</button>
+                <button type="button" class="btn btn-primary" (click)="deleteDocument()">Đồng ý</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->

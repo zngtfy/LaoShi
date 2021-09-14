@@ -1,0 +1,17 @@
+
+*, ::after, ::before {
+    box-sizing: border-box;
+}
+.navbar.scrolling-navbar {
+    padding-top: 10px ;
+    padding-bottom: 10px;
+    transition: background .5s ease-in-out,padding .5s ease-in-out !important;
+}
+.navbar1 {
+    background-color: rgba(0,0,0,.5) !important;
+}
+.img-circle {
+    object-fit: cover;
+    width: 200px;
+    height: 200px;
+}

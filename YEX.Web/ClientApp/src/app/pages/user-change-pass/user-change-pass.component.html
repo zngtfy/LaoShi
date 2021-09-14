@@ -1,0 +1,32 @@
+<div class="card card-accent-info">
+    <div class="card-header">
+        <i class="fa fa-call-in fa-lg text-success"></i> Đổi mật khẩu
+    </div>
+    <div class="card-body">
+        <form #f="ngForm" (ngSubmit)="changePass(f.form.valid)">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="col-md-12 col-sm-12 col-xs-12 form-group">
+                        <label for="oldPassword">Mật khẩu cũ</label>
+                        <input class="form-control valid" id="oldPassword" maxlength="40" name="oldPassword" type="password"
+                            required="" placeholder="" aria-required="true" aria-invalid="false"
+                            [(ngModel)]="curUser.oldPassword">
+                    </div>
+                    <div class="col-md-12 col-sm-12 col-xs-12 form-group">
+                        <label for="newPassword">Mật khẩu mới</label>
+                        <input class="form-control" id="newPassword" maxlength="80" name="newPassword" type="password"
+                            placeholder="" aria-required="true" [(ngModel)]="curUser.newPassword">
+                    </div>
+                    <div class="col-md-12 col-sm-12 col-xs-12 form-group">
+                        <label for="confirmPassword">Xác nhận</label>
+                        <input class="form-control" id="confirmPassword" maxlength="80" name="confirmPassword"
+                            type="password" placeholder="" aria-required="true" [(ngModel)]="curUser.confirmPassword">
+                    </div>
+                    <div class="col-md-12 col-sm-12 col-xs-12 form-group"><br>
+                        <button id="btn_connect" type="submit" class="btn btn-primary">Cập nhật</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

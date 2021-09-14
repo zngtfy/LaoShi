@@ -1,0 +1,51 @@
+.my-form {
+    font-size: 15px;
+    width: 100%;
+    height: 100%;
+    border-radius: 7px;
+    background-color: #ffffff;
+}
+
+.form-create {
+    background: #999;
+    height: 60px;
+}
+
+.form-create h3 {
+    line-height: 60px; 
+}
+
+.content-form-create {
+    padding: 20px 40px 10px 40px;
+}
+
+.form-group {
+    padding-top: 15px;
+    padding-bottom: 15px;
+    background-color: white;
+    color: black;
+    font-size: 15px;
+}
+
+.form-sign-up {
+    background: #999;
+    height: 60px;
+}
+
+.form-sign-up h3 {
+    line-height: 60px;
+}
+
+.content-form-sign-up {
+    padding: 20px 40px 10px 40px;
+}
+
+.btn {
+    width: 200px;
+    height: 40px;
+    color: black;
+    border-radius: 7px;
+    background: #999;
+    border-radius: 7px;
+    box-shadow: 0px 3px 6px white;
+}

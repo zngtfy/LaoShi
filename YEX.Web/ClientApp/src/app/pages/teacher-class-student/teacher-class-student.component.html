@@ -1,0 +1,904 @@
+<div class="animated fadeIn">
+    <div class="card card-accent-primary">
+        <div class="card-body">
+            <div class="form-group row">
+                <label class="col-md-3 col-form-label" for="select1">
+                    <i class="icon-home text-primary"></i> Vui lòng chọn lớp / Khóa học
+                </label>
+                <div *ngIf="classes.length>0" class="col-md-9">
+                    <select [disabled]="show" id="select1" name="select1" class="form-control"
+                        (change)="changeClass($event)">
+                        <option value="">---- Please select ----</option>
+                        <option *ngFor="let c of classes; index as i;" value="{{i+1}}">{{c.classCode}} - {{c.className}}
+                            ({{c.schoolName}})</option>
+                    </select>
+                    <hr *ngIf="curClass!=null" />
+                    <div *ngIf="curClass!=null" class="row">
+                        <div class="col-sm-6 col-md-6">
+                            {{curClass.className}} <br />
+                            <div class="small text-muted">
+                                <i class="fa fa-check-square-o text-info"></i> {{curClass.classCode}} <br />
+                                <i class="fa fa-check-square-o text-info"></i> {{curClass.classDesc}} <br />
+                                <i class="fa fa-check-square-o text-info"></i> {{formatDate(curClass.startDate)}} -
+                                {{formatDate(curClass.endDate)}} <br />
+                                <i class="fa fa-check-square-o text-info"></i> {{curClass.venue}} <br />
+                                <i class="fa fa-check-square-o text-info"></i> Học kỳ {{curClass.semester}}, năm học:
+                                {{curClass.schoolYear}}
+                            </div>
+                        </div>
+                        <div class="col-sm-6 col-md-6">
+                            <img src="{{curClass.logoUrl}}" height="45px" /><br />
+                            {{curClass.schoolName}} <br />
+                            {{curClass.department}}
+                            <div class="small text-muted">
+                                <i class="fa fa-check-square-o text-secondary"></i> {{curClass.subjectCode}} -
+                                {{curClass.subjectName}}<br />
+                                <i class="fa fa-check-square-o text-secondary"></i> Số tín chỉ:
+                                {{curClass.totalCredit}} ({{curClass.theoryCredit}} LT, {{curClass.practiceCredit}}
+                                TH)<br />
+                                <i class="fa fa-check-square-o text-secondary"></i> {{curClass.schoolAddress}}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div *ngIf="curClass!=null" class="card-footer">
+            <div class="pull-right">
+                <button [ngStyle]="selectStyleBtn" type="button" class="btn btn-primary" (click)="selectClass()">
+                    <i class="icon-check"></i> Chọn
+                </button>
+                <button style="margin-left: 10px;" type="reset" class="btn btn-danger" (click)="unSelectClass()">
+                    <i class="fa fa-ban"></i> Reset
+                </button>
+            </div>
+            <div class="clearfix"></div>
+        </div>
+    </div>
+</div>
+<div *ngIf="curClass!=null  && show" class="animated fadeOut">
+    <div class="card border-success">
+        <div class="card-header">
+            <i class="fa fa-users text-danger"></i>
+            Danh sách Sinh viên / học viên của lớp!
+            <br /><br />
+            <div class="row">
+                <div class="col-md-10">
+                    <input type="text" [(ngModel)]="keyword" class="form-control" id="keyword"
+                        placeholder="Nhập từ khóa cần tìm ...">
+                </div>
+                <div class="col-md-2">
+                    <button type="button" class="btn btn-pill btn-outline-primary" (click)="getTeacherClassStudent(1)">
+                        <i class="fa fa-search"></i> Tìm
+                    </button>
+                </div>
+            </div>
+            <div *ngIf="clickSearch" class="row">
+                <div class="col-md-12">
+                    <p *ngIf="students.totalRecords==0" class="text-danger">Tìm không thấy sinh viên nào thỏa !</p>
+                    <p *ngIf="students.totalRecords>0" class="text-primary">Tìm thấy
+                        <strong>[{{students.totalRecords}}]</strong> sinh viên !</p>
+                </div>
+            </div>
+        </div>
+        <div *ngIf="students.totalRecords>0" class="card-body">
+            <table class="table table-sm table-bordered">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>MSSV</th>
+                        <th>Họ Tên</th>
+                        <th>Ngày sinh</th>
+                        <th>Vai trò</th>
+                        <th>Điểm Final</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let item of students.data; index as i;">
+                        <td>{{getSTT(i)}}</td>
+                        <td>{{item.officialStudentId}}</td>
+                        <td>
+                            <ng-template #popTemplateHtml>
+                                <div>
+                                    <img src="{{item.avatar}}" height="80px" />
+                                    <br /><i class="fa fa-check-square-o text-info"></i> Họ tên: {{item.fullname}}
+                                    <br /><i class="fa fa-check-square-o text-info"></i> MSSV:
+                                    {{item.officialStudentId}}
+                                    <br /><i class="fa fa-check-square-o text-info"></i> Ngày sinh:
+                                    {{formatDate(item.birthday)}}
+                                    <br /><i class="fa fa-check-square-o text-info"></i> Trường: {{item.schoolName}}
+                                    <br /><i class="fa fa-check-square-o text-info"></i> Lớp: {{item.className}}
+                                    <br /><i class="fa fa-check-square-o text-info"></i> {{item.courseName}}
+                                </div>
+                            </ng-template>
+                            <button type="button" class="btn btn-default btn-light btn-sm" [popover]="popTemplateHtml"
+                                popoverTitle="{{item.fullname}}" placement="top">
+                                {{item.fullname}}
+                            </button>
+                        </td>
+                        <td>{{formatDate(item.birthday)}}</td>
+                        <td>
+                            <span class="badge badge-light">{{item.studentRole}}</span>
+                        </td>
+                        <td>
+                            <p *ngIf="item.finalScore==null" class="small text-muted">Chưa có điểm !</p>
+                            <span *ngIf="item.finalScore > 5"
+                                class="badge badge-pill badge-success">{{item.finalScore}}</span>
+                            <span *ngIf="item.finalScore < 5"
+                                class="badge badge-pill badge-danger">{{item.finalScore}}</span>
+                        </td>
+                        <td>
+                            <button (click)="deleteStudent(i,item.id)" type="button"
+                                popover="Xóa sinh viên [{{item.fullname}}] khỏi lớp !" triggers="mouseenter:mouseleave"
+                                class="btn btn-sm btn-outline-danger">
+                                <i class="fa fa-times"></i>
+                            </button>
+                            <button (click)="openEditModal(i)" style="margin-left: 5px;" type="button"
+                                popover="Chỉnh sửa thông tin sinh viên [{{item.fullname}}] !"
+                                triggers="mouseenter:mouseleave" class="btn btn-sm btn-outline-info">
+                                <i class="fa fa-edit"></i>
+                            </button>
+                            <button (click)="openScoreModal(i)" style="margin-left: 5px;" type="button"
+                                popover="Xem điểm thành phần của sinh viên [{{item.fullname}}] !"
+                                triggers="mouseenter:mouseleave" class="btn btn-sm btn-outline-primary">
+                                <i class="fa fa-info"></i>
+                            </button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <div *ngIf="students.totalPages>1" class="col-xs-12 col-12">
+                <pagination [totalItems]="students.totalRecords" [(ngModel)]="students.page"
+                    (pageChanged)="pageChanged($event)" [itemsPerPage]="students.size" [maxSize]="3"
+                    previousText="&lsaquo;" nextText="&rsaquo;" firstText="&laquo;" lastText="&raquo;">
+                </pagination>
+                <pre
+                    class="card card-body card-header mb-3">Bạn đang ở trang: {{students.page}}/{{students.totalPages}}</pre>
+            </div>
+        </div>
+        <div class="card-footer">
+            <div class="pull-right">
+                <button *ngIf="students.totalRecords>0" type="button" class="btn  btn-primary"
+                    (click)="downloadStudentList()">
+                    <i class="fa fa-download"></i> Tải danh sách
+                </button>
+                <button *ngIf="students.totalRecords>0" style="margin-left: 5px;" type="button"
+                    class="btn btn-secondary" (click)="calculateStudentScore()">
+                    <i class="fa fa-hourglass-half"></i> Tổng kết điểm
+                </button>
+                <button style="margin-left: 5px;" type="button" class="btn btn-success" (click)="openCreateModal()">
+                    <i class="icon icon-user-follow"></i> Thêm sinh viên
+                </button>
+                <button *ngIf="students.totalRecords>0" style="margin-left: 5px;" type="button" class="btn btn-warning"
+                    (click)="openReportModal()">
+                    <i class="icon icon-chart"></i> Báo cáo
+                </button>
+                <button style="margin-left: 5px;" type="button" class="btn btn-danger" (click)="openUploadModal()">
+                    <i class="icon icon-cloud-upload"></i> Upload DSSV
+                </button>
+                <button *ngIf="students.totalRecords>0" style="margin-left: 5px;" type="button" class="btn btn-info"
+                    (click)="activateStudentAccount()">
+                    <i class="icon icon-spaceship"></i> Kích hoạt tài khoản SV
+                </button>
+                <button *ngIf="false" style="margin-left: 5px;" type="button" class="btn btn-dark"
+                    (click)="testSendEmail()">
+                    test send mail
+                </button>
+            </div>
+            <div class="clearfix"></div>
+        </div>
+    </div>
+</div>
+
+<ng-template #confirmModal>
+    <div class="modal-body text-center">
+        <p innerHTML="{{confirmContent.msg}}"></p>
+        <button type="button" class="btn btn-default" (click)="confirm()">Yes</button>
+        <button type="button" class="btn btn-primary" (click)="decline()">No</button>
+    </div>
+</ng-template>
+
+<div bsModal #editModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-primary" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 *ngIf="editingItem.id>0" class="modal-title">
+                    <i class="fa fa-edit"></i> Chỉnh sửa thông tin Sinh viên [{{editingItem.id}}] -
+                    [{{editingItem.fullname}}]
+                </h5>
+                <button type="button" class="close" (click)="editModal.hide()" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <tabset>
+                    <tab>
+                        <ng-template tabHeading>
+                            <i class="icon-list"></i> Thông tin sinh viên &nbsp;
+                        </ng-template>
+                        <div class="row">
+                            <div *ngIf="editStudent.classStudent!=null" class="form-group col-sm-4">
+                                <label for="studentRole">Vai trò </label>
+                                <select [(ngModel)]="editStudent.classStudent.studentRole" class="form-control"
+                                    id="studentRole">
+                                    <option value="Thành viên">Thành viên</option>
+                                    <option value="Lớp trưởng">Lớp trưởng</option>
+                                    <option value="Lớp phó">Lớp phó</option>
+                                </select>
+                            </div>
+                            <div *ngIf="editStudent.student!=null" class="form-group col-sm-4">
+                                <label for="birthday">Ngày sinh </label>
+                                <input [ngModel]="editStudent.student.birthday | date:'yyyy-MM-dd'"
+                                    (ngModelChange)="editStudent.student.birthday = dateChanged($event)"
+                                    class="form-control" id="birthday" type="date" name="birthday" />
+                            </div>
+                            <div *ngIf="editStudent.student!=null" class="form-group col-sm-4">
+                                <label for="gender">Giới tính </label>
+                                <select [(ngModel)]="editStudent.student.gender" class="form-control" id="gender">
+                                    <option [value]="true">Nữ</option>
+                                    <option [value]="false">Nam</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div *ngIf="editStudent.student!=null" class="row">
+                            <div class="form-group col-sm-4">
+                                <label for="studentType">Nhóm sinh viên </label>
+                                <select [(ngModel)]="editStudent.student.studentType" class="form-control"
+                                    id="studentType">
+                                    <option value="Under-Student">Sinh viên đại học</option>
+                                    <option value="Grad-Student">Học viên SĐH</option>
+                                </select>
+                            </div>
+                            <div class="form-group col-sm-8">
+                                <label for="note">Thông tin: </label>
+                                <input [(ngModel)]="editStudent.student.note" type="text" id="note" name="note"
+                                    class="form-control" />
+                            </div>
+                        </div>
+                        <div *ngIf="editStudent.student!=null" class="row">
+                            <div class="form-group col-sm-6">
+                                <label for="officialStudentId">MSSV / MSHV </label>
+                                <input [(ngModel)]="editStudent.student.officialStudentId" (blur)="checkMSSVEdit()"
+                                    type="text" id="officialStudentId" name="officialStudentId" class="form-control" />
+                                <span *ngIf="errE.mssv!=''" class="small text-danger"
+                                    style="margin-left: 5px;">{{errE.mssv}}</span>
+                            </div>
+                            <div class="form-group col-sm-6">
+                                <label for="className">Lớp </label>
+                                <input [(ngModel)]="editStudent.student.class" type="text" id="className"
+                                    name="className" class="form-control" />
+                            </div>
+                        </div>
+                        <div *ngIf="editStudent.student!=null" class="row">
+                            <div class="form-group col-sm-6">
+                                <label for="courseName">Khóa học </label>
+                                <input [(ngModel)]="editStudent.student.courseName" type="text" id="courseName"
+                                    name="courseName" class="form-control" />
+                            </div>
+                            <div class="form-group col-sm-6">
+                                <label for="school">Trường </label>
+                                <input type="text" disabled value="{{schoolName}}" id="schoolName" name="schoolName"
+                                    class="form-control" />
+                            </div>
+                        </div>
+                    </tab>
+                    <tab>
+                        <ng-template tabHeading>
+                            <i class="icon-user"></i> Thông tin người dùng &nbsp;
+                        </ng-template>
+                        <div *ngIf="editStudent.user!=null" class="row">
+                            <div class="col-sm-2">
+                                <img src="{{editStudent.user.avatar}}" class="img-center" height="60px" />
+                            </div>
+                            <div class="form-group col-sm-3">
+                                <label for="userName">Tên đăng nhập </label>
+                                <input disabled [(ngModel)]="editStudent.user.userName" type="text" id="userName"
+                                    name="userName" class="form-control" />
+                                <span *ngIf="errE.username!=''" class="small text-danger"
+                                    style="margin-left: 5px;">{{errE.username}}</span>
+                            </div>
+                            <div class="form-group col-sm-4">
+                                <label for="lastName">Họ </label>
+                                <input [(ngModel)]="editStudent.user.lastName" type="text" id="lastName" name="lastName"
+                                    class="form-control" />
+                            </div>
+                            <div class="form-group col-sm-3">
+                                <label for="lastName">Tên </label>
+                                <input [(ngModel)]="editStudent.user.firstName" type="text" id="firstName"
+                                    name="firstName" class="form-control" />
+                            </div>
+                        </div>
+                        <div *ngIf="editStudent.user!=null" class="row">
+                            <div class="form-group col-sm-6">
+                                <label for="email">Địa chỉ Email </label>
+                                <input [(ngModel)]="editStudent.user.email" type="text" (blur)="checkEmailEdit()"
+                                    id="email" name="email" class="form-control" />
+                                <span *ngIf="errE.email!=''" class="small text-danger"
+                                    style="margin-left: 5px;">{{errE.email}}</span>
+                            </div>
+                            <div class="form-group col-sm-6">
+                                <label for="phone">Số ĐT </label>
+                                <input [(ngModel)]="editStudent.user.phone" type="text" id="phone" name="phone"
+                                    class="form-control" />
+                            </div>
+                        </div>
+                        <div *ngIf="editStudent.user!=null" class="row">
+                            <div class="form-group col-sm-12">
+                                <label for="address">Địa chỉ liên lạc </label>
+                                <input [(ngModel)]="editStudent.user.address" type="text" id="address" name="address"
+                                    class="form-control" />
+                            </div>
+                        </div>
+                    </tab>
+                </tabset>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" (click)="editModal.hide()">Đóng</button>
+                <button type="button" class="btn btn-primary" (click)="saveStudentInfo()">Lưu</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<div bsModal #uploadModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-warning" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    <i class="fa fa-upload"></i> Tải file lên để cập nhật thông tin sinh viên
+                </h5>
+                <button type="button" class="close" (click)="uploadModal.hide()" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group row">
+                    <div class="col-md-4">
+                        <div #popTemplateHtml>Lưu ý:
+                            <div class="text-muted small">
+                                <br /> <i class="fa fa-check text-primary"></i> Phải nhập đầy đủ các trường dữ liệu
+                                <br /> <i class="fa fa-check text-primary"></i> Giới tính [Gender] : Nam là False, Nữ là
+                                True
+                                <br /> <i class="fa fa-check text-primary"></i> [studentRole] : chỉ được 1 trong 3
+                                [Thành viên], [Lớp trưởng], [Lớp phó]
+                                <br /> <i class="fa fa-check text-primary"></i> [birthday] : Theo đúng quy ước
+                                [yyyy-MM-DD]
+                                <br /> <i class="fa fa-check text-primary"></i> [studentType] : chỉ được 1 trong 2
+                                [Grad-Student], [Under-Student]
+                                <br /> <i class="fa fa-check text-primary"></i> [email], [phone], [MSSV] : phải đảm bảo
+                                đúng định dạng
+                                <br /> <i class="fa fa-check text-primary"></i> [classId], [schoolId] : không thay đổi,
+                                lấy theo file template
+                            </div>
+                        </div>
+                        <br />
+                        <a href="javascript:void(0);" (click)="exportAsXLSX()">
+                            Download Template
+                        </a>
+                    </div>
+                    <div class="col-md-8">
+                        <label class="form-label" for="fileStudentList">Tải lên danh sách sinh viên</label><br />
+                        <input type="file" id="fileStudentList" name="fileStudentList" (change)="onFileChange($event)"
+                            [multiple]="false" />
+                        <div class="small">
+                            <p class="text-danger" [innerHTML]="checkUploadMessage"></p>
+                        </div>
+                    </div>
+                </div>
+                <table *ngIf="listStudentUpload.length>0" class="table table-bordered table-sm">
+                    <tr *ngFor="let s of listStudentUpload; index as i" class="small">
+                        <td class="small">{{i+1}}</td>
+                        <td class="small">{{s.lastName}} {{s.firstName}}</td>
+                        <td class="small">{{s.officialStudentId}}</td>
+                        <td class="small">{{formatDate(s.birthday)}}</td>
+                        <td class="small">{{s.studentType}}</td>
+                        <td class="small">{{s.studentRole}}</td>
+                        <td class="small">{{s.email}}</td>
+                        <td class="small">{{s.phone}}</td>
+                        <td class="small">{{s.address}}</td>
+                    </tr>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" (click)="uploadModal.hide()">Đóng</button>
+                <button *ngIf="listStudentUpload.length>0" type="button" class="btn btn-success"
+                    (click)="uploadStudentList()">Tải lên</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<div bsModal #socreModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-danger" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    <i class="fa fa-info-circle"></i> Thông tin điểm số của sinh viên [{{editingItem.fullname}}]
+                </h5>
+                <button type="button" class="close" (click)="socreModal.hide()" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div *ngIf="editingItem!=null && curClass != null" class="modal-body">
+                <p> <i class="fa fa-user-circle text-primary"></i> Thông tin sinh viên</p>
+                <div class="bd-example">
+                    <div class="row">
+                        <div class="col-sm-3">
+                            <img style="margin-left: 10px;" src="{{editingItem.avatar}}" height="90px" />
+                        </div>
+                        <div class="col-sm-5">
+                            <dl class="row">
+                                <dt class="col-sm-5">Họ Tên</dt>
+                                <dd class="col-sm-7">{{editingItem.fullname}}</dd>
+                                <dt class="col-sm-5">Ngày sinh</dt>
+                                <dd class="col-sm-7">{{formatDate(editingItem.birthday)}}</dd>
+                            </dl>
+                        </div>
+                        <div class="col-sm-4">
+                            <p class="small">
+                                <i class="fa fa-check-square-o text-success"></i> MSSV:
+                                {{editingItem.officialStudentId}},
+                                <br /><i class="fa fa-check-square-o text-success"></i> Nhóm: {{curClass.classCode}}
+                                <br /><i class="fa fa-check-square-o text-success"></i> {{editingItem.courseName}}
+                                <br /><i class="fa fa-check-square-o text-success"></i> {{editingItem.schoolName}}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <table class="table table-bordered table-striped table-sm">
+                    <thead>
+                        <tr>
+                            <th style="width:25px">#</th>
+                            <th>Điểm thành phần</th>
+                            <th colspan="2">Loại</th>
+                            <th>Tỷ lệ</th>
+                            <th>Điểm</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody *ngIf="studentScore.length > 0">
+                        <tr *ngFor="let item of studentScore; index as i;">
+                            <td>{{i+1}}</td>
+                            <td>
+                                {{item.description}} <br />
+                                {{item.assignmentName}}
+                            </td>
+                            <td>
+                                <span *ngIf="item.assignmentGroupNo == 1" class="badge badge-primary">Cá nhân</span>
+                                <span *ngIf="item.assignmentGroupNo > 1" class="badge badge-success">Nhóm</span>
+                            </td>
+                            <td>
+                                <span *ngIf="item.scoreType == 'QuaTrinh'" class="badge badge-warning">Quá trình</span>
+                                <span *ngIf="item.scoreType == 'CuoiKy'" class="badge badge-danger">Cuối kỳ</span>
+                            </td>
+                            <td class="text-right">
+                                {{item.percentage}}%
+                            </td>
+                            <td class="text-right">
+                                <span *ngIf="item.score == null">-</span>
+                                <span *ngIf="item.score != null">{{item.score}}</span>
+                            </td>
+                            <td>
+                                <small *ngIf="item.score == null">Chưa có điểm</small>
+                                <small *ngIf="item.score != null && item.score >= 5">
+                                    <i class="fa fa-check-square-o text-primary"></i> Đạt
+                                </small>
+                                <small *ngIf="item.score != null && item.score < 5">
+                                    <i class="fa fa-frown-o text-danger"></i> Chưa đạt
+                                </small>
+                            </td>
+                        </tr>
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <th colspan="4" class="text-right">Tổng cộng</th>
+                            <th class="text-right">{{result.totPer}}%</th>
+                            <th class="text-right">{{result.avgScore}}</th>
+                            <td>
+                                <small *ngIf="result.isFull == false">Chưa có kết quả</small>
+                                <small *ngIf="result.isFull && result.avgScore >= 5">
+                                    <i class="fa fa-check-square-o text-primary"></i> Đạt
+                                </small>
+                                <small *ngIf="result.isFull && result.avgScore < 5">
+                                    <i class="fa fa-frown-o text-danger"></i> Chưa đạt
+                                </small>
+                            </td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" (click)="socreModal.hide()">Đóng</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<div bsModal #createModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-success" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    <i class="fa fa-plus"></i> Thêm mới sinh viên cho lớp
+                </h5>
+                <button type="button" class="close" (click)="createModal.hide()" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div *ngIf="newStudent.student!=null" class="card card-accent-danger">
+                    <div class="card-header">
+                        <i class="icon-user-follow text-success"></i> Thông tin sinh viên &nbsp;
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div *ngIf="newStudent.classStudent!=null" class="form-group col-sm-4">
+                                <label for="studentRole1">Vai trò </label>
+                                <select [(ngModel)]="newStudent.classStudent.studentRole" class="form-control"
+                                    id="studentRole1">
+                                    <option value="Thành viên">Thành viên</option>
+                                    <option value="Lớp trưởng">Lớp trưởng</option>
+                                    <option value="Lớp phó">Lớp phó</option>
+                                </select>
+                            </div>
+                            <div class="form-group col-sm-4">
+                                <label for="officialStudentId1">MSSV / MSHV </label>
+                                <input [(ngModel)]="newStudent.student.officialStudentId" (blur)="checkMSSVCreate()"
+                                    type="text" id="officialStudentId1" name="officialStudentId1"
+                                    class="form-control" />
+                                <span *ngIf="errC.mssv!=''" class="small text-danger"
+                                    style="margin-left: 5px;">{{errC.mssv}}</span>
+                            </div>
+                            <div class="form-group col-sm-4">
+                                <button *ngIf="foundStudent.student!=null" type="button"
+                                    class="btn btn-sm btn-outline-success" (click)="refreshFoundStudent()">
+                                    <i class="fa fa-refresh"></i> Xóa data tìm thấy
+                                </button>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div *ngIf="newStudent.student!=null" class="form-group col-sm-3">
+                                <label for="birthday1">Ngày sinh </label>
+                                <input [ngModel]="newStudent.student.birthday | date:'yyyy-MM-dd'"
+                                    (ngModelChange)="newStudent.student.birthday = dateChanged($event)"
+                                    class="form-control" id="birthday1" type="date" name="birthday1" />
+                            </div>
+                            <div *ngIf="newStudent.student!=null" class="form-group col-sm-3">
+                                <label for="gender1">Giới tính </label>
+                                <select [(ngModel)]="newStudent.student.gender" class="form-control" id="gender1">
+                                    <option [value]="true">Nữ</option>
+                                    <option [value]="false">Nam</option>
+                                </select>
+                            </div>
+                            <div class="form-group col-sm-6">
+                                <label for="courseName1">Khóa học </label>
+                                <input [(ngModel)]="newStudent.student.courseName" type="text" id="courseName1"
+                                    name="courseName1" class="form-control" />
+                            </div>
+                        </div>
+                        <div *ngIf="newStudent.student!=null" class="row">
+                            <div class="form-group col-sm-7">
+                                <label for="note1">Thông tin thêm: </label>
+                                <input [(ngModel)]="newStudent.student.note" type="text" id="note1" name="note1"
+                                    class="form-control" />
+                            </div>
+                            <div class="form-group col-sm-5">
+                                <label for="school">Trường </label>
+                                <input type="text" disabled value="{{schoolName}}" id="schoolName1" name="schoolName1"
+                                    class="form-control" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div *ngIf="newStudent.user!=null" class="card card-accent-warning">
+                    <div class="card-header">
+                        <i class="fa fa-user text-danger"></i> Thông tin người dùng &nbsp;
+                    </div>
+                    <div class="card-body">
+                        <div *ngIf="newStudent.user!=null" class="row">
+                            <div class="col-sm-2">
+                                <img src="{{newStudent.user.avatar}}" class="img-center" height="60px" />
+                            </div>
+                            <div class="form-group col-sm-3">
+                                <label for="userName1">Tên đăng nhập </label>
+                                <input disabled [(ngModel)]="newStudent.user.userName" type="text" id="userName1"
+                                    name="userName1" class="form-control" />
+                                <span *ngIf="errC.username!=''" class="small text-danger"
+                                    style="margin-left: 5px;">{{errC.username}}</span>
+                            </div>
+                            <div class="form-group col-sm-4">
+                                <label for="lastName1">Họ </label>
+                                <input [(ngModel)]="newStudent.user.lastName" type="text" id="lastName1"
+                                    name="lastName1" class="form-control" />
+                            </div>
+                            <div class="form-group col-sm-3">
+                                <label for="lastName1">Tên </label>
+                                <input [(ngModel)]="newStudent.user.firstName" type="text" id="firstName1"
+                                    name="firstName1" class="form-control" />
+                            </div>
+                        </div>
+                        <div *ngIf="newStudent.user!=null" class="row">
+                            <div class="form-group col-sm-6">
+                                <label for="email1">Địa chỉ Email </label>
+                                <input [(ngModel)]="newStudent.user.email" type="text" (blur)="checkEmailCreate()"
+                                    id="email1" name="email1" class="form-control" />
+                                <span *ngIf="errC.email!=''" class="small text-danger"
+                                    style="margin-left: 5px;">{{errC.email}}</span>
+                            </div>
+                            <div class="form-group col-sm-6">
+                                <label for="phone1">Số ĐT </label>
+                                <input [(ngModel)]="newStudent.user.phone" type="text" id="phone1" name="phone1"
+                                    class="form-control" />
+                            </div>
+                        </div>
+                        <div *ngIf="newStudent.user!=null" class="row">
+                            <div class="form-group col-sm-12">
+                                <label for="address1">Địa chỉ liên lạc </label>
+                                <input [(ngModel)]="newStudent.user.address" type="text" id="address1" name="address1"
+                                    class="form-control" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" (click)="createModal.hide()">Đóng</button>
+                <button type="button" class="btn btn-success" (click)="createStudentForClass()">Thêm mới</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<div bsModal #reportModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-warning" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    <i class="fa fa-pie-chart"></i> Báo cáo điểm số lớp
+                </h5>
+                <button type="button" class="close" (click)="reportModal.hide()" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div *ngIf="curClass!=null" class="modal-body">
+                <div class="form-group row">
+                    <label class="col-md-2 col-form-label" for="selScore">Chọn điểm</label>
+                    <div class="col-md-6">
+                        <select [disabled]="queryScore" [(ngModel)]="selScore" id="selScore" name="selScore" class="form-control">
+                            <option [value]="null">----- Please select ------ </option>
+                            <option *ngFor="let sc of rptSC;" [value]="sc.id">{{getScoreType(sc.scoreType)}} - [{{sc.percentage}}%] - {{sc.description}}</option>
+                            <option [value]="0">Điểm tổng kết môn (Final Score) </option>
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <button *ngIf="!queryScore" type="button" class="btn btn-primary" (click)="queryScoreReport()">
+                            <i class="fa fa-dot-circle-o"></i> Tra cứu
+                        </button>
+                        <button type="reset" class="btn btn-danger" style="margin-left: 5px;" (click)="resetScoreReport()">
+                            <i class="fa fa-ban"></i> Reset
+                        </button>
+                    </div>
+                </div>
+                <div id="MyDiv" *ngIf="queryScore">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <p class="text-center">
+                                <span class="font-2xl text-dark">THỐNG KÊ ĐIỂM SỐ</span>
+                                <br/>{{scoreConfigStr}}
+                                <br/><span class="text-primary">{{curClass.classCode}} - {{curClass.className}}</span>
+                            </p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-7">
+                            <h5>Thống kê chi tiết điểm số</h5>
+                            <table class="table table-sm table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Mô tả</th>
+                                        <th>SL</th>
+                                        <th>Tỷ lệ</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>1</td>
+                                        <td>
+                                            <p class="small">
+                                                Không tham gia thi / làm bài/ nộp bài
+                                            </p>
+                                        </td>
+                                        <td>
+                                            {{rpt.notScored}}
+                                        </td>
+                                        <td>
+                                            {{getPercentage(rpt.notScored)}}
+                                        </td>
+                                        <td>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>2</td>
+                                        <td>
+                                            <p class="small">
+                                                Từ 0 điểm --> nhỏ hơn 5 điểm
+                                            </p>
+                                        </td>
+                                        <td>
+                                            {{rpt.zeroFiveScored}}
+                                        </td>
+                                        <td>
+                                            {{getPercentage(rpt.zeroFiveScored)}}
+                                        </td>
+                                        <td>
+                                            <span class="badge badge-danger">Yếu</span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>3</td>
+                                        <td>
+                                            <p class="small">
+                                                Từ 5 điểm --> nhỏ hơn 7 điểm
+                                            </p>
+                                        </td>
+                                        <td>
+                                            {{rpt.fiveSevenScored}}
+                                        </td>
+                                        <td>
+                                            {{getPercentage(rpt.fiveSevenScored)}}
+                                        </td>
+                                        <td>
+                                            <span class="badge badge-warning">Trung bình khá</span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>4</td>
+                                        <td>
+                                            <p class="small">
+                                                Từ 7 điểm --> nhỏ hơn 8 điểm
+                                            </p>
+                                        </td>
+                                        <td>
+                                            {{rpt.sevenEightScored}}
+                                        </td>
+                                        <td>
+                                            {{getPercentage(rpt.sevenEightScored)}}
+                                        </td>
+                                        <td>
+                                            <span class="badge badge-success">Khá</span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>5</td>
+                                        <td>
+                                            <p class="small">
+                                                Từ 8 điểm --> nhỏ hơn 9 điểm
+                                            </p>
+                                        </td>
+                                        <td>
+                                            {{rpt.eightNineScored}}
+                                        </td>
+                                        <td>
+                                            {{getPercentage(rpt.eightNineScored)}}
+                                        </td>
+                                        <td>
+                                            <span class="badge badge-primary">Giỏi</span>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>5</td>
+                                        <td>
+                                            <p class="small">
+                                                Từ 9 điểm --> 10 điểm
+                                            </p>
+                                        </td>
+                                        <td>
+                                            {{rpt.nineTenScored}}
+                                        </td>
+                                        <td>
+                                            {{getPercentage(rpt.nineTenScored)}}
+                                        </td>
+                                        <td>
+                                            <span class="badge badge-primary">Xuất sắc</span>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                                <tfoot>
+                                    <tr>
+                                        <th colspan="2">Tổng cộng</th>
+                                        <th>{{rpt.totalStudent}}</th>
+                                        <th>100%</th>
+                                        <th></th>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                        <div class="col-md-5">
+                            <h5>Thống kê tổng hợp</h5>
+                            <table class="table table-sm table-bordered table-striped">
+                                <tr>
+                                    <th>
+                                        Điểm cao nhất:
+                                    </th>
+                                    <td>
+                                        {{rpt.maxScored}}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>
+                                        Điểm thấp nhất:
+                                    </th>
+                                    <td>
+                                        {{rpt.minScored}}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>
+                                        Điểm Trung bình:
+                                    </th>
+                                    <td>
+                                        <span *ngIf="rpt.avgScored>0">{{rpt.avgScored}}</span>
+                                    </td>
+                                </tr>
+                            </table>
+                            <table class="table table-sm table-bordered table-striped" style="margin-top: 5px;">
+                                <tr>
+                                    <th>
+                                        Tỷ lệ đậu (>=5.0):
+                                    </th>
+                                    <td>
+                                        {{rpt.passed}}%
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>
+                                        Tỷ lệ rớt (< 5.0): </th>
+                                    <td>
+                                        {{rpt.unpassed}}%
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                    <hr />
+                    <div>
+                        <google-chart
+                            [title]="rpt.histChart.title" [type]="rpt.histChart.type" 
+                            [data]="rpt.histChart.data" [columnNames]="rpt.histChart.columnNames"
+                            [options]="rpt.histChart.options"
+                            width="600" height="400" >
+                        </google-chart>
+                    </div>
+                    <hr />
+                    <div>
+                        <google-chart 
+                            [title]="rpt.pieChart.title" [type]="rpt.pieChart.type" 
+                            [data]="rpt.pieChart.data" [columnNames]="rpt.pieChart.columnNames"
+                            [options]="rpt.pieChart.options" 
+                            width="700" height="400">
+                        </google-chart>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" (click)="reportModal.hide()">
+                    <i class="fa fa-sign-out"></i> Đóng
+                </button>
+                <button type="button" class="btn btn-primary">
+                    <i class="fa fa-file-excel-o"></i> Xuất Excel
+                </button>
+                <button type="button" class="btn btn-success" (click)="captureScreen()">
+                    <i class="fa fa-file-pdf-o"></i> Xuất PDF
+                </button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->

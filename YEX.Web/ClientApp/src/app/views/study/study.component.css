@@ -1,0 +1,15 @@
+.bg {
+    background: url(../../../assets/img/science1.jpg);
+    background-position: center;
+    background-size: cover;
+}
+.schoolLogo1 {
+    max-height: 60px;
+}
+.divDes {
+    font-size: 0.75em;
+}
+.public-list
+{
+    overflow-x: scroll !important;
+}

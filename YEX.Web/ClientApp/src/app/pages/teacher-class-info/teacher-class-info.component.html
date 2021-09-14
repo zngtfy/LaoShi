@@ -1,0 +1,479 @@
+<div class="animated fadeIn">
+    <div class="card card-accent-primary">
+        <div class="card-body">
+            <div class="form-group row">
+                <label class="col-md-3 col-form-label" for="select1">
+                    <i class="icon-home text-primary"></i> Vui lòng chọn lớp / Khóa học
+                </label>
+                <div *ngIf="classes.length>0" class="col-md-9">
+                    <select [disabled]="show" id="select1" name="select1" class="form-control"
+                        (change)="changeClass($event)">
+                        <option value="">---- Please select ----</option>
+                        <option *ngFor="let c of classes; index as i;" value="{{i+1}}">{{c.classCode}} - {{c.className}}
+                            ({{c.schoolName}})</option>
+                    </select>
+                    <hr *ngIf="curClass!=null" />
+                    <div *ngIf="curClass!=null" class="row">
+                        <div class="col-sm-6 col-md-6">
+                            {{curClass.className}} <br />
+                            <div class="small text-muted">
+                                <i class="fa fa-check-square-o text-info"></i> {{curClass.classCode}} <br />
+                                <i class="fa fa-check-square-o text-info"></i> {{curClass.classDesc}} <br />
+                                <i class="fa fa-check-square-o text-info"></i> {{formatDate(curClass.startDate)}} -
+                                {{formatDate(curClass.endDate)}} <br />
+                                <i class="fa fa-check-square-o text-info"></i> {{curClass.venue}} <br />
+                                <i class="fa fa-check-square-o text-info"></i> Học kỳ {{curClass.semester}}, năm học:
+                                {{curClass.schoolYear}}
+                            </div>
+                        </div>
+                        <div class="col-sm-6 col-md-6">
+                            <img src="{{curClass.logoUrl}}" height="45px" /><br />
+                            {{curClass.schoolName}} <br />
+                            {{curClass.department}}
+                            <div class="small text-muted">
+                                <i class="fa fa-check-square-o text-secondary"></i> {{curClass.subjectCode}} -
+                                {{curClass.subjectName}}<br />
+                                <i class="fa fa-check-square-o text-secondary"></i> Số tín chỉ:
+                                {{curClass.totalCredit}} ({{curClass.theoryCredit}} LT, {{curClass.practiceCredit}}
+                                TH)<br />
+                                <i class="fa fa-check-square-o text-secondary"></i> {{curClass.schoolAddress}}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div *ngIf="curClass!=null" class="card-footer">
+            <div class="pull-right">
+                <button [ngStyle]="selectStyleBtn" type="button" class="btn btn-primary" (click)="selectClass()">
+                    <i class="icon-check"></i> Chọn
+                </button>
+                <button style="margin-left: 10px;" type="reset" class="btn btn-danger" (click)="unSelectClass()">
+                    <i class="fa fa-ban"></i> Reset
+                </button>
+            </div>
+            <div class="clearfix"></div>
+        </div>
+    </div>
+</div>
+<div *ngIf="curClass!=null  && show" class="animated fadeOut">
+    <div class="row">
+        <div class="col-sm-12 col-lg-12">
+            <tabset>
+                <tab>
+                    <ng-template tabHeading>
+                        <i class="fa fa-bank text-primary"></i>
+                        Thông tin lớp / khóa học
+                        <small>[{{curClass.className}}] </small>
+                        <span class="badge badge-success">ID#{{curClass.classId}}</span>
+                    </ng-template>
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <div class="form-group">
+                                <label for="classCode">Mã lớp</label>
+                                <input [(ngModel)]="editingClass.code" type="text" class="form-control" id="classCode"
+                                    placeholder="Nhập mã lớp / mã nhóm ...">
+                            </div>
+                        </div>
+                        <div class="col-sm-8">
+                            <div class="form-group">
+                                <label for="className">Tên lớp</label>
+                                <input [(ngModel)]="editingClass.name" type="text" class="form-control" id="className"
+                                    placeholder="Nhập tên lớp ...">
+                            </div>
+                        </div>
+                    </div>
+                    <!--/.row-->
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="form-group">
+                                <label for="classVenue">Địa điểm tổ chức lớp học</label>
+                                <input [(ngModel)]="editingClass.venue" type="text" class="form-control" id="classVenue"
+                                    placeholder="Nhập địa chỉ lớp học...">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label for="classDescription">Mô tả về lớp học</label>
+                                <input [(ngModel)]="editingClass.description" type="text" class="form-control"
+                                    id="classDescription" placeholder="Nhập địa chỉ lớp học...">
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label for="Prerequisition">Điều kiện học</label>
+                                <input [(ngModel)]="editingClass.prerequisition" type="text" class="form-control"
+                                    id="Prerequisition" placeholder="Điều kiện tiên quyết...">
+                            </div>
+                        </div>
+                    </div>
+                    <!--/.row-->
+                    <div class="row">
+                        <div class="form-group col-sm-3">
+                            <label for="startDate">Ngày bắt đầu</label>
+                            <div>
+                                <input [ngModel]="editingClass.startDate | date:'yyyy-MM-dd'"
+                                    (ngModelChange)="editingClass.startDate = dateChanged($event)" class="form-control"
+                                    id="startDate" type="date" name="startDate" placeholder="Ngày bắt đầu">
+                                <span class="help-block text-danger">Please enter a valid date</span>
+                            </div>
+                        </div>
+                        <div class="form-group col-sm-3">
+                            <label for="endDate">Ngày kết thúc</label>
+                            <div>
+                                <input [ngModel]="editingClass.endDate | date:'yyyy-MM-dd'"
+                                    (ngModelChange)="editingClass.endDate = dateChanged($event)" class="form-control"
+                                    id="endDate" type="date" name="endDate" placeholder="Ngày bắt đầu">
+                                <span class="help-block text-danger">Please enter a valid date</span>
+                            </div>
+                        </div>
+                        <div class="form-group col-sm-6">
+                            <div class="form-group">
+                                <label for="classTime">Thời gian học</label>
+                                <input [(ngModel)]="editingClass.classTime" type="text" class="form-control"
+                                    id="classTime" placeholder="Nhập TKB lớp học...">
+                            </div>
+                        </div>
+                    </div>
+                    <!--/.row-->
+                    <div class="row">
+                        <div class="form-group col-sm-6">
+                            <div class="col-form-label">
+                                <div class="form-check form-check-inline mr-1" id="radiosSemester">
+                                    <input [(ngModel)]="editingClass.semester" class="form-check-input" type="radio"
+                                        name="radiosSemester" id="radiosSemester1" [value]="1">
+                                    <label class="form-check-label" for="radiosSemester1">Học kỳ 1</label>
+                                </div>
+                                <div class="form-check form-check-inline mr-1">
+                                    <input [(ngModel)]="editingClass.semester" class="form-check-input" type="radio"
+                                        name="radiosSemester" id="radiosSemester2" [value]="2">
+                                    <label class="form-check-label" for="radiosSemester2">Học kỳ 2</label>
+                                </div>
+                                <div class="form-check form-check-inline mr-1">
+                                    <input [(ngModel)]="editingClass.semester" class="form-check-input" type="radio"
+                                        name="radiosSemester" id="radiosSemester3" [value]="3">
+                                    <label class="form-check-label" for="radiosSemester3">Học kỳ hè (HK3)</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group col-sm-3">
+                            <label for="SchoolYear">Năm học</label>
+                            <select [(ngModel)]="editingClass.schoolYear" class="form-control" id="SchoolYear">
+                                <option value="2019-2020">2019-2020</option>
+                                <option value="2020-2021">2020-2021</option>
+                            </select>
+                        </div>
+                        <div class="form-group col-sm-3">
+                            <label for="TotalSession">Tổng số buổi</label>
+                            <input [(ngModel)]="editingClass.totalSession" type="number" disabled class="form-control"
+                                id="TotalSession" name="TotalSession" />
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="form-group">
+                                <label for="classNote">Ghi chú về lớp : </label>
+                                <textarea [(ngModel)]="editingClass.note" id="classNote" name="classNote" rows="3"
+                                    class="form-control" placeholder="Content..">
+                                </textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-sm-3">
+                                    Trạng thái:
+                                    <span *ngIf="editingClass.status==1" class="badge badge-pill badge-primary">Đang
+                                        hoạt động</span>
+                                    <span *ngIf="editingClass.status==2" class="badge badge-pill badge-secondary">Đã
+                                        hoàn tất</span>
+                                </div>
+                                <div class="col-sm-3">
+                                    Ngày tạo:
+                                    <span class="badge badge-secondary">
+                                        {{formatDate1(editingClass.createdOn)}}
+                                    </span>
+                                </div>
+                                <div *ngIf="editingClass.modifiedOn!=null" class="col-sm-3">
+                                    Ngày cập nhật:
+                                    <span class="badge badge-secondary">
+                                        {{formatDate1(editingClass.modifiedOn)}}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="pull-right">
+                        <button *ngIf="editingClass.status==1" (click)="saveClassInfo()" type="button"
+                            class="btn btn-primary">
+                            <i class="fa fa-save"></i> Lưu thông tin lớp học
+                        </button>
+                        <button *ngIf="editingClass.status!=2" (click)="completeClass()" type="button"
+                            class="btn btn-success" style="margin-left: 10px;">
+                            <i class="icon-check"></i> Hoàn tất lớp học
+                        </button>
+                    </div>
+                    <div class="clearfix"></div>
+                </tab>
+                <tab>
+                    <ng-template tabHeading>
+                        <i class="icon-notebook"></i> Thời khóa biểu dạy &nbsp;
+                        <span class="badge badge-pill badge-danger">{{editingSessions.length}}</span>
+                    </ng-template>
+                    <p *ngIf="editingSessions.length==0" class="text-danger">Lớp học này chưa cập nhật lịch dạy !</p>
+                    <table *ngIf="editingSessions.length>0" class="table table-sm table-bordered">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th colspan="2">Buổi học</th>
+                                <th colspan="2">Thời gian</th>
+                                <th>Số tiết</th>
+                                <th>Địa điểm</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let s of editingSessions; index as i;">
+                                <td>{{i+1}}</td>
+                                <td>
+                                    <span *ngIf="s.status==1" class="badge badge-primary">Chưa học</span>
+                                    <span *ngIf="s.status==2" class="badge badge-success">Đã học</span>
+                                    <br />
+                                    {{s.session}}
+                                </td>
+                                <td>
+                                    <span *ngIf="s.sessionType=='LT'" class="badge badge-pill badge-primary">Lý
+                                        thuyết</span>
+                                    <span *ngIf="s.sessionType=='TH'" class="badge badge-pill badge-danger">Thực
+                                        hành</span>
+                                    <span *ngIf="s.sessionType=='LT-TH'" class="badge badge-pill badge-success">Lý
+                                        thuyết & Thực hành</span>
+                                    <br />
+                                    {{s.brief}} - {{s.note}}
+                                </td>
+                                <td>
+                                    {{formatDate(s.dateOfClass)}}
+                                </td>
+                                <td>
+                                    {{s.fromTime}} - {{s.toTime}}
+                                </td>
+                                <td>{{s.totalClassUnit}}</td>
+                                <td>
+                                    {{s.location}}
+                                </td>
+                                <td>
+                                    <div *ngIf="s.status==1">
+                                        <button (click)="deleteSession(i,s.id)" type="button"
+                                            class="btn btn-sm btn-outline-danger">
+                                            <i class="fa fa-times"></i>
+                                        </button>
+                                        <button (click)="openSessionModal(i)" style="margin-left: 5px;" type="button"
+                                            class="btn btn-sm btn-outline-info">
+                                            <i class="fa fa-edit"></i>
+                                        </button>
+                                        <button (click)="completeSession(i,s.id)" style="margin-left: 5px;" type="button"
+                                            class="btn btn-sm btn-outline-success">
+                                            <i class="fa fa-check-square-o"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div class="pull-right">
+                        <button *ngIf="editingClass.status==1" (click)="openSessionModal(null)" type="button"
+                            class="btn btn-success">
+                            <i class="fa fa-plus"></i> Thêm buổi dạy
+                        </button>
+                    </div>
+                    <div class="clearfix"></div>
+                </tab>
+                <tab>
+                    <ng-template tabHeading>
+                        <i class="icon-people"></i> Giảng viên &nbsp;
+                        <span class="badge badge-pill badge-danger">{{editingTeachers.length}}</span>
+                    </ng-template>
+                    <p *ngIf="editingTeachers.length==0" class="text-danger">Lớp học này chưa có phụ trách lớp!</p>
+                    <table *ngIf="editingTeachers.length>0"
+                        class="table table-responsive-sm table-hover table-outline mb-0">
+                        <tbody>
+                            <tr *ngFor="let item of editingTeachers; index as i;">
+                                <td>{{i+1}}</td>
+                                <td class="text-center">
+                                    <div class="avatar">
+                                        <img src="{{item.avatar}}" class="img-avatar" alt="{{item.email}}">
+                                        <span class="avatar-status badge-danger"></span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div> {{item.fullName}}</div>
+                                </td>
+                                <td>
+                                    <span> {{item.memberRole}}</span> <br />
+                                    {{item.description}}
+                                </td>
+                                <td>
+                                    <div>Email: {{item.email}} </div>
+                                    <div>Username: {{item.userName}}</div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </tab>
+            </tabset>
+        </div>
+        <!--/.col-->
+    </div>
+    <!--/.row-->
+    <br />
+</div>
+<div bsModal #warningModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-warning" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    <i class="fa fa-warning"></i>
+                    Thông báo !!
+                </h5>
+                <button type="button" class="close" (click)="warningModal.hide()" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <div class="clearfix"></div>
+            </div>
+            <div class="card-body">
+                <p class="text-primary">Bạn có chắc chắn hoàn tất lớp học này không? Lưu ý, sau khi hoàn tất lớp học,
+                    bạn không thể chỉnh sửa thông tin lớp học ! &hellip;</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" (click)="warningModal.hide()">Không </button>
+                <button type="button" class="btn btn-warning" (click)="completeClassNext()">Đồng ý</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<div bsModal #warningModalSession="bs-modal" class="modal fade" tabindex="-1" role="dialog"
+    aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-warning" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    <i class="fa fa-warning"></i>
+                    Thông báo !!
+                </h5>
+                <button type="button" class="close" (click)="warningModalSession.hide()" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <div class="clearfix"></div>
+            </div>
+            <div class="card-body">
+                <p *ngIf="isDeleteSession" class="text-danger">Bạn có chắc chắn xóa buổi học này ?? &hellip;</p>
+                <p *ngIf="isDeleteSession==false" class="text-primary">Bạn có chắc chắn hoàn tất lớp buổi học này không?
+                    Lưu ý, sau khi hoàn tất buổi
+                    học,
+                    bạn không thể chỉnh sửa thông tin buổi học ! &hellip;</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" (click)="warningModalSession.hide()">Không </button>
+                <button type="button" class="btn btn-warning" (click)="doNextSession()">Đồng ý</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<div bsModal #sessionModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-info modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 *ngIf="editingSession.id>0" class="modal-title">
+                    Chỉnh sửa thông tin buổi dạy #id{{editingSession.id}}
+                </h5>
+                <h5 *ngIf="editingSession.id==0" class="modal-title">
+                    Thêm mới buổi dạy
+                </h5>
+                <button type="button" class="close" (click)="sessionModal.hide()" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="form-group col-sm-3">
+                        <label for="session">Buổi thứ</label>
+                        <input [disabled]="isEditing" [(ngModel)]="session" type="number" id="session" name="session"
+                            class="form-control">
+                    </div>
+                    <div class="form-group col-sm-3">
+                        <label for="dateOfClass">Ngày học</label>
+                        <input [ngModel]="editingSession.dateOfClass | date:'yyyy-MM-dd'"
+                            (ngModelChange)="editingSession.dateOfClass = dateChanged($event)" class="form-control"
+                            id="dateOfClass" type="date" name="dateOfClass" placeholder="Ngày học" />
+                    </div>
+                    <div class="form-group col-sm-3">
+                        <label for="fromTime">Bắt đầu</label>
+                        <input [(ngModel)]="editingSession.fromTime" type="text" class="form-control" id="fromTime"
+                            placeholder="00:00">
+                    </div>
+                    <div class="form-group col-sm-3">
+                        <label for="toTime">Kết thúc</label>
+                        <input [(ngModel)]="editingSession.toTime" type="text" class="form-control" id="toTime"
+                            placeholder="00:00">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col-sm-3">
+                        <label for="totalClassUnit">Tổng số tiết</label>
+                        <input [(ngModel)]="editingSession.totalClassUnit" type="number" id="totalClassUnit"
+                            name="totalClassUnit" class="form-control">
+                    </div>
+                    <div class="form-group col-sm-9">
+                        <label for="clocation">Phòng học / Location</label>
+                        <input [(ngModel)]="editingSession.location" type="text" id="clocation" name="clocation"
+                            class="form-control">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col-sm-6">
+                        <label for="sessionType">Hình thức buổi học</label>
+                        <select [disabled]="isEditing" [(ngModel)]="editingSession.sessionType" id="sessionType"
+                            name="sessionType" class="form-control">
+                            <option value="LT">Lý thuyết</option>
+                            <option value="TH">Thực hành</option>
+                            <option value="LT-TH">Lý thuyết & Thực hành</option>
+                        </select>
+                    </div>
+                    <div class="form-group col-sm-6">
+                        <label for="snote">Ghi chú</label>
+                        <input [(ngModel)]="editingSession.note" type="text" id="snote" name="snote"
+                            class="form-control">
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-md-3 col-form-label" for="brief">Tóm tắt</label>
+                    <div class="col-md-9">
+                        <input [(ngModel)]="editingSession.brief" type="text" id="brief" name="brief"
+                            class="form-control" placeholder="Tiêu đề bài học...">
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-md-3 col-form-label" for="content">Nội dung chính</label>
+                    <div class="col-md-9">
+                        <textarea [(ngModel)]="editingSession.classContent" rows="3" id="content" name="content"
+                            class="form-control" placeholder="Nội dung bài học..."></textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" (click)="sessionModal.hide()">Đóng</button>
+                <button *ngIf="editingSession.id>0" type="button" class="btn btn-primary"
+                    (click)="saveSession()">Lưu</button>
+                <button *ngIf="editingSession.id==0" type="button" class="btn btn-success"
+                    (click)="createSession()">Thêm mới</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->

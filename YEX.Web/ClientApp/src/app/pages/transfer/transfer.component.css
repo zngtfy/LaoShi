@@ -1,0 +1,24 @@
+.img {
+    max-width: 100px;
+    max-height: 15em;
+    width: auto !important;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.center {
+    margin: auto;
+    width: 80%;
+    padding: 10px;
+}
+
+.schoolLogo {
+    max-height: 45px;
+    width: auto;
+}
+
+.schoolLogo1 {
+    max-height: 65px;
+    width: auto;
+}

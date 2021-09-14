@@ -1,0 +1,207 @@
+<div class="animated fadeIn">
+    <div class="pad margin no-print">
+        <div class="callout callout-danger" style="margin-bottom: 0!important;">
+            <h4><i class="fa fa-info"></i> Lưu ý:</h4>
+            Đây là trang lưu trữ các tài liệu tham khảo liên quan khóa luận / luận văn tốt nghiệp!
+        </div>
+    </div>
+    <br />
+    <div class="row">
+        <div class="col-sm-6 col-md-9">
+            <div class="card border-success">
+                <div class="card-header">
+                    <div class="row">
+                        <div class="col-sm-6 col-md-6">
+                            <div class="form-group">
+                                <label for="keywords">
+                                    <i class="fa fa-key text-danger"></i> Keywords
+                                </label>
+                                <input [disabled]="isDisabled" [(ngModel)]="keyword" type="text" class="form-control"
+                                    id="keywords" placeholder="Nhập từ khóa cần tìm..." />
+                            </div>
+                        </div>
+                        <div class="col-sm-6 col-md-4">
+                            <div class="form-group">
+                                <label for="name">
+                                    <i class="fa fa-sort-alpha-asc text-primary"></i> Sắp xếp theo
+                                </label>
+                                <select [disabled]="isDisabled" [(ngModel)]="sortCode" (change)="selectSort($event)"
+                                    id="select2" name="select2" class="form-control">
+                                    <option value="0">---------</option>
+                                    <option value="1">Theo thời gian mới nhất</option>
+                                    <option value="2">Theo tác giả</option>
+                                    <option value="3">Theo tựa đề</option>
+                                    <option value="4">Theo loại TLTK</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-sm-6 col-md-2">
+                            <div class="form-group">
+                                <label for="name">
+                                    <i class="fa fa-puzzle-piece text-primary"></i> Số lượng
+                                </label>
+                                <select [disabled]="isDisabled" [(ngModel)]="size" (change)="selectSize($event)"
+                                    id="select2" name="select2" class="form-control">
+                                    <option value="5">5</option>
+                                    <option value="10">10</option>
+                                    <option value="25">25</option>
+                                    <option value="40">40</option>
+                                    <option value="50">50</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <!--/.row-->
+                    <div>
+                        <button style="margin-left: 5px;" type="button" (click)="searchRef(1)"
+                            class="btn btn-sm btn-primary pull-right">
+                            <i class="fa fa-search"></i>
+                            Tìm kiếm
+                        </button> &nbsp;
+                        <button type="reset" class="btn btn-sm btn-danger  pull-right" (click)="clearSearch()">
+                            <i class="fa fa-ban"></i> Xóa
+                        </button> &nbsp;
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+                <div *ngIf="isDisabled" class="card-body animated fadeOut">
+                    <table *ngIf="refs.totalRecords > 0" class="table">
+                        <thead>
+                            <tr>
+                                <th width="5%">#</th>
+                                <th width="5%">Năm</th>
+                                <th width="70%">Tài liệu tham khảo</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let item of refs.data; index as i;">
+                                <td>[{{getSTT(i)}}]</td>
+                                <td>{{item.year}}</td>
+                                <td>
+                                    <span *ngIf="item.type=='Book'" class="badge badge-success">{{item.typeName}}
+                                    </span>
+                                    <span *ngIf="item.type=='Journal-Article'"
+                                        class="badge badge-danger">{{item.typeName}}
+                                    </span>
+                                    <span *ngIf="item.type=='Conference-Proceeding'"
+                                        class="badge badge-primary">{{item.typeName}}
+                                    </span>
+                                    <span *ngIf="item.type=='Report'" class="badge badge-secondary">{{item.typeName}}
+                                    </span>
+                                    <span *ngIf="item.type=='Website'" class="badge badge-info">{{item.typeName}}
+                                    </span>
+                                    <br />
+                                    <p>
+                                        <strong>{{item.title}}</strong> <br />
+                                        Đồng tác giả: <i>{{item.coAuthors}}</i><br />
+                                        <a href="{{item.publisherUrl}}" target="_blank">{{item.publisher}}</a>, <br />
+                                        Được chỉ mục bởi: {{item.indexedBy}}
+                                    </p>
+                                </td>
+                                <td class="pull-right">
+                                    <button type="button" class="btn btn-sm btn-outline-primary"
+                                        (click)="viewRef(item.id)">
+                                        <i class="icon-info icons"></i>
+                                    </button>
+                                    &nbsp;
+                                    <button type="button" class="btn btn-sm btn-outline-danger"
+                                        (click)="downloadRef(item.id)">
+                                        <i class="icon-cloud-download icons"></i>
+                                    </button>
+                                    <br /><br />
+                                    <button type="button" class="btn btn-sm btn-outline-success"
+                                        (click)="getRefText(i)">
+                                        <i class="fa fa-info-circle"></i> Trích dẫn
+                                    </button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div *ngIf="refs.totalPages>1" class="col-xs-12 col-12">
+                        <pagination [totalItems]="refs.totalRecords" [(ngModel)]="refs.page"
+                            (pageChanged)="pageChanged($event)" [itemsPerPage]="refs.size" [maxSize]="3"
+                            previousText="&lsaquo;" nextText="&rsaquo;" firstText="&laquo;" lastText="&raquo;">
+                        </pagination>
+                        <pre
+                            class="card card-body card-header mb-3">Bạn đang ở trang: {{refs.page}}/{{refs.totalPages}}</pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6 col-md-3">
+            <div *ngIf="curThesis!=null" class="card">
+                <div class="card-body">
+                    <img src="{{curThesis.LogoUrl}}" height="60px" />
+                    <address>
+                        <strong *ngIf="curThesis.ThesisType=='Master-Thesis'">Luận văn thạc sĩ</strong>
+                        <strong *ngIf="curThesis.ThesisType=='Bachelor-Thesis'">Khóa luận tốt nghiệp ĐH</strong>
+                        <strong *ngIf="curThesis.ThesisType=='Engineer-Thesis'">ĐATN Kỹ sư</strong>
+                        <strong *ngIf="curThesis.ThesisType=='Doctor-Thesis'">Luận án tiến sĩ</strong>
+                        <br>
+                        <i class="fa fa-check-square-o text-primary"></i> Lớp: {{curThesis.Class}}<br>
+                        <i class="fa fa-check-square-o text-primary"></i> {{curThesis.ThesisCategory}}<br>
+                        <i class="fa fa-check-square-o text-primary"></i> {{curThesis.SchoolName}}<br>
+                        <i class="fa fa-check-square-o text-primary"></i> Năm: {{curThesis.ThesisYear}}
+                    </address>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div bsModal #viewModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-primary" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+                <pdf-viewer [src]="curView" [render-text]="true" style="display: block;"></pdf-viewer>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" (click)="viewModal.hide()">Đóng</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<div bsModal #citingModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-success modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">
+                    <i class="icon-paper-clip"></i> Trích dẫn
+                </h4>
+                <button type="button" class="close" (click)="citingModal.hide()" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <h5 class="text-success">{{selectedRef.title}}</h5>
+                <p *ngIf="selectedRef.introduction!=null">
+                    <strong><i class="icon-info text-primary"></i>  Abstract </strong> <br/>
+                    {{selectedRef.introduction}}
+                </p>
+                <p *ngIf="selectedRef.keywords!=null">
+                    <strong><i class="icon-info text-primary"></i>  Keywords </strong> <br/>
+                    {{selectedRef.keywords}}
+                </p>
+                <div class="form-group row">
+                    <label class="col-md-3 col-form-label" for="hf-email">
+                        <i class="icon-info text-primary"></i> Kiểu trích dẫn
+                    </label>
+                    <div class="col-md-9">
+                        <select id="select1" name="select1" class="form-control">
+                            <option value="">Vui lòng chọn </option>
+                            <option value="IEEE">Trích dẫn IEEE (Kỹ thuật - Công nghệ)</option>
+                            <option value="APA">Trích dẫn APA (Kinh tế - Xã hội)</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" (click)="citingModal.hide()">Đóng</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->

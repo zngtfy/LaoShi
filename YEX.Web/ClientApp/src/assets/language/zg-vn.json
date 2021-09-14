@@ -1,0 +1,64 @@
+{
+    "error": {
+        "maxSize": "Cev ylg tgx faa dbb saf.",
+        "existing": "Dul thn tcc.",
+        "noData": "Ehv cfd dul.",
+        "nothing": "Ehv cfd gdu fcq cbj obn.",
+        "cannotInstall": "Ehv ycq cca fbn lay yio hby."
+    },
+    "success": {
+        "setupDone": "Cca fbn shv."
+    },
+    "title": {
+        "forgotYourPassword": "Vdc Mbn Ebw Civ Bav",
+        "information": "Yhv Teo"
+    },
+    "label": {
+        "userName": "Tca Efz",
+        "password": "Mbn Ebw",
+        "email": "Yin Feg Tiq",
+        "newPassword": "Mbn Ebw Mco",
+        "confirmPassword": "Sbk Oba Mbn Ebw",
+        "firstName": "Tdc",
+        "lastName": "Hfg",
+        "phoneNumber": "Sfi Feg Ygo"
+    },
+    "message": {
+        "enterYourEmail": "Seo hcb obj feb adv yin feg tiq bdc dkj:",
+        "passwordNotMatch": "Mbn ebw ehv dhw.",
+        "subject": "Abq mkf fdd YEX",
+        "display": "Hcr yhw tir fhz",
+        "dear": "Cep yix {0},",
+        "yourAccount": "Tca efz civ bav lac {0}.",
+        "checkEmail": "Seo hcb cem aaa hib yin fcq fgz mbn ebw."
+    },
+    "link": {
+        "forgotYourPassword": "Vdc mbn ebw civ bav?",
+        "dontHaveAccount": "Ehv cfd tca efz? Tbs nfd iby.",
+        "clickSetupPassword": "Seo hcb ban vbq <a href=\"{0}forgot-password?token={1}\">fcd</a> fcq cca fbn mbn ebw vac tet tll.",
+        "signIn": "Faw obj"
+    },
+    "validation": {
+        "enterUserName": "Seo hcb obj tca efz hgj yin feg tiq.",
+        "enterPassword": "Seo hcb obj mbn ebw.",
+        "enterEmail": "Seo hcb obj feb adv yin feg tiq.",
+        "enterValidEmail": "Seo hcb obj feb adv yin feg tiq hib lcr.",
+        "enterConfirmPassword": "seo hcb obj sbk oba mbn ebw.",
+        "least6Chars": "Tgx yfa 6 cdt tir.",
+        "least2Chars": "Tgx yfa 2 cdt tir.",
+        "complexPassword": "Mbn ebw ucb 8 cdt tir bbo ghd sfi, aiq zeo hfr, zeo ykz vac 1 cdt tir fbn bei.",
+        "enterFirstName": "Seo hcb obj tdc.",
+        "enterLastName": "Seo hcb obj hfg.",
+        "enterPhone": "Seo hcb obj sfi feg ygo.",
+        "invalidEmail": "Yin feg tiq ehv hib lcr (tgx yfa 6 cdt tir).",
+        "phoneInvalid": "Sfi feg ygo ehv hib lcr."
+    },
+    "button": {
+        "signIn": "FAW OBJ",
+        "signUp": "FAW CDT",
+        "cancel": "Hlr",
+        "next": "Tet",
+        "change": "Fgz",
+        "ok": "OK"
+    }
+}

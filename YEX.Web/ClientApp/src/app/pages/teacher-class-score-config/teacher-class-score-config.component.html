@@ -1,0 +1,376 @@
+<div class="animated fadeIn">
+    <div class="card card-accent-primary">
+        <div class="card-body">
+            <div class="form-group row">
+                <label class="col-md-3 col-form-label" for="select1">
+                    <i class="icon-home text-primary"></i> Vui lòng chọn lớp / Khóa học
+                </label>
+                <div *ngIf="classes.length>0" class="col-md-9">
+                    <select [disabled]="show" id="select1" name="select1" class="form-control"
+                        (change)="changeClass($event)">
+                        <option value="">---- Please select ----</option>
+                        <option *ngFor="let c of classes; index as i;" value="{{i+1}}">{{c.classCode}} - {{c.className}}
+                            ({{c.schoolName}})</option>
+                    </select>
+                    <hr *ngIf="curClass!=null" />
+                    <div *ngIf="curClass!=null" class="row">
+                        <div class="col-sm-6 col-md-6">
+                            {{curClass.className}} <br />
+                            <div class="small text-muted">
+                                <i class="fa fa-check-square-o text-info"></i> {{curClass.classCode}} <br />
+                                <i class="fa fa-check-square-o text-info"></i> {{curClass.classDesc}} <br />
+                                <i class="fa fa-check-square-o text-info"></i> {{formatDate(curClass.startDate)}} -
+                                {{formatDate(curClass.endDate)}} <br />
+                                <i class="fa fa-check-square-o text-info"></i> {{curClass.venue}} <br />
+                                <i class="fa fa-check-square-o text-info"></i> Học kỳ {{curClass.semester}}, năm học:
+                                {{curClass.schoolYear}}
+                            </div>
+                        </div>
+                        <div class="col-sm-6 col-md-6">
+                            <img src="{{curClass.logoUrl}}" height="45px" /><br />
+                            {{curClass.schoolName}} <br />
+                            {{curClass.department}}
+                            <div class="small text-muted">
+                                <i class="fa fa-check-square-o text-secondary"></i> {{curClass.subjectCode}} -
+                                {{curClass.subjectName}}<br />
+                                <i class="fa fa-check-square-o text-secondary"></i> Số tín chỉ:
+                                {{curClass.totalCredit}} ({{curClass.theoryCredit}} LT, {{curClass.practiceCredit}}
+                                TH)<br />
+                                <i class="fa fa-check-square-o text-secondary"></i> {{curClass.schoolAddress}}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div *ngIf="curClass!=null" class="card-footer">
+            <div class="pull-right">
+                <button [ngStyle]="selectStyleBtn" type="button" class="btn btn-primary" (click)="selectClass()">
+                    <i class="icon-check"></i> Chọn
+                </button>
+                <button style="margin-left: 10px;" type="reset" class="btn btn-danger" (click)="unSelectClass()">
+                    <i class="fa fa-ban"></i> Reset
+                </button>
+            </div>
+            <div class="clearfix"></div>
+        </div>
+    </div>
+</div>
+<div *ngIf="curClass!=null  && show" class="animated fadeOut">
+    <div class="card border-success">
+        <div class="card-header">
+            <i class="fa fa-gear fa-lg"></i>
+            Bạn đang cài đặt điểm số cho lớp!
+        </div>
+        <div class="card-body">
+            <p *ngIf="scoreConfigs.length == 0" class="text-danger">Lớp này hiện tại chưa có cài đăt cột điểm thành phần
+                !</p>
+            <p *ngIf="totalPercentage < 100" class="text-danger">Hiện tại các cột điểm cộng lại chưa đủ 100%, bạn hãy
+                thêm hoặc điều chỉnh cột điểm thành phần !</p>
+            <table *ngIf="scoreConfigs.length > 0" class="table table-bordered table-striped table-sm">
+                <thead>
+                    <tr>
+                        <th style="width:25px">#</th>
+                        <th>Điểm thành phần</th>
+                        <th colspan="2">Loại</th>
+                        <th>Tỷ lệ</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let item of scoreConfigs; index as i;">
+                        <td>{{i+1}}</td>
+                        <td>
+                            <span *ngIf="item.status == 1" class="badge badge-primary">Đang hoạt động</span>
+                            <span *ngIf="item.status == 2" class="badge badge-secondary">Đã hoàn tất</span>
+                            <br /> {{item.description}}
+                            <p *ngIf="item.refAssignmentId>0" class="text-muted small">
+                                Bài tập: {{showRefAssignment(item.refAssignmentId)}}
+                            </p>
+                        </td>
+                        <td>
+                            {{item.note}}
+                            <div *ngIf="item.submitStatus == 'submitted'">
+                                <a href="javascript:void(0);" (click)="scoreThisAssgnment(i,item.id)">
+                                    <i class="fa fa-eye-slash"></i> Chấm điểm
+                                </a>
+                            </div>
+                            <div *ngIf="item.refAssignmentId == null">
+                                <a href="javascript:void(0);" (click)="inputScore(i,item.id)">
+                                    <i class="fa fa-eye-slash"></i> Nhập điểm
+                                </a>
+                            </div>
+                        </td>
+                        <td>
+                            <span *ngIf="item.scoreType == 'QuaTrinh'" class="badge badge-warning">Quá trình</span>
+                            <span *ngIf="item.scoreType == 'CuoiKy'" class="badge badge-danger">Cuối kỳ</span>
+                        </td>
+                        <td class="text-right">
+                            {{item.percentage}}%
+                        </td>
+                        <td>
+                            <small *ngIf="item.resultStatus == 'unscored'" class="text-success">Chưa có điểm!</small>
+                            <small *ngIf="item.resultStatus == 'scored'" class="text-danger">
+                                Đã có điểm, không thể chỉnh sửa
+                            </small>
+                            <small *ngIf="item.submitStatus == 'not-submitted'" class="text-success">Chưa có sv nộp bài
+                                !</small>
+                            <small *ngIf="item.submitStatus == 'submitted'" class="text-danger">
+                                Đã có sv nộp bài, không thể chỉnh sửa
+                            </small>
+                            <br />
+                            <div *ngIf="item.status==1">
+                                <button *ngIf="item.resultStatus=='unscored' && item.submitStatus == 'not-submitted'"
+                                    (click)="deleteScoreConfig(i,item.id)" type="button"
+                                    class="btn btn-sm btn-outline-danger">
+                                    <i class="fa fa-times"></i>
+                                </button>
+                                <button *ngIf="item.resultStatus=='unscored' && item.submitStatus == 'not-submitted'"
+                                    (click)="openEditModal(i)" style="margin-left: 5px;" type="button"
+                                    class="btn btn-sm btn-outline-info">
+                                    <i class="fa fa-edit"></i>
+                                </button>
+                                <button (click)="completeScoreConfig(i,item.id)" style="margin-left: 5px;" type="button"
+                                    class="btn btn-sm btn-outline-success">
+                                    <i class="fa fa-check"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <th colspan="4" class="text-right">Tổng cộng</th>
+                        <th class="text-right">{{totalPercentage}}%</th>
+                        <td>
+                        </td>
+                    </tr>
+                </tfoot>
+            </table>
+            <div class="pull-right">
+                <button *ngIf="totalPercentage<100" (click)="openEditModal(null)" type="button" class="btn btn-success">
+                    <i class="fa fa-plus"></i> Thêm cột điểm
+                </button>
+            </div>
+            <div class="clearfix"></div>
+        </div>
+    </div>
+</div>
+
+<div bsModal #warningModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-warning" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    <i class="fa fa-warning"></i>
+                    Thông báo !!
+                </h5>
+                <button type="button" class="close" (click)="warningModal.hide()" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <div class="clearfix"></div>
+            </div>
+            <div class="card-body">
+                <p *ngIf="isDeleteScoreConfig" class="text-danger">Bạn có chắc chắn xóa điểm thành phần này ?? &hellip;
+                </p>
+                <p *ngIf="isDeleteScoreConfig==false" class="text-primary">Bạn có chắc chắn hoàn tất cột điểm này cho
+                    lớp?
+                    Lưu ý, sau khi xác nhận hoàn tất cột điểm này,
+                    bạn không thể chỉnh sửa thông tin cột điểm này ! &hellip;</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" (click)="warningModal.hide()">Không </button>
+                <button type="button" class="btn btn-warning" (click)="doNextSC()">Đồng ý</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+
+<div bsModal #scModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-info modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 *ngIf="editingSC.id>0" class="modal-title">
+                    <i class="fa fa-edit"></i>
+                    Chỉnh sửa thông tin cột điểm thành phần #id{{editingSC.id}}
+                </h5>
+                <h5 *ngIf="editingSC.id==0" class="modal-title">
+                    <i class="fa fa-plus"></i>
+                    Thêm mới cột điểm thành phần
+                </h5>
+                <button type="button" class="close" (click)="scModal.hide()" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="form-group col-sm-4">
+                        <label for="scoreType">Hình thức</label>
+                        <select id="scoreType" name="scoreType" [(ngModel)]="editingSC.scoreType" class="form-control">
+                            <option value="QuaTrinh">Điểm quá trình</option>
+                            <option value="CuoiKy">Thi cuối kỳ</option>
+                        </select>
+                    </div>
+                    <div class="form-group col-sm-8">
+                        <label for="description">Mô tả</label>
+                        <input [(ngModel)]="editingSC.description" type="text" id="description" name="description"
+                            class="form-control">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col-sm-3">
+                        <label for="percentage">Tỷ trọng (%)</label>
+                        <input [(ngModel)]="editingSC.percentage" type="number" id="percentage" name="percentage"
+                            (change)="percentageChange($event)" class="form-control">
+                        <span *ngIf="percentageStr!=''" class="help-block small text-danger">{{percentageStr}}</span>
+                    </div>
+                    <div class="form-group col-sm-9">
+                        <label for="note">Ghi chú</label>
+                        <input [(ngModel)]="editingSC.note" type="text" id="note" name="note" class="form-control">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col-sm-12">
+                        <label for="sessionType">Bài tập</label>
+                        <select [(ngModel)]="refAssignmentId" id="refAssignmentId" name="refAssignmentId"
+                            class="form-control" (change)="refAssignmentChange($event)">
+                            <option value="0">Không có BT</option>
+                            <ng-container *ngFor="let a of assignments; index as i;">
+                                <option *ngIf="scoredAssignments.indexOf(a.id) < 0" value="{{a.id}}">
+                                    [{{a.id}}] - {{a.name}}
+                                    <span class="text-success" *ngIf="a.groupNo == 1">(Bài cá nhân)</span>
+                                    <span class="text-info" *ngIf="a.groupNo > 1">(Bài nhóm)</span>
+                                </option>
+                            </ng-container>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" (click)="scModal.hide()">Đóng</button>
+                <button *ngIf="editingSC.id>0" type="button" class="btn btn-primary" (click)="saveSC()">Lưu</button>
+                <button *ngIf="editingSC.id==0" type="button" class="btn btn-success" (click)="createSC()">Thêm
+                    mới</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<div bsModal #scoringModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    <i class="fa fa-gear text-danger"></i>
+                    Nhập điểm sinh viên [BangDiem_{{curConfig.classId}}_{{curConfig.id}}]
+                </h5>
+                <button type="button" class="close" (click)="scoringModal.hide()" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div *ngIf="curClass!=null" class="row">
+                    <div class="col-sm-12 col-md-6">
+                        <i class="fa fa-check-square-o text-success"></i> Lớp: {{curClass.classCode}} -
+                        {{curClass.className}}
+                        <br /><i class="fa fa-check-square-o text-success"></i> Học kỳ {{curClass.semester}}, năm học:
+                        {{curClass.schoolYear}}
+                    </div>
+                    <div class="col-sm-12 col-md-6">
+                        <i class="fa fa-check-square-o text-danger"></i> Điểm thành phần: {{curConfig.description}}
+                        <br /><i class="fa fa-check-square-o text-danger"></i> Tỷ lệ:
+                        <span class="badge badge-dark">{{curConfig.percentage}} %</span>
+                    </div>
+                </div>
+                <table *ngIf="studentScore.length>0" class="table table-sm table-bordered">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>MSSV</th>
+                            <th>Họ Tên</th>
+                            <th>Ngày sinh</th>
+                            <th>Điểm</th>
+                            <th>Bài nộp</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let item of studentScore; index as i;">
+                            <td>{{i+1}}</td>
+                            <td>{{item.officialStudentId}}</td>
+                            <td>
+                                <ng-template #popTemplateHtml>
+                                    <div>
+                                        <img src="{{item.avatar}}" height="80px" />
+                                        <br/><i class="fa fa-check-square-o text-info"></i> Họ tên: {{item.fullname}}
+                                        <br/><i class="fa fa-check-square-o text-info"></i> MSSV: {{item.officialStudentId}}
+                                        <br/><i class="fa fa-check-square-o text-info"></i> Ngày sinh: {{formatDate(item.birthday)}}
+                                        <br/><i class="fa fa-check-square-o text-info"></i> Trường: {{item.schoolName}}
+                                    </div>
+                                </ng-template>
+                                <button type="button" class="btn btn-default btn-secondary"
+                                    [popover]="popTemplateHtml"
+                                    popoverTitle="{{item.fullname}}" placement="top">
+                                    {{item.fullname}}
+                                </button>
+                            </td>
+                            <td>{{formatDate(item.birthday)}}</td>
+                            <td>
+                                <div *ngIf="(curConfig.refAssignmentId>0 && item.submissions!=null)||(curConfig.refAssignmentId==null && item.submissions==null)">
+                                    <input id="scor_{{item.studentId}}_{{item.classId}}_{{item.refScoreConfig}}"
+                                    (change)="scoreChange($event,i)" value="{{item.score}}" type="number"  style="width: 50px;" />
+                                </div>
+                                <div *ngIf="curConfig.refAssignmentId>0 && item.submissions==null">
+                                    <span class="badge badge-warning">Chưa nộp bài </span>
+                                </div>
+                            </td>
+                            <td>
+                                <div *ngIf="item.groupNo!=null && item.groupNo>0">
+                                    Nhóm {{item.groupNo}}
+                                </div>
+                                <div *ngIf="curConfig.refAssignmentId>0 && item.submissions!=null" class="text-muted small">
+                                    <div *ngIf="item.submissions.submission.submitType.indexOf('-Doc')>0 && item.submissions.attachments.length>0">
+                                        <div *ngFor="let att of item.submissions.attachments; index as i">
+                                            <i class="fa fa-file-text text-success"></i>
+                                            <a href="javascript:void(0);"
+                                                (click)="downloadAttachment(att.id, att.displayName)">
+                                                {{att.displayName}}
+                                            </a>
+                                        </div>
+                                    </div>
+                                    <div class="divUrl" *ngIf="item.submissions.submission.submitType.indexOf('-Git')>0">
+                                        <i class="fa fa-git-square text-danger"></i>
+                                        <a class="aUrl" href="{{item.submissions.submission.submissionUrl}}" target="_blank">
+                                            {{item.submissions.submission.submissionUrl}}
+                                        </a>
+                                    </div>
+                                    <div class="divUrl" *ngIf="item.submissions.submission.submitType.indexOf('-Url')>0">
+                                        <i class="fa fa-external-link-square text-warning"></i>
+                                        <a class="aUrl" href="{{item.submissions.submission.submissionUrl}}" target="_blank">
+                                            {{item.submissions.submission.submissionUrl}}
+                                        </a>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                    <tfoot>
+                        <th colspan="3" class="text-right">Tổng cộng</th>
+                        <th colspan="3" class="text-primary">{{studentScore.length}} Sinh viên</th>
+                    </tfoot>
+                </table>
+                <div>
+                    <a href="javascript:void(0);" (click)="exportAsXLSX(curConfig.id)">Download Template</a> <br />
+                    <input id="uploadFile" type="file" value="Upload file" (change)="onFileChange($event)" multiple="false" />
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" (click)="scoringModal.hide()">Đóng</button>
+                <button type="button" class="btn btn-primary" (click)="saveStudentScore()">Lưu</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->

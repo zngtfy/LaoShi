@@ -1,0 +1,131 @@
+<div class="animated fadeIn">
+    <div class="card">
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-7 col-sm-12">
+                    <span class="display-6">Xin chào, {{curUser.firstName}} !</span>
+                    <p>Chào mừng bạn đến với trang quản lý lớp học, luận văn dành cho GV, trợ giảng...</p>
+                </div>
+                <div class="col-md-5 col-sm-12">
+                    <p>
+                        <i class="fa fa-check-circle-o text-primary"></i> Tổng số lớp :
+                        {{statistic.classes.totalRecords}} <br />
+                        <i class="fa fa-check-circle-o text-success"></i> Tổng số luận văn :
+                        {{statistic.thesises.totalRecords}}
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6 col-sm-12">
+            <div class="card">
+                <div class="card-header">
+                    <i class="fa fa-address-book-o text-primary font-2xl"></i>
+                    Lớp học / Khóa học bạn đang tham gia quản lý
+                </div>
+                <div class="card-body">
+                    <p class="text-danger" *ngIf="statistic.classes.totalRecords == 0">
+                        Bạn không có lớp nào đang Active! 
+                    </p>
+                    <table *ngIf="statistic.classes.totalRecords > 0" style="width:100%" class="table table-responsive">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Lớp</th>
+                                <th>Trường</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let item of statistic.classes.data; index as i;">
+                                <td>{{getSTT(i,'class')}}</td>
+                                <td>
+                                    {{item.className}} <br/>
+                                    <div class="small text-muted">
+                                        <i class="fa fa-check-square-o text-info"></i> {{item.classCode}} <br/>
+                                        <i class="fa fa-check-square-o text-info"></i> {{item.classDesc}} <br/>
+                                        <i class="fa fa-check-square-o text-info"></i> {{formatDate(item.startDate)}} - {{formatDate(item.endDate)}} <br/>
+                                        <i class="fa fa-check-square-o text-info"></i> {{item.venue}}
+                                    </div>
+                                </td>
+                                <td>
+                                    <img src="{{item.logoUrl}}" height="40px"/><br/>
+                                    {{item.schoolName}} <br/>
+                                    <div class="small text-muted">
+                                        <i class="fa fa-check-square-o text-secondary"></i> {{item.subjectCode}} - {{item.subjectName}}<br/>
+                                        <i class="fa fa-check-square-o text-secondary"></i> {{item.schoolAddress}}
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div *ngIf="statistic.classes.totalPages>1" class="col-xs-12 col-12">
+                        <pagination [totalItems]="statistic.classes.totalRecords" [(ngModel)]="statistic.classes.page" (pageChanged)="pageChangedClass($event)"
+                        [itemsPerPage]="statistic.classes.size" [maxSize]="3" previousText="&lsaquo;" nextText="&rsaquo;" firstText="&laquo;" lastText="&raquo;">
+                        </pagination>
+                        <pre class="card card-body card-header mb-3">Bạn đang ở trang: {{statistic.classes.page}}/{{statistic.classes.totalPages}}</pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 col-sm-12">
+            <div class="card">
+                <div class="card-header">
+                    <i class="fa fa-address-book-o text-success font-2xl"></i>
+                    Luận văn / Khóa luận bạn đang tham gia quản lý
+                </div>
+                <div class="card-body">
+                    <p class="text-danger" *ngIf="statistic.thesises.totalRecords == 0">
+                        Bạn không có luận vă / khóa luận nào đang Active! 
+                    </p>
+                    <table *ngIf="statistic.thesises.totalRecords > 0" style="width:100%" class="table table-responsive">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Luận văn / Khóa luận</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let item of statistic.thesises.data; index as i;">
+                                <td>{{getSTT(i,'thesis')}}</td>
+                                <td>
+                                    <span *ngIf="item.thesisType=='Master-Thesis'" class="display-6">
+                                        <i class="fa fa-graduation-cap text-primary"></i>
+                                        Luận văn Thạc sĩ
+                                    </span>
+                                    <span *ngIf="item.thesisType=='Bachelor-Thesis'" class="display-6">
+                                        <i class="fa fa-graduation-cap text-danger"></i>
+                                        Khóa luận tốt nghiệp đại học
+                                    </span>
+                                    <span *ngIf="item.thesisType=='Engineer-Thesis'" class="display-6">
+                                        <i class="fa fa-graduation-cap text-danger"></i>
+                                        ĐATN Kỹ sư đại học
+                                    </span>
+                                    <span *ngIf="item.thesisType=='Doctor-Thesis'" class="display-6">
+                                        <i class="fa fa-graduation-cap text-success"></i>
+                                        Luận án tiến sĩ
+                                    </span> <br/>
+                                    <span class="badge badge-pill badge-secondary">{{item.memberDesc}}</span><br/>
+                                    <strong>{{item.thesisTitle}}</strong> <br/>
+                                    
+                                    <div class="small text-muted">
+                                        <i class="fa fa-check-square-o text-danger"></i> {{item.thesisCategory}} <br/>
+                                        <i class="fa fa-check-square-o text-danger"></i> {{item.studyCode}} <br/>
+                                        <i class="fa fa-check-square-o text-danger"></i> Năm: {{item.thesisYear}}<br/>
+                                        <i class="fa fa-check-square-o text-danger"></i> {{item.studyField}}
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <div *ngIf="statistic.thesises.totalPages>1" class="col-xs-12 col-12">
+                        <pagination [totalItems]="statistic.thesises.totalRecords" [(ngModel)]="statistic.thesises.page" (pageChanged)="pageChangedThesis($event)"
+                        [itemsPerPage]="statistic.thesises.size" [maxSize]="3" previousText="&lsaquo;" nextText="&rsaquo;" firstText="&laquo;" lastText="&raquo;">
+                        </pagination>
+                        <pre class="card card-body card-header mb-3">Bạn đang ở trang: {{statistic.thesises.page}}/{{statistic.thesises.totalPages}}</pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

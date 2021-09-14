@@ -1,0 +1,202 @@
+<div class="animated fadeIn">
+    <div class="card">
+        <div class="card-body">
+            <div class="row">
+                <div class="col-lg-9 col-sm-6">
+                    <span class="display-5">
+                        <i class="icon-calendar text-danger"></i>
+                        {{curClass.ClassName}} - {{curClass.ClassCode}}
+                    </span>
+                    <p>{{curClass.Description}}</p>
+                </div>
+                <div class="col-lg-3 col-sm-6">
+                    <img class="schoolLogo pull-right " src="{{curClass.LogoUrl}}" />
+                    <div class="clearfix claer"></div>
+                    <p class="text-right">{{curClass.SchoolName}}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row" *ngIf="announcements.totalRecords > 0">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <span class="display-6" >
+                        <i *ngIf="firstAnnouncement.type == 'ThongBao'" class="fa fa-volume-up text-success"></i>
+                        <i *ngIf="firstAnnouncement.type == 'GioiThieu'" class="fa fa-info-circle text-info"></i>
+                        <i *ngIf="firstAnnouncement.type == 'Urgent'" class="fa fa-eye-slash text-danger"></i>
+                        {{firstAnnouncement.title}}
+                    </span>
+                    <p class="pdate">
+                        <i class="fa fa-clock-o text-primary"></i> {{formatDate(firstAnnouncement.createdOn)}}
+                    </p>
+                </div>
+                <div class="card-body" >
+                    <p>{{firstAnnouncement.brief}}</p>
+                    <div class="bd-example" innerHTML="{{firstAnnouncement.content}}">
+                    </div>
+                    <p style="font-style: italic;" class="text-right">
+                        <i class="fa fa-user text-warning"></i>
+                        {{firstAnnouncement.createdByName}}
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4" *ngIf="announcements.totalRecords > 1">
+            <div class="card">
+                <div class="card-body">
+                    <ul class="products-list product-list-in-box">
+                        <li class="item" *ngFor="let item of announcements.data; index as i;">
+                            <div class="product-info">
+                                <a href="javascript:void(0);" class="product-title" (click)="loadDetail(i);">{{item.title}}
+                                    <span class="label pull-right">
+                                        <i class="fa fa-clock-o"></i> {{formatDate1(item.createdOn)}}
+                                    </span>
+                                </a>
+                                <p class="product-description">
+                                    {{item.brief}}
+                                </p>
+                            </div>
+                        </li><!-- /.item -->
+                    </ul>
+                    <ul *ngIf="announcements.totalPages > 1" class="pagination pull-right">
+                        <li class="page-item">
+                            <a class="page-link" href="javascript:void(0);" (click)="loadPrevAnnouncement()">Trước</a>
+                        </li>
+                        <li class="page-item active">
+                            <a class="page-link" href="javascript:void(0);">{{announcements.page}}</a>
+                        </li>
+                        <li class="page-item">
+                            <a class="page-link" href="javascript:void(0);" (click)="loadNextAnnouncement()">Sau</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="card-group mb-4">
+        <div class="card">
+            <div class="card-body">
+                <div class="h1 text-muted text-right mb-4">
+                    <i class="icon-people"></i>
+                </div>
+                <div class="h4 mb-0">{{statistic.totalStudent}}</div>
+                <small class="text-muted text-uppercase font-weight-bold">Sinh viên</small>
+                <div class="progress progress-xs mt-3 mb-0">
+                    <div class="progress-bar bg-info" role="progressbar" style="width: 25%" aria-valuenow="25"
+                        aria-valuemin="0" aria-valuemax="100"></div>
+                </div>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-body">
+                <div class="h1 text-muted text-right mb-4">
+                    <i class="icon-user-following"></i>
+                </div>
+                <div class="h4 mb-0">{{statistic.totalTeacher}}</div>
+                <small class="text-muted text-uppercase font-weight-bold">Giảng viên & Trợ giảng</small>
+                <div class="progress progress-xs mt-3 mb-0">
+                    <div class="progress-bar bg-success" role="progressbar" style="width: 25%" aria-valuenow="25"
+                        aria-valuemin="0" aria-valuemax="100"></div>
+                </div>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-body">
+                <div class="h1 text-muted text-right mb-4">
+                    <i class="icon-speedometer"></i>
+                </div>
+                <div class="h4 mb-0">{{statistic.totalSession}}</div>
+                <small class="text-muted text-uppercase font-weight-bold">Tổng số buổi học</small>
+                <div class="progress progress-xs mt-3 mb-0">
+                    <div class="progress-bar bg-warning" role="progressbar" style="width: 25%" aria-valuenow="25"
+                        aria-valuemin="0" aria-valuemax="100"></div>
+                </div>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-body">
+                <div class="h1 text-muted text-right mb-4">
+                    <i class="icon-clock"></i>
+                </div>
+                <div class="h5 mb-0">{{formatDate2(statistic.beginDate)}}</div>
+                <small class="text-muted text-uppercase font-weight-bold">Bắt đầu</small>
+                <div class="progress progress-xs mt-3 mb-0">
+                    <div class="progress-bar" role="progressbar" style="width: 25%" aria-valuenow="25" aria-valuemin="0"
+                        aria-valuemax="100"></div>
+                </div>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-body">
+                <div class="h1 text-muted text-right mb-4">
+                    <i class="icon-clock"></i>
+                </div>
+                <div class="h5 mb-0">{{formatDate2(statistic.endDate)}}</div>
+                <small class="text-muted text-uppercase font-weight-bold">Kết thúc</small>
+                <div class="progress progress-xs mt-3 mb-0">
+                    <div class="progress-bar bg-danger" role="progressbar" style="width: 25%" aria-valuenow="25"
+                        aria-valuemin="0" aria-valuemax="100"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <div class="callout callout-info">
+                                        <small class="text-muted">Trạng thái lớp học</small>
+                                        <br>
+                                        <strong class="h4">{{statistic.classStatus}}</strong>
+                                    </div>
+                                </div>
+                                <!--/.col-->
+                                <div class="col-sm-6">
+                                    <div class="callout callout-danger">
+                                        <small class="text-muted">Số buổi học lý thuyết</small>
+                                        <br>
+                                        <strong class="h4">{{statistic.theoryStatus}}</strong>
+                                    </div>
+                                </div>
+                                <!--/.col-->
+                            </div>
+                            <!--/.row-->
+                        </div>
+                        <!--/.col-->
+                        <div class="col-sm-6">
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <div class="callout callout-warning">
+                                        <small class="text-muted">Số buổi học thực hành</small>
+                                        <br>
+                                        <strong class="h4">{{statistic.practiseStatus}}</strong>
+                                    </div>
+                                </div>
+                                <!--/.col-->
+                                <div class="col-sm-6">
+                                    <div class="callout callout-success">
+                                        <small class="text-muted">Mã môn học</small>
+                                        <br>
+                                        <strong class="h4">{{statistic.subjectCode}}</strong>
+                                    </div>
+                                </div>
+                                <!--/.col-->
+                            </div>
+                            <!--/.row-->
+                        </div>
+                        <!--/.col-->
+                    </div>
+                    <!--/.row-->
+                </div>
+            </div>
+        </div>
+        <!--/.col-->
+    </div>
+    <!--/.row-->
+
+</div>

@@ -1,0 +1,194 @@
+<div class="card">
+    <div class="card-header">
+        <i class="fa fa-code fa-lg"></i> <strong>Quản lý bài viết</strong>
+        <button type="button" class="btn btn-info btn-sm pull-right" data-toggle="modal" (click)="openAdd()">Thêm
+            mới</button>
+    </div>
+    <div class="card-body">
+        <div class="form-group row">
+            <label for="codeType" class="col-sm-2 col-form-label">Loại</label>
+            <div class="col-sm-4">
+                <select class="form-control" id="codeType" [(ngModel)]="typeFilter" (change)="search(1)">
+                    <option value="">Tất cả</option>
+                    <option *ngFor="let a of types" [value]="a.value">{{a.displayAs}}</option>
+                </select>
+            </div>
+            <label for="categorys" class="col-sm-2 col-form-label">Danh mục</label>
+            <div class="col-sm-4">
+                <select class="form-control" id="categorys" [(ngModel)]="categoryFilter" (change)="search(1)">
+                    <option value="">Tất cả</option>
+                    <option *ngFor="let a of categorys" [value]="a.value">{{a.displayAs}}</option>
+                </select>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-body">
+        <table class="table table-responsive-sm table-hover table-outline mb-0">
+            <thead class="thead-light">
+                <tr>
+                    <th>#</th>
+                    <th *ngIf="typeFilter == ''">Loại</th>
+                    <th width="10%" *ngIf="categoryFilter == ''">Danh mục</th>
+                    <th>Ảnh nổi bật</th>
+                    <th>Tiêu đề</th>
+                    <th>Tóm tắt</th>
+                    <th width="10%"></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let item of data; index as i;">
+                    <td>{{i + 1}}</td>
+                    <td *ngIf="typeFilter == ''">
+                        {{item.newsType}}
+                    </td>
+                    <td *ngIf="categoryFilter == ''">
+                        {{item.category}}
+                    </td>
+                    <td>
+                        <img class="thumb-image rounded" [src]="item.thumbnail" />
+                    </td>
+                    <td>{{item.title}}</td>
+                    <td>{{item.brief}}</td>
+                    <td>
+                        <button type="button" class="btn btn-outline-info btn-sm pull-right" data-toggle="modal"
+                            (click)="openEdit(item)">Chỉnh sửa</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <br />
+        <ul class="pagination pull-right">
+            <li class="page-item" [class.disabled]="currentPage == 1">
+                <a class="page-link" href="javascript:void(0);" (click)="search(currentPage - 1)">Trước</a>
+            </li>
+            <li *ngFor="let page of getPages(); index as i;">
+                <div class="page-item" [class.active]="currentPage == i + 1">
+                    <a class="page-link" href="javascript:void(0);" (click)="search(i + 1)">{{ i + 1 }}</a>
+                </div>
+            </li>
+            <li class="page-item" [class.disabled]="currentPage == totalPages">
+                <a class="page-link" href="javascript:void(0);" (click)="search(currentPage + 1)">Sau</a>
+            </li>
+        </ul>
+    </div>
+</div>
+
+<div bsModal #addModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-xl modal-info" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" *ngIf="!isEdit">Thêm bài viết mới</h4>
+                <h4 class="modal-title" *ngIf="isEdit">Edit post</h4>
+                <button type="button" class="close" (click)="addModal.hide()" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="container container-post">
+                    <div class="row">
+                        <div class="col-md-8 pdt-10">
+                            <div class="form-group">
+                                <input placeholder="Thêm tiêu đề" id="title" type="text" class="form-control"
+                                    [(ngModel)]="vm.title">
+                            </div>
+                            <div class="form-group">
+                                <ckeditor [editor]="Editor" [(ngModel)]="vm.content"></ckeditor>
+                            </div>
+                        </div>
+                        <div class="col-md-4 custom-area pdt-10">
+                            <div class="form-group" *ngIf="!isEdit">
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <label for="type">Loại</label></div>
+                                    <div class="col-md-9">
+                                        <select class="form-control hidden" id="type" [(ngModel)]="vm.type">
+                                            <option value="" disabled>-- Chọn loại --</option>
+                                            <option *ngFor="let a of types" [value]="a.value">{{a.displayAs}}</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group" *ngIf="isEdit">
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <label for="type">Type</label></div>
+                                    <div class="col-md-9">
+                                        <input id="category" type="text" class="form-control-plaintext"
+                                            [(ngModel)]="vm.type" readonly>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group" *ngIf="!isEdit">
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <label for="category">Danh mục</label>
+                                    </div>
+                                    <div class="col-md-9">
+                                        <select class="form-control hidden" id="category" [(ngModel)]="vm.category">
+                                            <option value="" disabled>-- Chọn danh mục --</option>
+                                            <option *ngFor="let a of categorys" [value]="a.value">{{a.displayAs}}
+                                            </option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group" *ngIf="isEdit">
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <label for="category">Category</label>
+                                    </div>
+                                    <div class="col-md-9">
+                                        <input id="category" type="text" class="form-control-plaintext"
+                                            [(ngModel)]="vm.category" readonly>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <label for="brief">Tóm tắt</label>
+                                    </div>
+                                    <div class="col-md-9">
+                                        <textarea id="brief" class="form-control" [(ngModel)]="vm.brief"
+                                            rows="4"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="row">
+                                    <div class="col-md-3"><label for="avatar">Ảnh nổi bật</label>
+                                    </div>
+                                    <div class="col-md-9">
+                                        <div class="preview-image-choose" (click)="uploader.click()"
+                                            *ngIf="vm.avatar == null">
+                                        </div>
+                                        <img class="preview-image" (click)="uploader.click()" [src]="vm.avatar"
+                                            *ngIf="vm.avatar != null" />
+                                        <input hidden type="file" #uploader (change)="handlerUpload($event)" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="row">
+                                    <div class="col-md-3"></div>
+                                    <div class="col-md-9">
+                                        <button type="button" *ngIf="!isEdit" class="btn btn-primary"
+                                            (click)="add()">Thêm</button>
+                                        <button type="button" *ngIf="isEdit" class="btn btn-primary"
+                                            (click)="update()">Update</button>
+                                        <button style="margin-left: 5px;" type="button" class="btn btn-secondary"
+                                            (click)="addModal.hide()">Cancel</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->

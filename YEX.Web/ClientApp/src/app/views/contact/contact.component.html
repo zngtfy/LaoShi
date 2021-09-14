@@ -1,0 +1,48 @@
+<div class="bg">
+    <div class="blck"></div>
+</div>
+
+<div class="container1 bb">
+    <div class="search">
+        <h1>Liên hệ</h1>
+    </div>
+
+    <div class="public-list pd-2">
+        <form #f="ngForm" (ngSubmit)="send(f.form.valid)">
+            <div class="row">
+                <div class="col-md-12 col-sm-12 col-xs-12 form-group">
+                    <label class="sr-only" for="00N6F00000ESsv0">Loại liên hệ</label>
+                    <select class="form-control hidden" id="00N6F00000ESsv0" name="00N6F00000ESsv0"
+                        [(ngModel)]="vm.requestType" required="" placeholder="Reason for contact" aria-required="true">
+                        <option value="" disabled>Chọn loại liên hệ</option>
+                        <option *ngFor="let a of requestTypes" value="General Inquiry">{{a.displayAs}}</option>
+                    </select>
+                </div>
+                <div class="col-md-12 col-sm-12 col-xs-12 form-group">
+                    <label class="sr-only" for="subject">Tiêu đề</label>
+                    <input class="form-control valid" id="subject" maxlength="40" name="subject" type="text" required=""
+                        placeholder="Tiêu đề" aria-required="true" aria-invalid="false" [(ngModel)]="vm.requestName">
+                </div>
+                <div class="col-md-12 col-sm-12 col-xs-12 form-group">
+                    <label class="sr-only" for="email">Email hoặc số điện thoại</label>
+                    <input class="form-control" id="email" maxlength="80" name="email" type="email" required=""
+                        placeholder="Email hoặc số điện thoại" aria-required="true" [(ngModel)]="vm.requestBy">
+                </div>
+                <!-- <div class="col-md-6 col-sm-12 col-xs-12 form-group">
+                    <label class="sr-only" for="phone">Phone</label>
+                    <input class="form-control valid" id="phone" maxlength="80" name="phone" type="tel" pattern="\d{8}"
+                        required="" placeholder="Phone" aria-required="true" aria-invalid="false">
+                </div> -->
+                <div class="col-md-12 col-sm-12 col-xs-12 form-group">
+                    <label class="sr-only" for="00N6F00000ESsv5">Nội dung</label>
+                    <textarea class="form-control" id="00N6F00000ESsv5" name="00N6F00000ESsv5" [(ngModel)]="vm.content"
+                        placeholder="Nội dung" rows="6" required="" aria-required="true"></textarea>
+                </div>
+                <div *ngIf="getCookie('contact') == ''" class="col-md-12" #captchaRef2></div>
+                <div class="col-md-12 col-sm-12 col-xs-12 form-group"><br>
+                    <button id="btn_connect" type="submit" class="btn btn-primary">Gửi</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

@@ -1,0 +1,61 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30104.148
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "YEX.Web", "YEX.Web\YEX.Web.csproj", "{BEB829DB-1759-4F06-82A5-0BA18F533AEC}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "YEX.BLL", "YEX.BLL\YEX.BLL.csproj", "{8AB85893-7E97-4CFD-8D29-7C6A1557AE02}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "YEX.DAL", "YEX.DAL\YEX.DAL.csproj", "{14FF00AA-1365-4B10-ACAE-8CDF1989979A}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "YEX", "YEX\YEX.csproj", "{4791BEA2-602D-486C-93A9-2DEC942324DB}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SKG", "SKG\SKG.csproj", "{DDC8E08A-7DD3-4530-A28D-0F7CD587E579}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Test", "Test", "{BA054FFB-7190-4131-B03D-486B0071857A}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SKG.Test", "SKG.Test\SKG.Test.csproj", "{72ACC223-181F-4BE5-BEB8-B2B82DC0F8E3}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{BEB829DB-1759-4F06-82A5-0BA18F533AEC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BEB829DB-1759-4F06-82A5-0BA18F533AEC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BEB829DB-1759-4F06-82A5-0BA18F533AEC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BEB829DB-1759-4F06-82A5-0BA18F533AEC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8AB85893-7E97-4CFD-8D29-7C6A1557AE02}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8AB85893-7E97-4CFD-8D29-7C6A1557AE02}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8AB85893-7E97-4CFD-8D29-7C6A1557AE02}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8AB85893-7E97-4CFD-8D29-7C6A1557AE02}.Release|Any CPU.Build.0 = Release|Any CPU
+		{14FF00AA-1365-4B10-ACAE-8CDF1989979A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{14FF00AA-1365-4B10-ACAE-8CDF1989979A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{14FF00AA-1365-4B10-ACAE-8CDF1989979A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{14FF00AA-1365-4B10-ACAE-8CDF1989979A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4791BEA2-602D-486C-93A9-2DEC942324DB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4791BEA2-602D-486C-93A9-2DEC942324DB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4791BEA2-602D-486C-93A9-2DEC942324DB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4791BEA2-602D-486C-93A9-2DEC942324DB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DDC8E08A-7DD3-4530-A28D-0F7CD587E579}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DDC8E08A-7DD3-4530-A28D-0F7CD587E579}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DDC8E08A-7DD3-4530-A28D-0F7CD587E579}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DDC8E08A-7DD3-4530-A28D-0F7CD587E579}.Release|Any CPU.Build.0 = Release|Any CPU
+		{72ACC223-181F-4BE5-BEB8-B2B82DC0F8E3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{72ACC223-181F-4BE5-BEB8-B2B82DC0F8E3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{72ACC223-181F-4BE5-BEB8-B2B82DC0F8E3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{72ACC223-181F-4BE5-BEB8-B2B82DC0F8E3}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{72ACC223-181F-4BE5-BEB8-B2B82DC0F8E3} = {BA054FFB-7190-4131-B03D-486B0071857A}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		VisualSVNWorkingCopyRoot = .
+		SolutionGuid = {BA9904C3-6EC7-4801-9022-48B24BA6707F}
+	EndGlobalSection
+EndGlobal

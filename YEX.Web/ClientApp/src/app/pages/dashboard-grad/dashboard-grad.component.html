@@ -1,0 +1,181 @@
+<div class="animated fadeIn">
+    <div class="card">
+        <div class="card-body">
+            <span class="display-6">Xin chào, {{curUser.firstName}} !</span>
+            <p>Chào mừng bạn đến với trang thông tin luận văn tốt nghiệp...</p>
+        </div>
+    </div>
+    <div class="row">
+        <div  *ngIf="curThesis!=null" class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <span *ngIf="curThesis.ThesisType=='Master-Thesis'" class="display-6">
+                        <i class="fa fa-graduation-cap text-primary"></i>
+                        Luận văn Thạc sĩ
+                    </span>
+                    <span *ngIf="curThesis.ThesisType=='Bachelor-Thesis'" class="display-6">
+                        <i class="fa fa-graduation-cap text-danger"></i>
+                        Khóa luận tốt nghiệp đại học
+                    </span>
+                    <span *ngIf="curThesis.ThesisType=='Engineer-Thesis'" class="display-6">
+                        <i class="fa fa-graduation-cap text-danger"></i>
+                        ĐATN Kỹ sư đại học
+                    </span>
+                    <span *ngIf="curThesis.ThesisType=='Doctor-Thesis'" class="display-6">
+                        <i class="fa fa-graduation-cap text-success"></i>
+                        Luận án tiến sĩ
+                    </span>
+                </div>
+                <div class="card-body">
+                    <h5>{{curThesis.ThesisTitle}}</h5>
+                    <div class="bd-example">
+                        <p>{{curThesis.Description}}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div *ngIf="curThesis!=null" class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <img src="{{curThesis.LogoUrl}}" height="60px"/>
+                    <address>
+                        <strong *ngIf="curThesis.ThesisType=='Master-Thesis'">Luận văn thạc sĩ</strong>
+                        <strong *ngIf="curThesis.ThesisType=='Bachelor-Thesis'">Khóa luận tốt nghiệp ĐH</strong>
+                        <strong *ngIf="curThesis.ThesisType=='Engineer-Thesis'">ĐATN Kỹ sư</strong>
+                        <strong *ngIf="curThesis.ThesisType=='Doctor-Thesis'">Luận án tiến sĩ</strong>
+                        <br>
+                        <i class="fa fa-check-square-o text-primary"></i> {{curThesis.Class}} - {{curThesis.ThesisCategory}}<br>
+                        <i class="fa fa-check-square-o text-primary"></i> {{curThesis.SchoolName}}<br>
+                        <i class="fa fa-check-square-o text-primary"></i> Năm: {{curThesis.ThesisYear}}
+                    </address>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="card-group mb-4">
+        <div class="card">
+            <div class="card-body">
+                <div class="h1 text-muted text-right mb-4">
+                    <i class="icon-people"></i>
+                </div>
+                <div class="h4 mb-0">{{statistic.totalTeacher}}</div>
+                <small class="text-muted text-uppercase font-weight-bold">GV Hướng dẫn</small>
+                <div class="progress progress-xs mt-3 mb-0">
+                    <div class="progress-bar bg-info" role="progressbar" style="width: 25%" aria-valuenow="25"
+                        aria-valuemin="0" aria-valuemax="100"></div>
+                </div>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-body">
+                <div class="h1 text-muted text-right mb-4">
+                    <i class="icon-book-open"></i>
+                </div>
+                <div class="h4 mb-0">{{statistic.totalReference}}</div>
+                <small class="text-muted text-uppercase font-weight-bold">Tài liệu tham khảo</small>
+                <div class="progress progress-xs mt-3 mb-0">
+                    <div class="progress-bar bg-success" role="progressbar" style="width: 25%" aria-valuenow="25"
+                        aria-valuemin="0" aria-valuemax="100"></div>
+                </div>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-body">
+                <div class="h1 text-muted text-right mb-4">
+                    <i class="icon-notebook"></i>
+                </div>
+                <div class="h4 mb-0">{{statistic.totalDocument}}</div>
+                <small class="text-muted text-uppercase font-weight-bold">Văn bản liên quan</small>
+                <div class="progress progress-xs mt-3 mb-0">
+                    <div class="progress-bar bg-warning" role="progressbar" style="width: 25%" aria-valuenow="25"
+                        aria-valuemin="0" aria-valuemax="100"></div>
+                </div>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-body">
+                <div class="h1 text-muted text-right mb-4">
+                    <i class="icon-speedometer"></i>
+                </div>
+                <div class="h4 mb-0">{{formatDate(curThesis.StartTime)}}</div>
+                <small class="text-muted text-uppercase font-weight-bold">Bắt đầu</small>
+                <div class="progress progress-xs mt-3 mb-0">
+                    <div class="progress-bar" role="progressbar" style="width: 25%" aria-valuenow="25" aria-valuemin="0"
+                        aria-valuemax="100"></div>
+                </div>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-body">
+                <div class="h1 text-muted text-right mb-4">
+                    <i class="icon-speedometer"></i>
+                </div>
+                <div class="h4 mb-0">{{formatDate(curThesis.EndTime)}}</div>
+                <small class="text-muted text-uppercase font-weight-bold">Kết thúc</small>
+                <div class="progress progress-xs mt-3 mb-0">
+                    <div class="progress-bar bg-danger" role="progressbar" style="width: 25%" aria-valuenow="25"
+                        aria-valuemin="0" aria-valuemax="100"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <div class="callout callout-info">
+                                        <small class="text-muted">Số tài liệu đã upload</small>
+                                        <br>
+                                        <strong class="h4">{{statistic.totalUploadWork}}</strong>
+                                    </div>
+                                </div>
+                                <!--/.col-->
+                                <div class="col-sm-6">
+                                    <div class="callout callout-danger">
+                                        <small class="text-muted">Đang ở giai đoạn</small>
+                                        <br>
+                                        <strong *ngIf="statistic.periodStatus == null" class="h4 text-info">Bắt đầu</strong>
+                                        <strong *ngIf="statistic.periodStatus != null" class="h4 text-success">{{statistic.periodStatus}}</strong>
+                                    </div>
+                                </div>
+                                <!--/.col-->
+                            </div>
+                            <!--/.row-->
+                        </div>
+                        <!--/.col-->
+                        <div class="col-sm-6">
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <div class="callout callout-warning">
+                                        <small class="text-muted">Số ngày đã thực hiện</small>
+                                        <br>
+                                        <strong class="h4">{{getDiffDays(curThesis.StartTime, true)}}</strong>
+                                    </div>
+                                </div>
+                                <!--/.col-->
+                                <div class="col-sm-6">
+                                    <div class="callout callout-success">
+                                        <small class="text-muted">Số ngày còn lại</small>
+                                        <br>
+                                        <strong class="h4">{{getDiffDays(curThesis.EndTime, false)}}</strong>
+                                    </div>
+                                </div>
+                                <!--/.col-->
+                            </div>
+                            <!--/.row-->
+                        </div>
+                        <!--/.col-->
+                    </div>
+                    <!--/.row-->
+                </div>
+            </div>
+        </div>
+        <!--/.col-->
+    </div>
+    <!--/.row-->
+
+</div>

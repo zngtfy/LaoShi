@@ -1,0 +1,18 @@
+﻿{
+  "MailConfig": {
+    "To": "abc@gmail.com",
+    "DisplayName": "HaoLee-LaoShi App",
+    "TitleNotification": "Thông báo từ [haolaoshi.site]",
+    "From": "admin@haolaoshi.site",
+    "CC": "occbuu@gmail.com",
+    "CC1": "hieu.ln@ou.edu.vn",
+    "Password": "Hao123456",
+    "SMTP": "pro18.emailserver.vn",
+    "Port": 587,
+    "SMTP1": "pro18.emailserver.vn",
+    "Port1": 993,
+    "SystemAdmin": "Mr Hao Lee",
+    "SystemAdminContact": "+84 919 004 169",
+    "SystemAdminEmail": "hieu@tanvieta.co"
+  }
+}

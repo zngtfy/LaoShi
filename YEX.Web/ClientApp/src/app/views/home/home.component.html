@@ -1,0 +1,268 @@
+<carousel>
+    <ng-template ngFor let-item [ngForOf]="banners" let-i="index">
+        <slide>
+            <img src="{{item.value}}" alt="First slide" style="display: block; width: 100%; object-fit: cover;">
+            <div class="carousel-caption d-none d-md-block wow fadeIn" innerHTML="{{item.displayAs}}">
+            </div>
+        </slide>
+    </ng-template>
+</carousel>
+
+<div class="container1">
+    <section *ngIf="newss.totalRecords > 0">
+        <div class="row">
+            <div class="col-md-8">
+                <div class="single_stuff wow">
+                    <div class="single_stuff_img">
+                        <a href="#" data-toggle="modal" (click)="loadDetail(0)">
+                            <img src="{{firstNews.imgUrl}}" alt="">
+                        </a>
+                    </div>
+                    <div class="single_stuff_article">
+                        <div class="single_sarticle_inner">
+                            <div class="stuff_article_inner"> 
+                                <span class="stuff_date">{{formatDate(firstNews.createdOn)}}</span>
+                                <h2>
+                                    <a href="#" data-toggle="modal" (click)="loadDetail(0);">
+                                        {{firstNews.title}}
+                                    </a>
+                                </h2>
+                                <p>
+                                    {{firstNews.brief}} ...
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <h2 class="yellow_bg">What's Hot</h2>
+                <div class="middlebar_content_inner wow fadeInUp">
+                    <ul class="middlebar_nav">
+                        <ng-template ngFor let-item [ngForOf]="newss.data" let-i="index">
+                            <li>
+                                <a class="mbar_thubnail" href="#" data-toggle="modal"  (click)="loadDetail(i);">
+                                    <img src="{{item.imgUrl}}" alt="">
+                                </a>
+                                <a class="mbar_title text-primary" href="#" data-toggle="modal"  (click)="loadDetail(i);">
+                                    {{item.title}}
+                                </a>
+                                <small class="mbar_title1" >{{item.brief}}</small>
+                            </li>
+                        </ng-template>
+                    </ul>
+                </div>
+                <ul class="pagination" *ngIf="newss.totalPages > 1">
+                    <li class="page-item">
+                        <a class="page-link" (click)="loadPrevNews()">
+                            <i class="icon-arrow-left"></i>
+                        </a> 
+                    </li> 
+                    <li class="page-item active">
+                        <a class="page-link">{{newss.page}}</a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" (click)="loadNextNews()">
+                            <i class="icon-arrow-right"></i>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <hr class="mb-5">
+
+    <!--Section: More-->
+    <section>
+
+        <h2 class="my-5 h3 text-center">Một số tính năng của Hao Lee LaoShi</h2>
+
+        <!--First row-->
+        <div class="row features-small mt-5 wow fadeIn">
+
+            <!--Grid column-->
+            <div class="col-xl-3 col-lg-6">
+                <!--Grid row-->
+                <div class="row">
+                    <div class="col-2">
+                        <i class="fa fa-files-o fa-2x mb-1 text-info" aria-hidden="true"></i>
+                    </div>
+                    <div class="col-10 mb-2 pl-3">
+                        <h5 class="feature-title font-bold mb-1">Tài liệu học tập</h5>
+                        <p class="grey-text mt-2">Sinh viên có thể xem và lưu tất cả tài liệu học tập liên quan đến môn học như đề cương
+                            bài tập, bài thi mẫu, source mẫu, ... phục vụ cho môn học.
+                        </p>
+                    </div>
+                </div>
+                <!--/Grid row-->
+            </div>
+            <!--/Grid column-->
+
+            <!--Grid column-->
+            <div class="col-xl-3 col-lg-6">
+                <!--Grid row-->
+                <div class="row">
+                    <div class="col-2">
+                        <i class="fa fa-file-code-o fa-2x mb-1 text-info" aria-hidden="true"></i>
+                    </div>
+                    <div class="col-10 mb-2">
+                        <h5 class="feature-title font-bold mb-1">Bài tập</h5>
+                        <p class="grey-text mt-2">Sinh viên nộp bài tập cá nhân và bài tập nhóm cho giảng viên thông qua chức năng này. Và 
+                        làm bài kiểm tra online. Các bài tập và bài kiểm tra đều được chấm điểm và tổng kết thành điểm quá trình của các bạn.
+                        </p>
+                    </div>
+                </div>
+                <!--/Grid row-->
+            </div>
+            <!--/Grid column-->
+
+            <!--Grid column-->
+            <div class="col-xl-3 col-lg-6">
+                <!--Grid row-->
+                <div class="row">
+                    <div class="col-2">
+                        <i class="fa icon-badge fa-2x mb-1 text-info" aria-hidden="true"></i>
+                    </div>
+                    <div class="col-10 mb-2">
+                        <h5 class="feature-title font-bold mb-1">Điểm số</h5>
+                        <p class="grey-text mt-2">Sinh viên cò thể xem điểm số các bài tập, bài kiểm tra và tổng điểm quá trình của mình.
+                        </p>
+                    </div>
+                </div>
+                <!--/Grid row-->
+            </div>
+            <!--/Grid column-->
+
+            <!--Grid column-->
+            <div class="col-xl-3 col-lg-6">
+                <!--Grid row-->
+                <div class="row">
+                    <div class="col-2">
+                        <i class="fa fa-group fa-2x mb-1 text-info" aria-hidden="true"></i>
+                    </div>
+                    <div class="col-10 mb-2">
+                        <h5 class="feature-title font-bold mb-1">Thảo luận</h5>
+                        <p class="grey-text mt-2">Nơi trao đổi các vấn đề thắc mắc của sinh viên về môn học. sinh viên có thể trao đổi với nhau 
+                            và trao đổi với giảng viên, trợ giảng. 
+                        </p>
+                    </div>
+                </div>
+                <!--/Grid row-->
+            </div>
+            <!--/Grid column-->
+
+        </div>
+        <!--/First row-->
+
+        <!--Second row-->
+        <div class="row features-small mt-4 wow fadeIn">
+
+            <!--Grid column-->
+            <div class="col-xl-3 col-lg-6">
+                <!--Grid row-->
+                <div class="row">
+                    <div class="col-2">
+                        <i class="fa fa-bell-o fa-2x mb-1 text-info" aria-hidden="true"></i>
+                    </div>
+                    <div class="col-10 mb-2">
+                        <h5 class="feature-title font-bold mb-1">Thông báo</h5>
+                        <p class="grey-text mt-2">Cập nhật các thông báo liên quan đến môn học, lớp học</p>
+                    </div>
+                </div>
+                <!--/Grid row-->
+            </div>
+            <!--/Grid column-->
+
+            <!--Grid column-->
+            <div class="col-xl-3 col-lg-6">
+                <!--Grid row-->
+                <div class="row">
+                    <div class="col-2">
+                        <i class="fa fa-question fa-2x mb-1 text-info" aria-hidden="true"></i>
+                    </div>
+                    <div class="col-10 mb-2">
+                        <h5 class="feature-title font-bold mb-1">Hỗ trợ luận văn sinh viên</h5>
+                        <p class="grey-text mt-2">Cập nhật các văn bản liên quan đến luận văn, nghiên cứu khoa học cho sinh viên.
+                        </p>
+                    </div>
+                </div>
+                <!--/Grid row-->
+            </div>
+            <!--/Grid column-->
+
+            <!--Grid column-->
+            <div class="col-xl-3 col-lg-6">
+                <!--Grid row-->
+                <div class="row">
+                    <div class="col-2">
+                        <i class="fa fa-th fa-2x mb-1 text-info" aria-hidden="true"></i>
+                    </div>
+                    <div class="col-10 mb-2">
+                        <h5 class="feature-title font-bold mb-1">Nộp luận văn</h5>
+                        <p class="grey-text mt-2">Sinh viên có thể nộp đề cương, báo cáo, văn bản luận văn cho giảng viên.
+                        </p>
+                    </div>
+                </div>
+                <!--/Grid row-->
+            </div>
+            <!--/Grid column-->
+
+            <!--Grid column-->
+            <div class="col-xl-3 col-lg-6">
+                <!--Grid row-->
+                <div class="row">
+                    <div class="col-2">
+                        <i class="fa fa-file-zip-o fa-2x mb-1 text-info" aria-hidden="true"></i>
+                    </div>
+                    <div class="col-10 mb-2">
+                        <h5 class="feature-title font-bold mb-1">Tài liệu tham khảo luận văn</h5>
+                        <p class="grey-text mt-2">Các tài liệu tham khảo liên quan đến đề tài được giảng viên hướng dẫn chọn ra.
+                            </p>
+                    </div>
+                </div>
+                <!--/Grid row-->
+            </div>
+            <!--/Grid column-->
+
+        </div>
+        <!--/Second row-->
+
+    </section>
+    <!--Section: More-->
+</div>
+<div bsModal #newsModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="singlepost_area">
+                    <div class="singlepost_content">
+                        <span href="#" class="stuff_category">{{detailNews.categoryName}}</span>
+                        <p class="stuff_date">{{formatDate(detailNews.createdOn)}}</p>
+                        <h2><a href="#">{{detailNews.title}}</a></h2>
+                        <div class="single_stuff_img">
+                            <img src="{{detailNews.imgUrl}}" alt="">
+                        </div>
+                        <h5>{{detailNews.brief}}</h5>
+                        <div innerHTML="{{detailNews.content}}"></div>
+                        
+                        <hr />
+                        <div class="author"> <a href="#"><img src="assets/img/100x100.jpg" alt="" /></a>
+                            <div class="author_details">
+                                <h3><a href="#">Author Name</a></h3>
+                                <p>About Author Content lobortis. Proin ut nibh quis felis auctor ornare. Cras
+                                    ultricies, nibh at mollis faucibus, justo eros porttitor mi, quis auctor lectus arcu
+                                    sit amet nunc. Vivamus gravida vehicula arcu, vitae vulputate augue lacinia faucibus
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" (click)="newsModal.hide()">Close</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->

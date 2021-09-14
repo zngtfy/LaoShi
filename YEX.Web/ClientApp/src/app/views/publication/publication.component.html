@@ -1,0 +1,105 @@
+<div class="bg">
+    <div class="blck"></div>
+</div>
+
+<div class="container1 bb">
+    <div class="search">
+        <h1>Công bố khoa học</h1>
+        <div class="ii">
+            <input name="keyword" [(ngModel)]="keyword" class="ip" placeholder="Tìm kiếm theo...">
+            <button class="ipp" (click)="searchPublication()">Tìm</button>
+        </div>
+        <div class="filter">
+            <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                <label class="btn btn-secondary active">
+                    <input ng-model="chkTitle" name="chkTitle" type="checkbox" id="chkTitle" checked> Tiêu đề
+                </label>
+                <label class="btn btn-secondary">
+                    <input ng-model="chkCoAuthors" name="chkCoAuthors" type="checkbox" id="chkCoAuthors"> Đồng tác
+                    giả
+                </label>
+                <label class="btn btn-secondary">
+                    <input ng-model="chkKeywords" name="chkKeywords" type="checkbox" id="chkKeywords"> Từ khóa
+                </label>
+            </div>
+        </div>
+    </div>
+
+    <div class="public-list">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th width="5%">#</th>
+                    <th width="5%">Năm</th>
+                    <th width="70%">Công bố</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let item of TeacherPublication.data; index as i;">
+                    <td>[{{item.id}}]</td>
+                    <td>{{item.year}}</td>
+                    <td style="min-width: 350px;">
+                        <span *ngIf="item.type=='Domestic-Journal'" class="badge badge-success">{{item.type}}</span>
+                        <span *ngIf="item.type=='International-Conference'"
+                            class="badge badge-danger">{{item.type}}</span>
+                        <span *ngIf="item.type=='International-Journal'"
+                            class="badge badge-primary">{{item.type}}</span>
+                        <br />
+                        <p>
+                            <strong>{{item.title}}</strong> <br />
+                            Đồng tác giả: <i>{{item.coAuthors}}</i><br />
+                            <a href="{{item.publisherUrl}}" target="_blank">{{item.publisher}}</a>, Được chỉ mục bởi:
+                            {{item.indexedBy}}
+                        </p>
+                    </td>
+                    <td class="pull-right">
+                        <button type="button" class="btn btn-sm btn-outline-primary" (click)="viewPublication(item.id)">
+                            <i class="icon-info icons"></i>
+                        </button>
+                        &nbsp;
+                        <button type="button" class="btn btn-sm btn-outline-danger"
+                            (click)="downloadPublication(item.id)">
+                            <i class="icon-cloud-download icons"></i>
+                        </button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+    </div>
+
+    <div _ngcontent-c32="" _nghost-c34="" class="ng-star-inserted" style="padding: 1.25rem;"
+        [hidden]="TeacherPublication.data.length==0">
+        <nav _ngcontent-c34="" class="ng2-smart-pagination-nav ng-star-inserted row">
+            <ul class="pagination">
+                <li class="page-item">
+                    <a class="page-link" href="javascript:void(0);" (click)="loadPrevPublication();">Trước</a>
+                </li>
+                <li class="page-item active">
+                    <a class="page-link" >{{TeacherPublication.page}}</a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link" href="javascript:void(0);" (click)="loadNextPublication();">Sau</a>
+                </li>
+            </ul>
+            <span class="col-md-6 text-right text-italic">
+                {{TeacherPublication.totalRecords}} dòng
+            </span>
+        </nav>
+    </div>
+</div>
+
+<div bsModal #viewModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-primary" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+                <pdf-viewer [src]="curView" [render-text]="true" style="display: block;"></pdf-viewer>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" (click)="viewModal.hide()">Đóng</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->

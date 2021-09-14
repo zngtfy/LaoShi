@@ -1,0 +1,505 @@
+<div class="animated fadeIn">
+    <div class="pad margin no-print">
+        <div class="callout callout-success" style="margin-bottom: 0!important;">
+            <h4><i class="fa fa-info"></i> Note:</h4>
+            Đây là trang bài tập về nhà, bài tập bắt buộc phải làm và nộp bài online tại trang này!
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-6 col-md-9">
+            <div class="card">
+                <div class="card-header">
+                    <i class="fa fa-check-circle fa-lg text-primary"></i> Bài tập rèn luyện
+                    <div class="card-header-actions">
+                        <button type="button" class="btn btn-sm btn-outline-primary"
+                            (click)="isCollapsed = !isCollapsed">
+                            <div *ngIf="isCollapsed; then thenBlock else elseBlock"></div>
+                            <ng-template #thenBlock>Open</ng-template>
+                            <ng-template #elseBlock>Close</ng-template>
+                        </button>
+                    </div>
+                </div>
+                <div class="card-body" (collapsed)="collapsed($event)" (expanded)="expanded($event)"
+                    [collapse]="isCollapsed">
+                    <table *ngIf="courseAssignments.length > 0" class="table table-bordered table-striped table-sm">
+                        <thead>
+                            <tr>
+                                <th style="width:25px">#</th>
+                                <th>Bài tập</th>
+                                <th>Ghi chú</th>
+                                <th>Trạng thái</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let item of courseAssignments; index as i;">
+                                <td>{{i+1}}</td>
+                                <td>
+                                    <span *ngIf="item.assignmentType=='BaiTapGK'" class="badge badge-danger">Bắt
+                                        buộc</span>
+                                    <span *ngIf="item.assignmentType=='BaiTapRenLuyen'" class="badge badge-info">Luyện
+                                        tập</span>
+                                    <br />
+                                    {{item.name}}
+                                    <br />
+                                    <small>{{item.assignmentContent}}</small><br />
+                                    <a class="text-info" data-toggle="modal" (click)="showAssignmentDetail(item.id)"
+                                        style="cursor: pointer;">
+                                        <i class="fa fa-info-circle"></i>&nbsp; Xem chi tiết
+                                    </a>
+                                </td>
+                                <td>
+                                    <span *ngIf="item.groupNo==1" class="badge badge-success">Bài cá nhân</span>
+                                    <span *ngIf="item.groupNo > 1" class="badge badge-primary">Bài nhóm</span>
+                                    <br />
+                                    <div *ngIf="item.requireSubmit">
+                                        <i class="fa fa-cloud-upload text-success"></i> Cách nộp:
+                                        {{item.submitType}}<br />
+                                        <i class="fa fa-clock-o text-danger"></i> Hạn chót:
+                                        {{formatDate1(item.dueDate)}}
+                                    </div>
+                                </td>
+                                <td>
+                                    <div *ngIf="item.requireSubmit">
+                                        {{item.submissionStatus}} <br>
+                                        <span class="badge badge-success" *ngIf="checkDueDate(item.dueDate)"> Chưa hết
+                                            hạn</span>
+                                        <span class="badge badge-danger" *ngIf="checkDueDate(item.dueDate)== false"> Đã
+                                            hết hạn</span>
+                                    </div>
+
+                                </td>
+                                <td>
+                                    <button *ngIf="item.requireSubmit && checkDueDate(item.dueDate)" type="button"
+                                        class="btn btn-sm btn-outline-success mr-1 pull-right" data-toggle="modal"
+                                        (click)="openUploadModal(item.id)" style="margin-bottom: 4px">
+                                        <i class="fa fa-upload"></i>
+                                        <span> Nộp bài</span>
+                                    </button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6 col-md-3">
+            <div class="card">
+                <div class="card-body">
+                    <img src="{{curClass.LogoUrl}}" height="60px" />
+                    <address>
+                        <strong>{{curClass.ClassName}}</strong><br>
+                        <i class="fa fa-check-square-o text-primary"></i> {{curClass.ClassCode}}<br>
+                        <i class="fa fa-check-square-o text-primary"></i> {{curClass.Venue}}<br>
+                        <i class="fa fa-check-square-o text-primary"></i> {{curClass.Note}}<br />
+                        <i class="fa fa-check-square-o text-primary"></i> Học kỳ {{curClass.Semester}}, năm học
+                        {{curClass.SchoolYear}}
+                    </address>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div *ngIf="onlineTests.length > 0" class="row">
+        <div class="col-sm-6 col-md-10">
+            <div class="card">
+                <div class="card-header">
+                    <i class="fa fa-check-circle fa-lg text-danger"></i> Bài kiểm tra online
+                </div>
+                <div class="card-body">
+                    <table class="table table-bordered table-striped table-sm">
+                        <thead>
+                            <tr>
+                                <th style="width:25px">#</th>
+                                <th>Bài kiểm tra</th>
+                                <th>Ghi chú</th>
+                                <th>Trạng thái</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let item of onlineTests; index as i;">
+                                <td>{{i+1}}</td>
+                                <td>
+                                    <span *ngIf="item.assignmentType=='BaiTapGK'" class="badge badge-danger">Bắt
+                                        buộc</span>
+                                    <span *ngIf="item.assignmentType=='BaiTapRenLuyen'" class="badge badge-info">Luyện
+                                        tập</span>
+                                    <br />
+                                    {{item.name}}
+                                    <br />
+                                    <small>{{item.assignmentContent}}</small><br />
+                                    <a class="text-info" data-toggle="modal" (click)="showAssignmentDetail(item.id)"
+                                        style="cursor: pointer;">
+                                        <i class="fa fa-info-circle"></i>&nbsp; Xem chi tiết
+                                    </a>
+                                </td>
+                                <td>
+                                    <span *ngIf="item.groupNo==1" class="badge badge-success">Bài cá nhân</span>
+                                    <span *ngIf="item.groupNo > 1" class="badge badge-primary">Bài nhóm</span>
+                                    <br />
+                                    <div *ngIf="item.requireSubmit">
+                                        <i class="fa fa-cloud-upload text-success"></i> Cách nộp:
+                                        {{item.submitType}}<br />
+                                        <i class="fa fa-clock-o text-danger"></i> Hạn chót:
+                                        {{formatDate1(item.dueDate)}}
+                                    </div>
+                                </td>
+                                <td>
+                                    <div *ngIf="item.requireSubmit">
+                                        {{item.submissionStatus}} <br>
+                                        <span class="badge badge-success" *ngIf="checkDueDate(item.dueDate)"> Chưa hết
+                                            hạn</span>
+                                        <span class="badge badge-danger" *ngIf="checkDueDate(item.dueDate)== false"> Đã
+                                            hết hạn</span>
+                                    </div>
+
+                                </td>
+                                <td>
+                                    <button *ngIf="item.requireSubmit && checkDueDate(item.dueDate)" type="button"
+                                        class="btn btn-sm btn-outline-danger mr-1 pull-right" data-toggle="modal"
+                                        (click)="doTestOnline(item.id)" style="margin-bottom: 4px">
+                                        <i class="fa fa-deviantart"></i>
+                                        <span> Làm bài</span>
+                                    </button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6 col-md-2">
+        </div>
+    </div>
+</div>
+<div bsModal #uploadModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-success" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">
+                    <i class="fa fa-cloud-upload text-light"></i> Nộp bài
+                    <small>[{{subAssign.name}}]</small>
+                </h4>
+                <button type="button" class="close" (click)="uploadModal.hide()" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <tabset>
+                    <tab>
+                        <ng-template tabHeading>
+                            <i class="icon-cloud-upload"></i> Nộp bài tại đây &nbsp;
+                            <span class="badge badge-success">{{submissionInfo.subType.value}}
+                            </span>
+                        </ng-template>
+                        <p>
+                            Cách nộp: <strong>{{submissionInfo.subType.displayAs}}</strong>
+                            <br /> Lưu ý: đối với nộp file trên hệ thống, không được nộp quá 20 lần !
+                            <br/> Bạn còn <span class="text-danger text-bold">{{20 - submissionInfo.submissions.totalRecords}}</span>  lần nộp !
+                        </p>
+                        <p *ngIf="submissionInfo.submissions.totalRecords >= 20" class="text-danger">
+                            <strong>Bạn không thể nộp được nữa vì đã quá số lần cho phép! </strong>
+                        </p>
+                        <p *ngIf="subAssign.scoreStatus!='unscored'" class="text-danger">
+                            <strong>Bạn không thể nộp được nữa vì giáo viên đã chấm điểm! </strong>
+                        </p>
+                        <div *ngIf="submissionInfo.submissions.totalRecords < 20 && subAssign.scoreStatus=='unscored'">
+                            <div *ngIf="submissionInfo.subType!=null && submissionInfo.subType.value.indexOf('-Doc')>0"
+                                class="center">
+                                <ngx-file-drop accept="*" multiple="false"
+                                    dropZoneLabel="Kéo thảo tập tin cần nộp vào đây..." (onFileDrop)="dropped($event)"
+                                    (onFileOver)="fileOver($event)" (onFileLeave)="fileLeave($event)">
+                                    <ng-template ngx-file-drop-content-tmp let-openFileSelector="openFileSelector">
+                                        Kéo thảo tập tin cần nộp vào đây ....
+                                        <br />
+                                        <a class="text-info" (click)="openFileSelector()" style="cursor: pointer;">
+                                            Browse
+                                            Files</a>
+                                    </ng-template>
+                                </ngx-file-drop>
+                                <div *ngIf="files.length > 0" class="upload-table">
+                                    <p>Các tập tin đã chọn</p>
+                                    <table class="table table-bordered table-striped table-sm">
+                                        <thead>
+                                            <tr>
+                                                <th>#</th>
+                                                <th>Tên tập tin</th>
+                                                <th></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody class="upload-name-style">
+                                            <tr *ngFor="let item of files; let i=index">
+                                                <td>{{i+1}}</td>
+                                                <td>
+                                                    <strong>{{ item.relativePath }}</strong>
+                                                    - Kích thước: {{ item.size }} - <br>
+                                                    - Loại tập tin: {{ item.type }}
+                                                </td>
+                                                <td>
+                                                    <button (click)="deleteFile(i)" type="button"
+                                                        class="btn btn-sm btn-outline-secondary">
+                                                        <i class="fa fa-times text-danger"></i>
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                    <div class=" mb-3 mb-xl-0 text-center">
+                                        <button (click)="uploadDocument()" type="button"
+                                            class="btn btn-pill btn-danger pull-right">
+                                            <i class="fa fa-cloud-upload"></i>&nbsp; Tải lên
+                                        </button>
+                                    </div>
+                                    <div class="clearfix"></div>
+                                    <br />
+                                </div>
+                            </div>
+                            <div *ngIf="submissionInfo.subType!=null && submissionInfo.subType.value.indexOf('-Git')>0">
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        <div class="form-group">
+                                            <label for="ccnumber">
+                                                <i class="fa fa-github-alt fa-lg mt-4 text-danger"></i>
+                                                Đường link gitHub cần nộp (url):
+                                            </label>
+                                            <input [(ngModel)]="subUrlGit" type="text" class="form-control" />
+                                        </div>
+                                        <div class="form-actions">
+                                            <button type="button" class="btn btn-primary"
+                                                (click)="saveAssignmentSubmission(true)">
+                                                <i class="fa fa-save"></i>
+                                                Lưu đường link
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!--/.row-->
+                            </div>
+                            <div *ngIf="submissionInfo.subType!=null && submissionInfo.subType.value.indexOf('-Url')>0">
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        <div class="form-group">
+                                            <label for="ccnumber">
+                                                <i class="fa fa-link fa-lg mt-4 text-success"></i>
+                                                Đường link cần nộp (url):
+                                            </label>
+                                            <input [(ngModel)]="subUrl" type="text" class="form-control" />
+                                        </div>
+                                        <div class="form-actions">
+                                            <button type="button" class="btn btn-primary"
+                                                (click)="saveAssignmentSubmission(false)">
+                                                <i class="fa fa-save"></i>
+                                                Lưu đường link
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!--/.row-->
+                            </div>
+                        </div>
+                    </tab>
+                    <tab>
+                        <ng-template tabHeading>
+                            <i class="icon-share-alt"></i> Lịch sử nộp bài &nbsp;
+                            <span class="badge badge-pill badge-info">{{submissionInfo.submissions.totalRecords}}</span>
+                        </ng-template>
+                        <p *ngIf="submissionInfo.submissions.totalRecords==0" class="text-danger"> Chưa có nộp bài lần
+                            nào !! </p>
+                        <table *ngIf="submissionInfo.submissions.totalRecords>0"
+                            class="table table-bordered table-striped table-sm">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Ngày giờ</th>
+                                    <th>Người nộp</th>
+                                    <th width="50%"></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let item of submissionInfo.submissions.data; index as i;">
+                                    <td>{{i+1}}</td>
+                                    <td>{{formatDate1(item.createdOn)}}</td>
+                                    <td>{{item.createdByName}}</td>
+                                    <td>
+                                        <div *ngIf="item.submitType.indexOf('-Doc')>0 && item.attachments.length>0">
+                                            <div *ngFor="let att of item.attachments; index as i">
+                                                <i class="fa fa-file-text text-success"></i>
+                                                <a href="javascript:void(0);"
+                                                    (click)="downloadAttachment(att.id, att.displayName)">
+                                                    {{att.displayName}}
+                                                </a>
+                                            </div>
+                                        </div>
+                                        <div class="divUrl" *ngIf="item.submitType.indexOf('-Git')>0">
+                                            <i class="fa fa-git-square text-danger"></i>
+                                            <a class="aUrl" href="{{item.submissionUrl}}" target="_blank">
+                                                {{item.submissionUrl}}
+                                            </a>
+                                        </div>
+                                        <div class="divUrl" *ngIf="item.submitType.indexOf('-Url')>0">
+                                            <i class="fa fa-external-link-square text-warning"></i>
+                                            <a class="aUrl" href="{{item.submissionUrl}}" target="_blank">
+                                                {{item.submissionUrl}}
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <nav *ngIf="submissionInfo.submissions.totalPages>1">
+                            <ul class="pagination">
+                                <li class="page-item">
+                                    <a class="page-link" href="javascript:void(0);"
+                                        (click)="loadAssignmentSubmissionPrev()">Trước</a>
+                                </li>
+                                <li class="page-item active">
+                                    <a class="page-link">{{submissionInfo.submissions.page}}</a>
+                                </li>
+                                <li class="page-item">
+                                    <a class="page-link" href="javascript:void(0);">Sau</a>
+                                </li>
+                            </ul>
+                        </nav>
+                    </tab>
+                    <tab>
+                        <ng-template tabHeading>
+                            <i class="icon-user"></i> Thành viên nhóm &nbsp;
+                            <span class="badge badge-pill badge-danger">{{submissionInfo.users.length}}</span>
+                        </ng-template>
+                        <table class="table table-responsive-sm table-hover mb-0">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th class="text-center"><i class="icon-people"></i></th>
+                                    <th>MSSV</th>
+                                    <th>Họ tên</th>
+                                    <th>Ngày sinh</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let item of submissionInfo.users; index as i;">
+                                    <td>{{i+1}}</td>
+                                    <td class="text-center">
+                                        <div class="avatar">
+                                            <img src="{{item.avatar}}" class="img-avatar" alt="{{item.email}}">
+                                        </div>
+                                    </td>
+                                    <td>
+                                        {{item.officialStudentId}}
+                                    </td>
+                                    <td>
+                                        <strong>{{item.lastName}} {{item.firstName}}</strong><br />
+                                        <!-- <i class="fa fa-home text-primary"></i> {{item.address}} <br/> -->
+                                        <i class="fa fa-envelope-o text-primary"></i> {{item.email}} <br />
+                                        <i class="fa fa-phone text-primary"></i> {{item.phone}} <br />
+                                    </td>
+                                    <td>
+                                        {{formatDate2(item.birthday)}}
+                                    </td>
+                                    <td>
+                                        Lớp: {{item.class}} <br />
+                                        {{item.courseName}}
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </tab>
+                </tabset>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" (click)="uploadModal.hide()">Đóng</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<div bsModal #infoModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-info" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 *ngIf="assignmentDetail.assignment!=null" class="modal-title">
+                    <i class="fa fa-book"></i> {{assignmentDetail.assignment.name}}
+                </h4>
+                <button type="button" class="close" (click)="infoModal.hide()" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div *ngIf="assignmentDetail.assignment!=null" class="col-sm-6 col-lg-4">
+                        <div class="form-group">
+                            <p class="labelName"><i class="fa fa-cogs"></i> Thông tin bài tập</p>
+                            <p class="pName">
+                                <span class="text-primary"> {{assignmentDetail.assignment.name}}</span> <br />
+                                {{assignmentDetail.assignment.assignmentContent}} <br />
+                                <span *ngIf="assignmentDetail.assignment.assignmentType=='BaiTapGK'">Bài tập quá trình,
+                                    tính điểm</span>
+                                <span *ngIf="assignmentDetail.assignment.assignmentType=='BaiTapRenLuyen'">Bài tập rèn
+                                    luyện, không tính điểm</span>
+                            </p>
+                            <p *ngIf="assignmentDetail.assignment.requireSubmit" class="labelName"> <i
+                                    class="fa fa-calendar-times-o"></i> Thông tin nộp bài </p>
+                            <p *ngIf="assignmentDetail.assignment.requireSubmit" class="pName">
+                                Hình thức nộp: {{assignmentDetail.assignment.submitType}} <br />
+                                Hạn chót: {{formatDate1(assignmentDetail.assignment.dueDate)}} <br />
+                            </p>
+                        </div>
+                    </div>
+                    <div *ngIf="assignmentDetail.scoreConfig!=null" class="col-sm-6 col-lg-4">
+                        <div class="form-group">
+                            <p class="labelName"><i class="fa fa-grav"></i> Thông tin điểm số</p>
+                            <p class="pName">
+                                <span class="text-primary"> {{assignmentDetail.scoreConfig.description}}</span> <br />
+                                {{assignmentDetail.scoreConfig.note}} <br />
+                                <span *ngIf="assignmentDetail.scoreConfig.scoreType=='QuaTrinh'">Bài tập quá
+                                    trình</span> <br />
+                                <span class="badge badge-pill badge-primary">Tỷ lệ điểm:
+                                    {{assignmentDetail.scoreConfig.percentage}}%</span>
+                            </p>
+                        </div>
+                    </div>
+                    <div *ngIf="assignmentDetail.assignment!=null && assignmentDetail.assignment.requireSubmit"
+                        class="col-sm-6 col-lg-4">
+                        <div *ngIf="assignmentDetail.submission!=null" class="form-group">
+                            <p class="labelName"><i class="fa fa-upload"></i> Thông tin nộp bài</p>
+                            <p class="pName">
+                                <span class="badge badge-pill badge-success">Đã nộp</span><br />
+                                Vào lúc: {{formatDate1(assignmentDetail.submission.createdOn)}} <br />
+                                Người nộp: {{assignmentDetail.submission.createdByName}}
+                            </p>
+                        </div>
+                        <div *ngIf="assignmentDetail.submission==null" class="form-group">
+                            <p class="labelName"><i class="fa fa-upload"></i> Thông tin nộp bài</p>
+                            <p class="pName">
+                                <span class="badge badge-pill badge-danger">Chưa nộp</span>
+                            </p>
+                        </div>
+                        <div *ngIf="assignmentDetail.score!=null" class="form-group">
+                            <p class="labelName"><i class="fa fa-desktop"></i> Thông tin điểm số</p>
+                            <p class="pName">
+                                <span class="badge badge-pill badge-success">Đã có điểm ! </span>
+                                <br />
+                                Điểm: {{assignmentDetail.score.score}} <br />
+                                Tỷ lệ : {{assignmentDetail.score.percentage}} %<br />
+                                Vào lúc: {{formatDate1(assignmentDetail.score.createdOn)}} <br />
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" (click)="infoModal.hide()">
+                    <i class="fa fa-times"></i>
+                    Đóng
+                </button>
+                <button *ngIf="assignmentDetail.assignment != null && assignmentDetail.assignment.submitType != 'Per-Online-Test'" (click)="downloadAssignment()" type="button" class="btn btn-primary">
+                    <i class="fa fa-download"></i>
+                    Tải về
+                </button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->

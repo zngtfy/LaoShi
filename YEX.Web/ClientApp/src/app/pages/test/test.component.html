@@ -1,0 +1,222 @@
+<div *ngIf="assigmentExam.assignmentExam ==null || assigmentExam.exam ==null" class="animated fadeIn">
+    <div class="pad margin no-print">
+        <div class="callout callout-danger" style="margin-bottom: 0!important;">
+            <h4><i class="fa fa-info"></i> Lưu ý:</h4>
+            <p style="font-size:0.9em; color: gray; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
+                Đây là trang làm kiểm tra trực tuyến! Bạn có thể làm nhiều lần trước khi hết hạn! Hệ thống sẽ cập nhật
+                điểm sau cùng của bạn!
+                <br />
+                Mỗi lần test đề khác nhau, bạn phải hoàn tất thì điểm mới cập nhật! Nếu bạn chưa complete thì hệ thống
+                sẽ không ghi nhận điểm của bạn!
+            </p>
+        </div>
+    </div>
+    <br />
+    <div class="card card-accent-info">
+        <div class="card-body">
+            <p>Thông báo !</p>
+            <div class="bd-example bd-example-type">
+                <p class="display-5">
+                    Bài kiểm tra online chưa được cập nhật trên hệ thống ! <br />
+                    Bạn hãy quay lại sau !
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+<div *ngIf="assigmentExam.assignmentExam !=null && assigmentExam.exam !=null" class="animated fadeIn">
+    <div class="pad margin no-print">
+        <div class="callout callout-danger" style="margin-bottom: 0!important;">
+            <h4><i class="fa fa-info"></i> Lưu ý:</h4>
+            <p style="font-size:0.9em; color: gray; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
+                Đây là trang làm kiểm tra trực tuyến! Bạn có thể làm nhiều lần trước khi hết hạn! Hệ thống sẽ cập nhật
+                điểm sau cùng của bạn!
+                <br />
+                Mỗi lần test đề khác nhau, bạn phải hoàn tất thì điểm mới cập nhật! Nếu bạn chưa complete thì hệ thống
+                sẽ không ghi nhận điểm của bạn!
+            </p>
+            <p *ngIf="assigmentExam.studentExam!=null" class="text-primary">
+                Hệ thống tìm thấy thông tin bạn đã làm bài kiểm tra này! <br />
+                <i class="fa fa-clock-o"></i> Vào lúc:
+                {{formatDate(assigmentExam.studentExam.createdOn)}}<br />
+                <i class="fa fa-sticky-note-o"></i> Điểm: <strong>{{assigmentExam.studentExam.score}} / {{assigmentExam.studentExam.totScore}} </strong> <br/>
+                <i class="fa fa-sticky-note-o"></i> Kết quả: <strong>{{resultScore(assigmentExam.studentExam.score,assigmentExam.studentExam.totScore)}} </strong>
+            </p>
+        </div>
+    </div>
+    <br />
+    <div class="row">
+        <div class="col-sm-12 col-md-9">
+            <div class="card border-info">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-sm-12 col-md-4">
+                            <i class="icon-graduation icons mt-1 font-4xl text-primary"></i>
+                            <br />
+                            KIỂM TRA ONLINE
+                        </div>
+                        <div class="col-sm-12 col-md-4">
+                            <i class="fa fa-check-square-o text-info"></i>
+                            {{assigmentExam.assignmentExam.assignmentName}} <br />
+                            <i class="fa fa-check-square-o text-info"></i>
+                            {{assigmentExam.assignmentExam.assignmentType}} <br />
+                        </div>
+                        <div class="col-sm-12 col-md-4">
+                            <i class="fa fa-check-square-o text-success"></i>
+                            {{curClass.SubjectCode}} - {{curClass.SubjectName}} <br />
+                            <i class="fa fa-check-square-o text-success"></i>
+                            {{curClass.SchoolCode}} - {{curClass.SchoolName}} <br />
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <div *ngIf="passTime == 0 && timeLeft > 0" class="card">
+                <div *ngIf="assigmentExam.exam!=null" class="card-body">
+                    <div class="row">
+                        <div class="col-sm-12 col-lg-6">
+                            <p class="text-center">
+                                {{assigmentExam.exam.examSchool}} <br>
+                                <strong>{{assigmentExam.exam.examDepartment}}</strong> <br>
+                                ------
+                            </p>
+                        </div>
+                        <div class="col-sm-12 col-lg-6">
+                            <p class="text-center">
+                                Cộng Hòa Xã hội Chủ nghĩa Việt Nam <br>
+                                Độc lập – Tự do – Hạnh phúc <br>
+                                ---oOo---
+                            </p>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-12 col-lg-12">
+                            <p class="text-center">
+                                {{assigmentExam.exam.examTitle}} <br />
+                                <strong>{{curClass.SubjectName}}</strong> <br />
+                                Thời gian: {{assigmentExam.exam.totMinutes}} phút<br /><br />
+                                <span class="ghichu">{{assigmentExam.exam.note}} </span><br>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div *ngIf="passTime > 0 && timeLeft > 0 && curQuestion!=null" class="card">
+                <div class="card-header">
+                    <strong>Câu {{currentPage}}</strong>
+                    <small>{{curQuestion.questionInstruction}}</small>
+                </div>
+                <div class="card-body">
+                    <div>
+                        <p class="font-2xl">{{curQuestion.questionContent}}</p><br/>
+                        <img *ngIf="curQuestion.questionImage!=null" [src]="curQuestion.questionImage" class="imgQuestion" />
+                    </div>
+                    
+                    <div *ngIf="curQuestion.questionType == 'Text-TF-Choice' || curQuestion.questionType == 'Text-1-Choice'"
+                        class="form-group row">
+                        <div class="offset-1 col-md-11 col-form-label">
+                            <div *ngFor="let a of curQuestion.answers; index as i;" class="form-check">
+                                <input [checked]="a.checked" (change)="handleChange($event)" class="form-check-input"
+                                    type="radio" name="radios" id="radioAnswer_{{a.id}}_{{i}}"
+                                    value="radioAnswer_{{a.id}}_{{i}}">
+                                <label class="form-check-label" for="radioAnswer_{{a.id}}_{{i}}">
+                                    {{a.answerContent}}
+                                    <br/>
+                                    <img *ngIf="a.answerImage!=null" [src]="a.answerImage" class="imgAnswer" />
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div *ngIf="curQuestion.questionType == 'Text-n-Choice'" class="form-group row">
+                        <div class="offset-1 col-md-11 col-form-label">
+                            <div *ngFor="let a of curQuestion.answers; index as i;" class="form-check">
+                                <input [checked]="a.checked" (change)="handleChange($event)" class="form-check-input"
+                                    type="checkbox" value="checkboxAnswer_{{a.id}}_{{i}}"
+                                    id="checkboxAnswer_{{a.id}}_{{i}}">
+                                <label class="form-check-label" for="checkboxAnswer_{{a.id}}_{{i}}">
+                                    {{a.answerContent}}
+                                    <br/>
+                                    <img *ngIf="a.answerImage!=null" [src]="a.answerImage" class="imgAnswer" />
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div *ngIf="passTime > 0 && timeLeft == 0" class="card card-accent-info">
+                <div class="card-body">
+                    <p>Chúc mừng bạn!</p>
+                    <div class="bd-example bd-example-type">
+                        <span class="display-5">Bạn đã hoàn tất !</span>
+                    </div>
+                    <p *ngIf="resultExam.studentExam!=null">
+                        Kết quả như sau: <br/>
+                        <i class="fa fa-check-circle-o text-success"></i> Kết quả: <strong>{{resultScore(resultExam.studentExam.score,resultExam.studentExam.totScore)}}</strong><br/>
+                        <i class="fa fa-check-circle-o text-success"></i> Điểm: <strong>{{resultExam.studentExam.score}}/{{resultExam.studentExam.totScore}}</strong><br/>
+                        <span *ngIf="resultExam.studentScore!=null">
+                            <i class="fa fa-check-circle-o text-success"></i> Điểm hệ số 10: <strong class="text-danger">{{resultExam.studentScore.score}}</strong>
+                        </span>
+                    </p>
+                </div>
+            </div>
+        </div>
+        <!--/.col-->
+        <div class="col-sm-12 col-md-3">
+            <div class="card border-warning">
+                <div class="card-body">
+                    <div class="h1 text-muted text-right mb-4">
+                        <i class="icon-speedometer"></i>
+                    </div>
+                    <div class="h4 mb-0 text-danger">{{countDown}}</div>
+                    <small class="text-muted font-weight-bold">Thời gian còn lại</small>
+                    <div class="progress progress-xs mt-3 mb-0">
+                        <div class="progress-bar bg-danger" role="progressbar" [ngStyle]="myStyles" aria-valuenow="25"
+                            aria-valuemin="0" aria-valuemax="100"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="card border-danger">
+                <div class="card-body">
+                    <p *ngIf="passTime > 0 && timeLeft > 0" class="text-center">
+                        <i class="fa fa-circle-o-notch font-5xl fa-lg mt-4 fa-spin text-primary"></i>
+                    </p>
+                    <p *ngIf="passTime > 0 && timeLeft == 0" class="text-center">
+                        <i class="fa fa-check-square-o font-5xl fa-lg mt-4 text-success"></i>
+                        <br /> Bạn đã hoàn tất !
+                    </p>
+                    <p *ngIf="passTime > 0 && timeLeft == 0">
+                        <br /> Thời gian: <strong>{{duration}}</strong>
+                        <br /> Bắt đầu: <strong>{{formatDate1(startTime)}}</strong>
+                        <br /> Kết thúc: <strong>{{formatDate1(endTime)}}</strong>
+                    </p>
+                    <br />
+                    <p class="text-center">
+                        <button *ngIf="passTime == 0 && timeLeft > 0" type="button"
+                            class="btn btn-brand btn-lg btn-stack-overflow mr-1" (click)='startTimer()'
+                            style="margin-bottom: 4px">
+                            <i class="icon-control-play icons"></i>
+                            <span>Bắt đầu</span>
+                        </button>
+                        <button *ngIf="passTime > 0 && timeLeft > 0" type="button"
+                            class="btn btn-brand btn-lg btn-linkedin mr-1" (click)='pauseTimer()'
+                            style="margin-bottom: 4px">
+                            <i class="fa fa-check-square-o"></i>
+                            <span>Hoàn tất</span>
+                        </button>
+                    </p>
+                </div>
+                <div *ngIf="passTime > 0 && timeLeft > 0" class="card-footer">
+                    <div class="paginCenter">
+                        <pagination [boundaryLinks]="true" [itemsPerPage]="1" [totalItems]="totalItems"
+                            [(ngModel)]="currentPage" class="pagination-sm" [maxSize]="5" previousText="&lsaquo;"
+                            nextText="&rsaquo;" firstText="&laquo;" lastText="&raquo;"
+                            (pageChanged)="pageChanged($event)"></pagination>
+                    </div>
+                    <pre class="card card-body card-header mb-3">Bạn đang ở trang: {{currentPage}}/{{totalItems}}
+                    </pre>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,147 @@
+<div class="animated fadeIn">
+    <div class="pad margin no-print">
+        <div class="callout callout-danger" style="margin-bottom: 0!important;">
+            <h4><i class="fa fa-info"></i> Lưu ý:</h4>
+            Đây là trang nộp bài trực tuyến khóa luận / luận văn tốt nghiệp!
+        </div>
+    </div>
+    <br />
+    <div class="row">
+        <div class="col-sm-6 col-md-9">
+            <div class="card">
+                <div class="card-header">
+                    <form action="" method="post" class="form-horizontal">
+                        <div class="form-group row">
+                            <label class="col-md-3 col-form-label" for="select2">Vui lòng chọn</label>
+                            <div class="col-md-9">
+                                <select id="select2" name="select2" (change)="changeType($event)" class="form-control">
+                                    <option value="">Vui lòng chọn</option>
+                                    <option *ngFor="let item of worktypes; index as i;" value="{{i}}">{{item.displayAs}}
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div *ngIf="show" class="card-body">
+                    <p><strong>{{typeStr}}</strong></p>
+                    <tabset>
+                        <tab>
+                            <ng-template tabHeading>
+                                <i class="icon-cloud-upload"></i> Tải lên &nbsp;
+                                <span class="badge badge-success">New</span>
+                            </ng-template>
+                            <ngx-file-drop accept="*" multiple="false"
+                                dropZoneLabel="Kéo thảo tập tin cần nộp vào đây..." (onFileDrop)="dropped($event)"
+                                (onFileOver)="fileOver($event)" (onFileLeave)="fileLeave($event)">
+                                <ng-template ngx-file-drop-content-tmp let-openFileSelector="openFileSelector">
+                                    Kéo thảo tập tin cần nộp vào đây ....
+                                    <br />
+                                    <a class="text-info" (click)="openFileSelector()" style="cursor: pointer;">
+                                        Browse
+                                        Files</a>
+                                </ng-template>
+                            </ngx-file-drop>
+                            <div *ngIf="files.length > 0" class="upload-table">
+                                <p>Các tập tin đã chọn</p>
+                                <table class="table table-bordered table-striped table-sm">
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Tên tập tin</th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="upload-name-style">
+                                        <tr *ngFor="let item of files; let i=index">
+                                            <td>{{i+1}}</td>
+                                            <td>
+                                                <strong>{{ item.relativePath }}</strong>
+                                                - Kích thước: {{ item.size }} - <br>
+                                                - Loại tập tin: {{ item.type }}
+                                            </td>
+                                            <td>
+                                                <button (click)="deleteFile(i)" type="button"
+                                                    class="btn btn-sm btn-outline-secondary">
+                                                    <i class="fa fa-times text-danger"></i>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <div class=" mb-3 mb-xl-0 text-center">
+                                    <button (click)="uploadDocument()" type="button"
+                                        class="btn btn-pill btn-danger pull-right">
+                                        <i class="fa fa-cloud-upload"></i>&nbsp; Tải lên
+                                    </button>
+                                </div>
+                                <div class="clearfix"></div>
+                                <br />
+                            </div>
+                        </tab>
+                        <tab>
+                            <ng-template tabHeading>
+                                <i class="icon-list"></i> Lịch sử nộp bài &nbsp;
+                                <span class="badge badge-pill badge-danger">{{works.totalRecords}}</span>
+                            </ng-template>
+                            <p *ngIf="works.totalRecords==0" class="text-danger">Chưa nộp bài lần nào! </p>
+                            <table *ngIf="works.totalRecords>0"
+                                class="table table-bordered table-striped table-sm">
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Ngày giờ</th>
+                                        <th>Người nộp</th>
+                                        <th width="50%"></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let item of works.data; index as i;">
+                                        <td>{{getSTT(i)}}</td>
+                                        <td>{{formatDate(item.createdOn)}}</td>
+                                        <td>{{item.createdByName}}</td>
+                                        <td>
+                                            <div *ngIf="item.attachments.length>0">
+                                                <div *ngFor="let att of item.attachments; index as i">
+                                                    <i class="fa fa-file-text text-success"></i>
+                                                    <a href="javascript:void(0);"
+                                                        (click)="downloadAttachment(att.id, att.displayName)">
+                                                        {{att.displayName}}
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <div *ngIf="works.totalPages>1" class="col-xs-12 col-12">
+                                <pagination [totalItems]="works.totalRecords" [(ngModel)]="works.page" (pageChanged)="pageChanged($event)"
+                                [itemsPerPage]="works.size" [maxSize]="3" previousText="&lsaquo;" nextText="&rsaquo;" firstText="&laquo;" lastText="&raquo;">
+                                </pagination>
+                                <pre class="card card-body card-header mb-3">Bạn đang ở trang: {{works.page}}/{{works.totalPages}}</pre>
+                            </div>
+                        </tab>
+                    </tabset>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6 col-md-3">
+            <div *ngIf="curThesis!=null" class="card">
+                <div class="card-body">
+                    <img src="{{curThesis.LogoUrl}}" height="60px" />
+                    <address>
+                        <strong *ngIf="curThesis.ThesisType=='Master-Thesis'">Luận văn thạc sĩ</strong>
+                        <strong *ngIf="curThesis.ThesisType=='Bachelor-Thesis'">Khóa luận tốt nghiệp ĐH</strong>
+                        <strong *ngIf="curThesis.ThesisType=='Engineer-Thesis'">ĐATN Kỹ sư</strong>
+                        <strong *ngIf="curThesis.ThesisType=='Doctor-Thesis'">Luận án tiến sĩ</strong>
+                        <br>
+                        <i class="fa fa-check-square-o text-primary"></i> Lớp: {{curThesis.Class}}<br>
+                        <i class="fa fa-check-square-o text-primary"></i> {{curThesis.ThesisCategory}}<br>
+                        <i class="fa fa-check-square-o text-primary"></i> {{curThesis.SchoolName}}<br>
+                        <i class="fa fa-check-square-o text-primary"></i> Năm: {{curThesis.ThesisYear}}
+                    </address>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,92 @@
+<div class="app-body">
+    <main class="main d-flex align-items-center">
+        <div class="container">
+            <br />
+            <div class="center text-center">
+                <img class="img" src="assets/img/brand/logo.png" />
+                <h4 class="alert-heading">Xin chào <span class="text-primary">{{curUser.firstName}}</span>  !</h4>
+                <p *ngIf="curCls.length > 0">Chào mừng bạn đến với lớp học, hệ thống tìm thấy các lớp học bạn tham gia. Bạn chọn lớp mà bạn muốn vào ở bên dưới. </p>
+                <p *ngIf="curThesis.length > 0">Chào mừng bạn, hệ thống tìm luận văn mà bạn đang tham gia. Bạn hãy chọn luận văn / khóa luận bạn muốn vào ở bên dưới. </p>
+                <p *ngIf="curCls.length == 0 && curThesis.length == 0" class="mb-0">Hệ thống không tìm thấy các lớp bạn tham gia hoặc các lớp đã hết hạn !</p>
+            </div>
+            <div class="row center" *ngIf="curCls.length > 0">
+                <div *ngFor="let item of curCls; index as i;" class="col-sm-12 col-lg-6 offset-lg-3 ">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-lg-3 col-sm-6">
+                                    <img class="schoolLogo" src="{{item.logoUrl}}" />
+                                </div>
+                                <div class="col-lg-9 col-sm-6">
+                                    <div class="h4 m-0">
+                                       {{item.className}} - {{item.subjectCode}}
+                                    </div>
+                                    <small class="text-muted">{{item.description}}</small>
+                                </div>
+                            </div>
+                            <div class="progress progress-xs my-3">
+                                <div class="progress-bar bg-success" role="progressbar" style="width: 25%"
+                                    aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">
+                                </div>
+                            </div>
+                            <div>
+                                <i class="fa fa-institution  text-primary"></i> {{item.schoolName}}<br/>
+                                <i class="icon-location-pin text-primary"></i>  {{item.venue}}<br/>
+                                <i class="icon-clock text-primary"></i> Học kỳ {{item.semester}} , năm học: {{item.schoolYear}} <br/>
+                                <i class="icon-note text-primary"></i> Mã lớp: {{item.classCode}}, Tổng số tín chỉ: {{item.totalCredit}} <br/>
+                            </div>
+                        </div>
+                        <div class="card-footer">
+                            <button (click)="goToClass(item.classId)" type="button" class="btn btn-pill btn-info active pull-right">
+                                 Vào lớp <i class="icon-login"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row center" *ngIf="curThesis.length > 0">
+                <div *ngFor="let item of curThesis; index as i;" class="col-sm-12 col-lg-10 offset-lg-1">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-lg-2 col-sm-12">
+                                    <img class="schoolLogo1" src="{{item.logoUrl}}" />
+                                </div>
+                                <div class="col-lg-10 col-sm-12">
+                                    <div class="h4 m-1">
+                                       {{item.thesisTitle}}
+                                    </div>
+                                    <small class="text-muted">{{item.description}}</small>
+                                </div>
+                            </div>
+                            <div class="progress progress-xs my-3">
+                                <div class="progress-bar bg-danger" role="progressbar" style="width: 25%"
+                                    aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">
+                                </div>
+                            </div>
+                            <div>
+                                <i class="fa fa-institution  text-primary"></i> {{item.schoolName}} - {{item.courseName}}<br/>
+                                <i class="icon-location-pin text-primary"></i>  {{item.schoolAddress}}<br/>
+                                <i class="icon-clock text-primary"></i> Thời gian: {{formatDate1(item.startTime)}} - {{formatDate1(item.endTime)}}<br/>
+                                <i class="icon-note text-primary"></i> Chuyên ngành: {{item.thesisCategory}} - Nhóm: {{item.thesisType}}<br/>
+                            </div>
+                        </div>
+                        <div class="card-footer">
+                            <button (click)="goToThesis(item.thesisId)" type="button" class="btn btn-pill btn-success active pull-right">
+                                 Vào luận văn <i class="icon-login"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--/.row-->
+            <div class="center clearfix">
+                <div class="text-center">
+                    <button class="btn btn-ghost-primary" type="button" routerLink="/">
+                        <i class="fa fa-home"></i>&nbsp; Quay về trang chủ
+                    </button>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>

@@ -1,0 +1,526 @@
+<div class="animated fadeIn">
+    <div class="card card-accent-primary">
+        <div class="card-body">
+            <div class="form-group row">
+                <label class="col-md-3 col-form-label" for="select1">
+                    <i class="icon-home text-primary"></i> Vui lòng chọn lớp / Khóa học
+                </label>
+                <div *ngIf="classes.length>0" class="col-md-9">
+                    <select [disabled]="show" id="select1" name="select1" class="form-control"
+                        (change)="changeClass($event)">
+                        <option value="">---- Please select ----</option>
+                        <option *ngFor="let c of classes; index as i;" value="{{i+1}}">{{c.classCode}} - {{c.className}}
+                            ({{c.schoolName}})</option>
+                    </select>
+                    <hr *ngIf="curClass!=null" />
+                    <div *ngIf="curClass!=null" class="row">
+                        <div class="col-sm-6 col-md-6">
+                            {{curClass.className}} <br />
+                            <div class="small text-muted">
+                                <i class="fa fa-check-square-o text-info"></i> {{curClass.classCode}} <br />
+                                <i class="fa fa-check-square-o text-info"></i> {{curClass.classDesc}} <br />
+                                <i class="fa fa-check-square-o text-info"></i> {{formatDate(curClass.startDate)}} -
+                                {{formatDate(curClass.endDate)}} <br />
+                                <i class="fa fa-check-square-o text-info"></i> {{curClass.venue}} <br />
+                                <i class="fa fa-check-square-o text-info"></i> Học kỳ {{curClass.semester}}, năm học:
+                                {{curClass.schoolYear}}
+                            </div>
+                        </div>
+                        <div class="col-sm-6 col-md-6">
+                            <img src="{{curClass.logoUrl}}" height="45px" /><br />
+                            {{curClass.schoolName}} <br />
+                            {{curClass.department}}
+                            <div class="small text-muted">
+                                <i class="fa fa-check-square-o text-secondary"></i> {{curClass.subjectCode}} -
+                                {{curClass.subjectName}}<br />
+                                <i class="fa fa-check-square-o text-secondary"></i> Số tín chỉ:
+                                {{curClass.totalCredit}} ({{curClass.theoryCredit}} LT, {{curClass.practiceCredit}}
+                                TH)<br />
+                                <i class="fa fa-check-square-o text-secondary"></i> {{curClass.schoolAddress}}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div *ngIf="curClass!=null" class="card-footer">
+            <div class="pull-right">
+                <button [ngStyle]="selectStyleBtn" type="button" class="btn btn-primary" (click)="selectClass()">
+                    <i class="icon-check"></i> Chọn
+                </button>
+                <button style="margin-left: 10px;" type="reset" class="btn btn-danger" (click)="unSelectClass()">
+                    <i class="fa fa-ban"></i> Reset
+                </button>
+            </div>
+            <div class="clearfix"></div>
+        </div>
+    </div>
+</div>
+<div *ngIf="curClass!=null  && show" class="animated fadeOut">
+    <tabset>
+        <tab>
+            <ng-template tabHeading>
+                <i class="icon-list text-primary"></i>
+                Bài tập cầp nộp / Rèn luyện &nbsp;
+                <span class="badge badge-success">{{assignments1.length}}</span>
+            </ng-template>
+            <p *ngIf="assignments1.length==0" class="text-danger">Hiện tại lớp này chưa có bài tập [Cần nộp] hoặc [rèn
+                luện] !</p>
+            <div *ngIf="assignments1.length>0">
+                <table class="table table-sm">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Bài tập</th>
+                            <th>Nộp bài</th>
+                            <th>Hình thức</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let item of assignments1; index as i;">
+                            <td>
+                                {{i+1}}
+                            </td>
+                            <td style="max-width: 250px;">
+                                <span *ngIf="item.assignmentType =='BaiTapGK'"
+                                    class="badge badge-pill badge-primary">Bài tập quá trình</span>
+                                <span *ngIf="item.assignmentType =='BaiTapRenLuyen'"
+                                    class="badge badge-pill badge-secondary">Bài tập rèn luyện</span>
+                                <br />
+                                id[{{item.id}}] - {{item.name}} <br />
+                                <p class="small">{{item.assignmentContent}}</p>
+                            </td>
+                            <td>
+                                <p class="text-muted small">
+                                    Hình thức: {{getSubmitTye(item.submitType)}} <br />
+                                    <span *ngIf="item.requireSubmit">Hạn nộp: {{formatDate(item.dueDate)}}</span>
+                                </p>
+                                <a href="javascript:void(0);" (click)="downloadAssignment(i,item.id,1)">
+                                    <i class="fa fa-cloud-download"></i> Tải xuống
+                                </a>
+                            </td>
+                            <td>
+                                <span *ngIf="item.groupNo==1" class="badge badge-success">Cá nhân</span>
+                                <span *ngIf="item.groupNo>1" class="badge badge-danger">Nhóm</span>
+                                <br />
+                                <a *ngIf="item.groupNo>1" href="javascript:void(0);"
+                                    (click)="openStudentModal(i,item.id,1)">
+                                    <i class="fa fa-users"></i> Danh sách nhóm
+                                </a>
+                            </td>
+                            <td>
+                                <div *ngIf="item.status==1">
+                                    <button (click)="deleteAssignment(i,item.id,1)" type="button"
+                                        class="btn btn-sm btn-outline-danger">
+                                        <i class="fa fa-times"></i>
+                                    </button>
+                                    <button (click)="openAssignmentModal(i,1)" style="margin-left: 5px;" type="button"
+                                        class="btn btn-sm btn-outline-info">
+                                        <i class="fa fa-edit"></i>
+                                    </button>
+                                    <button (click)="completeAssignment(i,item.id,1)" style="margin-left: 5px;"
+                                        type="button" class="btn btn-sm btn-outline-success">
+                                        <i class="fa fa-check-square-o"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="pull-right">
+                    <button (click)="openAssignmentModal(null,1)" type="button" class="btn btn-success">
+                        <i class="fa fa-plus"></i> Thêm Bài tập
+                    </button>
+                </div>
+                <div class="clearfix"></div>
+            </div>
+        </tab>
+        <tab>
+            <ng-template tabHeading>
+                <i class="icon-calculator text-primary"></i>
+                Bài tập làm Online &nbsp;
+                <span class="badge badge-pill badge-danger">{{assignments2.length}}</span>
+            </ng-template>
+            <p *ngIf="assignments2.length==0" class="text-danger">
+                Hiện tại lớp này chưa có bài tập [Làm online] !
+            </p>
+            <div *ngIf="assignments2.length>0">
+                <table class="table table-sm">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Bài tập</th>
+                            <th>Nộp bài</th>
+                            <th>Hình thức</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let item of assignments2; index as i;">
+                            <td>
+                                {{i+1}}
+                            </td>
+                            <td style="max-width: 250px;">
+                                <span *ngIf="item.assignmentType =='BaiTapGK'"
+                                    class="badge badge-pill badge-primary">Bài tập quá trình</span>
+                                <span *ngIf="item.assignmentType =='BaiTapRenLuyen'"
+                                    class="badge badge-pill badge-secondary">Bài tập rèn luyện</span>
+                                <br />
+                                id[{{item.id}}] - {{item.name}} <br />
+                                <p class="small">{{item.assignmentContent}}</p>
+                            </td>
+                            <td>
+                                <p class="text-muted small">
+                                    Hình thức: {{getSubmitTye(item.submitType)}} <br />
+                                    <span *ngIf="item.requireSubmit">Hạn nộp: {{formatDate(item.dueDate)}}</span>
+                                </p>
+                                <a href="javascript:void(0);" (click)="openExamModal(i,item.id)">
+                                    <i class="fa fa-cogs"></i> Cài đặt đề thi ONLINE
+                                </a>
+                            </td>
+                            <td>
+                                <span class="badge badge-success">Cá nhân</span>
+                            </td>
+                            <td>
+                                <div *ngIf="item.status==1">
+                                    <button (click)="deleteAssignment(i,item.id,2)" type="button"
+                                        class="btn btn-sm btn-outline-danger">
+                                        <i class="fa fa-times"></i>
+                                    </button>
+                                    <button (click)="openAssignmentModal(i,2)" style="margin-left: 5px;" type="button"
+                                        class="btn btn-sm btn-outline-info">
+                                        <i class="fa fa-edit"></i>
+                                    </button>
+                                    <button (click)="completeAssignment(i,item.id,2)" style="margin-left: 5px;"
+                                        type="button" class="btn btn-sm btn-outline-success">
+                                        <i class="fa fa-check-square-o"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="pull-right">
+                    <button (click)="openAssignmentModal(null,2)" type="button" class="btn btn-success">
+                        <i class="fa fa-plus"></i> Thêm Bài tập ONLINE
+                    </button>
+                </div>
+                <div class="clearfix"></div>
+            </div>
+        </tab>
+    </tabset>
+    <br />
+</div>
+
+<ng-template #confirmModal>
+    <div class="modal-body text-center">
+        <p innerHTML="{{confirmContent.msg}}"></p>
+        <button type="button" class="btn btn-default" (click)="confirm()">Yes</button>
+        <button type="button" class="btn btn-primary" (click)="decline()">No</button>
+    </div>
+</ng-template>
+
+<div bsModal #assignmentModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-success" role="document">
+        <div *ngIf="editingAssignment!=null" class="modal-content">
+            <div class="modal-header">
+                <h5 *ngIf="editingAssignment.id == 0" class="modal-title">
+                    <i class="fa fa-plus-square-o"></i>
+                    Thêm mới Bài tập
+                </h5>
+                <h5 *ngIf="editingAssignment.id > 0" class="modal-title">
+                    <i class="fa fa-edit"></i>
+                    Chỉnh sửa bài tập [id_{{editingAssignment.id}}]
+                </h5>
+                <button type="button" class="close" (click)="assignmentModal.hide()" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="form-group col-sm-4">
+                        <label for="assignmentType">Hình thức</label>
+                        <select id="assignmentType" name="scoreType" [(ngModel)]="editingAssignment.assignmentType"
+                            class="form-control">
+                            <option value="BaiTapGK">Bài tập tính điểm quá trình</option>
+                            <option value="BaiTapRenLuyen">Bài tập thêm, rèn luyện</option>
+                        </select>
+                    </div>
+                    <div class="form-group col-sm-8">
+                        <label for="name">Tên bài tập</label>
+                        <input [(ngModel)]="editingAssignment.name" type="text" id="name" name="name"
+                            class="form-control">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col-sm-12">
+                        <label for="assignmentContent">Nội dung bài tập</label>
+                        <input [(ngModel)]="editingAssignment.assignmentContent" type="text" id="assignmentContent"
+                            name="assignmentContent" class="form-control">
+                    </div>
+                </div>
+                <div class="row" *ngIf="action.stt==1">
+                    <div class="form-group col-sm-6">
+                        <label for="workGroup">Làm theo nhóm</label>
+                        <select [(ngModel)]="workGroup" id="workGroup" name="workGroup" (change)="groupChange($event)"
+                            class="form-control">
+                            <option value="1">Làm theo nhóm</option>
+                            <option value="0">Làm cá nhân</option>
+                        </select>
+                    </div>
+                    <div *ngIf="editingAssignment.groupNo>1" class="form-group col-sm-6">
+                        <label for="groupNo">Số lượng nhóm</label>
+                        <input [(ngModel)]="editingAssignment.groupNo" type="number" id="groupNo" name="groupNo"
+                            class="form-control">
+                    </div>
+                </div>
+                <div class="row" *ngIf="action.stt==2">
+                    <div class="form-group col-sm-6">
+                        Làm online, làm cá nhân
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col-sm-3">
+                        <label for="requireSubmit">Yêu cầu nộp bài</label>
+                        <br />
+                        <div class="form-check form-check-inline mr-1" id="inline-radios">
+                            <input [(ngModel)]="editingAssignment.requireSubmit" class="form-check-input" type="radio"
+                                name="requireSubmit" id="requireSubmit1" [value]="true">
+                            <label class="form-check-label" for="requireSubmit1">Có</label>
+                        </div>
+                        <div class="form-check form-check-inline mr-1">
+                            <input [(ngModel)]="editingAssignment.requireSubmit" class="form-check-input" type="radio"
+                                name="requireSubmit" id="requireSubmit2" [value]="false">
+                            <label class="form-check-label" for="requireSubmit2">Không</label>
+                        </div>
+                    </div>
+                    <div class="form-group col-sm-3">
+                        <label for="dueDate">Hạn nộp</label>
+                        <input [ngModel]="editingAssignment.dueDate | date:'yyyy-MM-dd'"
+                            (ngModelChange)="editingAssignment.dueDate = dateChanged($event)" class="form-control"
+                            id="dueDate" type="date" name="dueDate" />
+                    </div>
+                    <div class="form-group col-sm-6">
+                        <label for="submitType">Cách nộp bài</label>
+                        <select id="submitType" name="submitType" [(ngModel)]="editingAssignment.submitType"
+                            class="form-control">
+                            <option *ngIf="action.stt==1" value="Per-Online-Doc">Nộp onine bằng các tập office (doc,
+                                xls, pdf...), nộp cá
+                                nhân.</option>
+                            <option *ngIf="action.stt==1" value="Per-Online-Git">Nộp onine bằng url của GitHub hoặc
+                                BitBucket, nộp cá nhân.
+                            </option>
+                            <option *ngIf="action.stt==1" value="Per-Online-Url">Nộp onine bằng url của bên thứ 3 như
+                                Google Drive, nộp cá
+                                nhân.</option>
+                            <option *ngIf="action.stt==1" value="Grp-Online-Url">Nộp onine bằng url của bên thứ 3 như
+                                Google Drive, nộp theo
+                                nhóm.</option>
+                            <option *ngIf="action.stt==1" value="Grp-Online-Doc">Nộp onine bằng các tập office (doc,
+                                xls, pdf...), nộp theo
+                                nhóm.</option>
+                            <option *ngIf="action.stt==1" value="Grp-Online-Git">Nộp onine bằng url của GitHub hoặc
+                                BitBucket, nộp theo nhóm.
+                            </option>
+                            <option *ngIf="action.stt==1" value="Per-Offline">Bài cá nhân, nộp tại lớp cho giáo viên
+                            </option>
+                            <option *ngIf="action.stt==1" value="Grp-Offline">Bài nhóm, nộp tại lớp cho giáo viên
+                            </option>
+                            <option *ngIf="action.stt==2" value="Per-Online-Test">Bài cá nhân, làm test online trên hệ
+                                thống.</option>
+                        </select>
+                    </div>
+                </div>
+                <div *ngIf="action.stt==1" class="form-group row">
+                    <label class="col-md-3 col-form-label" for="assignmentFile">Tập tin</label>
+                    <div class="col-md-7">
+                        <input type="file" id="assignmentFile" name="assignmentFile" multiple="false" />
+                    </div>
+                    <div *ngIf="editingAssignment.assignmentUrl!=null && editingAssignment.assignmentUrl.length>0"
+                        class="col-md-2">
+                        <p class="small">
+                            Bạn đã tải file lên !
+                            <br />
+                            <a href="javascript:void(0);"
+                                (click)="downloadAssignment(editingAssignment.index,editingAssignment.id,1)">
+                                <i class="fa fa-cloud-download"></i> Tải xuống
+                            </a>
+                        </p>
+                    </div>
+                </div>
+                <div *ngIf="editingAssignment.id > 0" class="row text-muted small">
+                    <div class="col-sm-3">
+                        Ngày tạo: {{formatDate1(editingAssignment.createdOn)}}
+                    </div>
+                    <div class="col-sm-3">
+                        Người tạo: {{editingAssignment.createdByName}}
+                    </div>
+                    <div *ngIf="editingAssignment.modifiedOn!=null" class="col-sm-3">
+                        Ngày cập nhật: {{formatDate1(editingAssignment.modifiedOn)}}
+                    </div>
+                    <div *ngIf="editingAssignment.modifiedOn!=null" class="col-sm-3">
+                        Người cập nhật: {{editingAssignment.modifiedByName}}
+                    </div>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" (click)="assignmentModal.hide()">Đóng</button>
+                <button *ngIf="action.isEdit" type="button" class="btn btn-primary"
+                    (click)="SaveAssignment()">Lưu</button>
+                <button *ngIf="!action.isEdit" type="button" class="btn btn-success" (click)="CreateAssignment()">Thêm
+                    mới</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<div bsModal #studentModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    <i class="fa fa-gear text-danger"></i>
+                    Danh sách sinh viên chia nhóm [BaiTap_{{curAssign.classId}}_{{curAssign.id}}]
+                </h5>
+                <button type="button" class="close" (click)="studentModal.hide()" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-sm-12 col-md-12">
+                        <p class="text-center">
+                            DANH SÁCH SINH VIÊN THEO NHÓM
+                        </p>
+                    </div>
+                </div>
+                <div *ngIf="curClass!=null" class="row">
+                    <div class="col-sm-12 col-md-6">
+                        <i class="fa fa-check-square-o text-success"></i> Lớp: {{curClass.classCode}} -
+                        {{curClass.className}}
+                        <br /><i class="fa fa-check-square-o text-success"></i> Học kỳ {{curClass.semester}}, năm học:
+                        {{curClass.schoolYear}}
+                    </div>
+                    <div class="col-sm-12 col-md-6">
+                        <i class="fa fa-check-square-o text-danger"></i> Bài tập: {{curAssign.name}} <br />
+                        <i class="fa fa-check-square-o text-danger"></i> Tổng số nhóm: {{curAssign.groupNo}}
+                        <br /><small>{{curAssign.assignmentContent}}</small>
+                    </div>
+                </div>
+                <table *ngIf="studentGroup.length>0" class="table table-sm table-bordered">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>MSSV</th>
+                            <th>Họ Tên</th>
+                            <th>Ngày sinh</th>
+                            <th>Nhóm</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let item of studentGroup; index as i;">
+                            <td>{{i+1}}</td>
+                            <td>{{item.officialStudentId}}</td>
+                            <td>
+                                <ng-template #popTemplateHtml>
+                                    <div>
+                                        <img src="{{item.avatar}}" height="80px" />
+                                        <br /><i class="fa fa-check-square-o text-info"></i> Họ tên: {{item.fullname}}
+                                        <br /><i class="fa fa-check-square-o text-info"></i> MSSV:
+                                        {{item.officialStudentId}}
+                                        <br /><i class="fa fa-check-square-o text-info"></i> Ngày sinh:
+                                        {{formatDate(item.birthday)}}
+                                        <br /><i class="fa fa-check-square-o text-info"></i> Trường: {{item.schoolName}}
+                                    </div>
+                                </ng-template>
+                                <button type="button" class="btn btn-default btn-secondary" [popover]="popTemplateHtml"
+                                    popoverTitle="{{item.fullname}}" placement="top">
+                                    {{item.fullname}}
+                                </button>
+                            </td>
+                            <td>{{formatDate(item.birthday)}}</td>
+                            <td>
+                                <input id="group_{{item.studentId}}_{{item.ClassAssignmentId}}"
+                                    (change)="studentGroupChange($event,i)" value="{{item.groupNo}}" type="number"
+                                    style="width: 50px;" />
+                            </td>
+                        </tr>
+                    </tbody>
+                    <tfoot>
+                        <th colspan="3" class="text-right">Tổng cộng</th>
+                        <th colspan="3" class="text-primary">{{studentGroup.length}} Sinh viên</th>
+                    </tfoot>
+                </table>
+                <div>
+                    <a href="javascript:void(0);" (click)="exportAsXLSX(curAssign.id)">Download danh sách nhóm</a>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" (click)="studentModal.hide()">Đóng</button>
+                <button type="button" class="btn btn-primary" (click)="savestudentGroup()">Lưu</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<div bsModal #examModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-info" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    <i class="fa fa-gear mt-4"></i>Cài đặt đề thi
+                </h5>
+                <button type="button" class="close" (click)="examModal.hide()" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div *ngIf="curClass!=null" class="row">
+                    <div class="col-sm-12 col-md-6">
+                        <i class="fa fa-check-square-o text-success"></i> Lớp: {{curClass.classCode}} -
+                        {{curClass.className}}
+                        <br /><i class="fa fa-check-square-o text-success"></i> Học kỳ {{curClass.semester}}, năm học:
+                        {{curClass.schoolYear}}
+                    </div>
+                    <div class="col-sm-12 col-md-6">
+                        <i class="fa fa-check-square-o text-danger"></i> Bài tập: {{curAssign.name}} <br />
+                        <i class="fa fa-check-square-o text-danger"></i> Bài online, làm cá nhân
+                        <br /><small>{{curAssign.assignmentContent}}</small>
+                    </div>
+                </div>
+                <div *ngIf="examList.length>0" class="row">
+                    <label class="col-md-2 col-form-label" for="examlist">Vui lòng chọn để thi</label>
+                    <div class="col-md-10">
+                        <select [(ngModel)]="examIndex" id="examlist" name="examlist" (change)="selectExam($event)" class="form-control" size="5">
+                            <option value="">----- Vui lòng chọn ----- </option>
+                            <option *ngFor="let e of examList; index as i;" value="{{i}}">{{e.id}} - {{e.examTitle}}</option>
+                        </select>
+                        <div *ngIf="selExam!=null" class="small">
+                            <i class="fa fa-check-square-o text-success"></i> 
+                            Đề thi: [{{selExam.id}}] - {{selExam.examTitle}}
+                            <br /><i class="fa fa-check-square-o text-success"></i> 
+                            Khoa : {{selExam.examDepartment}}
+                            <br /><i class="fa fa-check-square-o text-success"></i> 
+                            Trường : {{selExam.examSchool}}
+                            <br /><i class="fa fa-check-square-o text-danger"></i> 
+                            Tổng sống câu hỏi : {{selExam.totalQuestion}}
+                            <br /><i class="fa fa-check-square-o text-danger"></i> 
+                            Tổng điểm : {{selExam.totalScore}}
+                            <br /><i class="fa fa-check-square-o text-danger"></i> 
+                            Tổng thời gian : {{selExam.totalMinutes}} phút
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" (click)="examModal.hide()">Đóng</button>
+                <button type="button" class="btn btn-primary" (click)="saveExamForAssignment()">Lưu</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->

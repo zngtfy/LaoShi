@@ -1,0 +1,46 @@
+<div class="card card-accent-info">
+    <div class="card-header">
+        <i class="fa fa-call-in fa-lg text-success"></i> Tài khoản cá nhân
+    </div>
+    <div class="card-body">
+        <form #f="ngForm" (ngSubmit)="save(f.form.valid)">
+            <div class="row">
+                <div class="col-lg-5 text-center">
+                    <img (click)="uploader.click()" [src]="curUser.avatar" width="200" height="200" class="img-circle">
+                    <input hidden type="file" #uploader (change)="uploadAvatar($event)" />
+                </div>
+                <div class="col-lg-5">
+                    <div class="col-md-12 col-sm-12 col-xs-12 form-group">
+                        <label for="userName">Tên đăng nhập</label>
+                        <input class="form-control valid" id="userName" maxlength="40" name="userName" readonly
+                            type="text" required="" placeholder="" aria-required="true" aria-invalid="false"
+                            [(ngModel)]="curUser.userName">
+                    </div>
+                    <div class="col-md-12 col-sm-12 col-xs-12 form-group">
+                        <label for="firstName">Họ và tên</label>
+                        <input class="form-control" id="firstName" maxlength="80" name="fullName" readonly type="text"
+                            placeholder="" aria-required="true" [(ngModel)]="curUser.fullName">
+                    </div>
+                    <div class="col-md-12 col-sm-12 col-xs-12 form-group">
+                        <label for="firstName">Email</label>
+                        <input class="form-control" id="firstName" maxlength="80" name="email" type="text"
+                            placeholder="" aria-required="true" [(ngModel)]="curUser.email">
+                    </div>
+                    <div class="col-md-12 col-sm-12 col-xs-12 form-group">
+                        <label for="firstName">Số điện thoại</label>
+                        <input class="form-control" id="firstName" maxlength="80" name="phone" type="text"
+                            placeholder="" aria-required="true" [(ngModel)]="curUser.phone">
+                    </div>
+                    <div class="col-md-12 col-sm-12 col-xs-12 form-group">
+                        <label for="firstName">Địa chỉ</label>
+                        <input class="form-control" id="firstName" maxlength="80" name="address" type="text"
+                            placeholder="" aria-required="true" [(ngModel)]="curUser.address">
+                    </div>
+                    <div class="col-md-12 col-sm-12 col-xs-12 form-group"><br>
+                        <button id="btn_connect" type="submit" class="btn btn-primary">Cập nhật</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

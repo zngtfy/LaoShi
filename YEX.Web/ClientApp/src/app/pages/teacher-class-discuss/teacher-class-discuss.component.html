@@ -1,0 +1,170 @@
+<div class="animated fadeIn">
+    <div class="card card-accent-primary">
+        <div class="card-body">
+            <div class="form-group row">
+                <label class="col-md-3 col-form-label" for="select1" style="margin: 10px 0 0 0; padding-left: 15px;">
+                    <i class="icon-home text-primary"></i> Vui lòng chọn lớp / Khóa học
+                </label>
+                <div *ngIf="classes.length>0" class="col-md-9"
+                    style="margin: 10px 0 0 0; padding-right: 15px; padding-bottom: 15px;">
+                    <select [disabled]="show" id="select1" name="select1" class="form-control"
+                        (change)="changeClass($event)">
+                        <option value="">---- Please select ----</option>
+                        <option *ngFor="let c of classes; index as i;" value="{{i+1}}">{{c.classCode}} - {{c.className}}
+                            ({{c.schoolName}})</option>
+                    </select>
+                    <hr *ngIf="curClass!=null" />
+                    <div *ngIf="curClass!=null" class="row">
+                        <div class="col-sm-6 col-md-6">
+                            {{curClass.className}} <br />
+                            <div class="small text-muted">
+                                <i class="fa fa-check-square-o text-info"></i> {{curClass.classCode}} <br />
+                                <i class="fa fa-check-square-o text-info"></i> {{curClass.classDesc}} <br />
+                                <i class="fa fa-check-square-o text-info"></i> {{formatDate(curClass.startDate)}} -
+                                {{formatDate(curClass.endDate)}} <br />
+                                <i class="fa fa-check-square-o text-info"></i> {{curClass.venue}} <br />
+                                <i class="fa fa-check-square-o text-info"></i> Học kỳ {{curClass.semester}}, năm học:
+                                {{curClass.schoolYear}}
+                            </div>
+                        </div>
+                        <div class="col-sm-6 col-md-6">
+                            <img src="{{curClass.logoUrl}}" height="45px" /><br />
+                            {{curClass.schoolName}} <br />
+                            {{curClass.department}}
+                            <div class="small text-muted">
+                                <i class="fa fa-check-square-o text-secondary"></i> {{curClass.subjectCode}} -
+                                {{curClass.subjectName}}<br />
+                                <i class="fa fa-check-square-o text-secondary"></i> Số tín chỉ:
+                                {{curClass.totalCredit}} ({{curClass.theoryCredit}} LT, {{curClass.practiceCredit}}
+                                TH)<br />
+                                <i class="fa fa-check-square-o text-secondary"></i> {{curClass.schoolAddress}}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div *ngIf="curClass!=null" class="card-footer" style="padding:10px 10px 10px 10px;">
+            <div class="pull-right">
+                <button style="padding:5px 5px 5px 5px;" [ngStyle]="selectStyleBtn" type="button"
+                    class="btn btn-primary" (click)="selectClass()">
+                    <i class="icon-check"></i> Chọn
+                </button>
+                <button style="margin-left: 10px; padding:5px 5px 5px 5px;" type="reset" class="btn btn-danger"
+                    (click)="unSelectClass()">
+                    <i class="fa fa-ban"></i> Reset
+                </button>
+            </div>
+            <div class="clearfix"></div>
+        </div>
+    </div>
+</div>
+<br />
+<div *ngIf="curClass!=null  && show" class="animated fadeOut">
+    <!-- comments container -->
+    <div class="comment_block">
+        <!-- used by #{user} to create a new comment -->
+        <div *ngIf="curUser!=null" class="create_new_comment">
+            <!-- current #{user} avatar -->
+            <div class="user_avatar">
+                <img src="{{curUser.avatar}}" />
+            </div><!-- the input field -->
+            <div class="input_comment">
+                <input [(ngModel)]="cmtStr" (keyup.enter)="addDiscussion(1,null, null, null)" type="text"
+                    placeholder="Hãy tham gia thảo luận môn học này..." />
+                <br />
+                <div class="pull-right">
+                    <a class="abtn1 btn-light" (click)="addDiscussion(1,null, null, null)">
+                        <i class="fa fa-send-o"></i>&nbsp; Bình luận
+                    </a>
+                    <a class="abtn1 btn-light" (click)="clearDiscussion()">
+                        <i class="fa fa-recycle"></i>&nbsp; Xóa
+                    </a>
+                </div>
+                <div class="clearfix"></div>
+            </div>
+
+        </div>
+        <div class="new_comment" *ngIf="courseDiscussions.totalRecords == 0">
+            <span class="display-4">Khóa học này chưa có ai thảo luận, bạn hãy là người đầu tiên thảo luận môn học này
+                !!</span>
+        </div>
+        <!-- new comment -->
+        <div class="new_comment" *ngIf="courseDiscussions.totalRecords > 0">
+            <!-- build comment -->
+            <ul class="user_comment">
+                <div *ngFor="let item of courseDiscussions.data; index as i;">
+                    <div class="user_avatar">
+                        <img src="{{item.avatar}}" />
+                    </div><!-- the comment body -->
+                    <div class="comment_body">
+                        <p>{{item.content}}</p>
+                    </div>
+                    <!-- comments toolbar -->
+                    <div class="comment_toolbar">
+                        <!-- inc. date and time -->
+                        <div class="comment_details">
+                            <ul>
+                                <li><i class="fa fa-clock-o"></i> {{formatTime(item.createdOn)}}</li>
+                                <li><i class="fa fa-calendar"></i>{{formatDate2(item.createdOn)}}</li>
+                                <li><i class="fa fa-user"></i> <span class="user">{{item.createdByName}}</span></li>
+                            </ul>
+                        </div><!-- inc. share/reply and love -->
+                        <div class="comment_tools">
+                            <ul>
+                                <li>
+                                    <a (click)="showReply(item.id)">
+                                        <i class="fa fa-reply"></i>
+                                    </a>
+                                </li>
+                                <li>
+                                    <i class="fa fa-heart love"></i>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="comment_input">
+                            <input (keyup.enter)="onEnter($event, item.id, i)" id="comment_{{item.id}}"
+                                class="form-control input1" style="display: none;" size="11" type="text" />
+                        </div>
+                    </div>
+                    <div *ngIf="item.subComments != null && item.subComments.totalRecords > 0">
+                        <div *ngFor="let subItem of item.subComments.data; index as i;" class="sub_comment">
+                            <div class="user_avatar_sub">
+                                <img src="{{subItem.avatar}}" />
+                            </div><!-- the comment body -->
+                            <div class="comment_body_sub">
+                                {{subItem.content}}
+                            </div>
+                            <!-- comments toolbar -->
+                            <div class="comment_toolbar_sub">
+                                <!-- inc. date and time -->
+                                <div class="comment_details">
+                                    <ul>
+                                        <li><i class="fa fa-clock-o"></i> {{formatTime(subItem.createdOn)}}</li>
+                                        <li><i class="fa fa-calendar"></i> {{formatDate2(subItem.createdOn)}}</li>
+                                        <li><i class="fa fa-user"></i> <span class="user">
+                                                {{subItem.createdByName}}</span></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div *ngIf="item.subComments.page < item.subComments.totalPages" class="comment_tools">
+                            <a href="javascript:void(0);" class="pull-right" style="margin-top: -23px;"
+                                (click)="loadMoreSubDiscuss(item.id, i)">
+                                <i class="fa fa-refresh text-primary"></i> Tải thêm
+                            </a>
+                        </div>
+                        <div class="clearfix"></div>
+                    </div>
+                    <br />
+                </div>
+            </ul>
+            <div *ngIf="courseDiscussions.page < courseDiscussions.totalPages">
+                <button type="button" class="btn btn-pill btn-block btn-light" (click)="loadMoreDiscuss()">
+                    <i class="fa fa-refresh"></i> Tải thêm
+                </button>
+            </div>
+        </div>
+    </div>
+    <br />
+</div>

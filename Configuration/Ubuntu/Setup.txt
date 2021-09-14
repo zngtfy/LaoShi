@@ -1,0 +1,67 @@
+** Ubuntu 18.04 **
+
+1. View all port
+sudo netstat -peanut
+
+2. Publish MSIL code
+dotnet publish -c Release -o E:\Publish\LaoShi
+
+3. Run MSIL code
+cd LaoShi
+dotnet YEX.Web.dll
+
+4. Publish native code
+dotnet publish -c Release -o E:\Publish\LaoShiNative -r linux-x64
+
+5. Run native code
+cd LaoShiNative
+chmod 755 ./YEX.Web
+./YEX.Web
+
+6. Add service
+sudo cp LaoShi.service /lib/systemd/system/LaoShi.service
+sudo systemctl enable LaoShi
+sudo systemctl start LaoShi
+sudo systemctl stop LaoShi
+
+7. Setup nginx
+sudo apt install nginx
+sudo service nginx start
+sudo nano /etc/nginx/sites-available/default
+        proxy_pass         http://localhost:5000;
+        proxy_http_version 1.1;
+        proxy_set_header   Upgrade $http_upgrade;
+        proxy_set_header   Connection keep-alive;
+        proxy_set_header   Host $host;
+        proxy_cache_bypass $http_upgrade;
+        proxy_set_header   X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header   X-Forwarded-Proto $scheme;
+sudo cp default /etc/nginx/sites-available/default
+sudo nginx -t
+sudo nginx -s reload
+
+8. NET Core
+wget https://download.visualstudio.microsoft.com/download/pr/d731f991-8e68-4c7c-8ea0-fad5605b077a/49497b5420eecbd905158d86d738af64/dotnet-sdk-3.1.100-linux-x64.tar.gz
+wget https://download.visualstudio.microsoft.com/download/pr/30915c37-fa5a-4930-b4e6-b4130e4596b2/38d531c10dc56950f17f3c604e9a2ebc/aspnetcore-runtime-3.1.0-linux-x64.tar.gz
+mkdir -p $HOME/dotnet && tar zxf dotnet-sdk-3.1.100-linux-x64.tar.gz -C $HOME/dotnet
+tar zxf aspnetcore-runtime-3.1.0-linux-x64.tar.gz -C $HOME/dotnet
+export DOTNET_ROOT=$HOME/dotnet
+export PATH=$PATH:$HOME/dotnet
+
+9. NodeJS
+wget https://nodejs.org/dist/v12.13.0/node-v12.13.0-linux-x64.tar.xz
+tar -xvf node-v12.13.0-linux-x64.tar.xz
+cd node-v12.13.0-linux-x64
+sudo cp -R * /usr/local/
+cd ~
+rm -R node-v12.13.0-linux-x64
+node -v
+
+10. NET Core
+wget -q https://packages.microsoft.com/config/ubuntu/18.04/packages-microsoft-prod.deb -O packages-microsoft-prod.deb
+sudo dpkg -i packages-microsoft-prod.deb
+sudo add-apt-repository universe
+sudo apt-get update
+sudo apt-get install apt-transport-https
+sudo apt-get update
+sudo apt-get install dotnet-sdk-3.0

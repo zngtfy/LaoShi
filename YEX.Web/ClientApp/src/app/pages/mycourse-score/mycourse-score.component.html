@@ -1,0 +1,122 @@
+<div class="animated fadeIn">
+    <div class="pad margin no-print">
+        <div class="callout callout-danger" style="margin-bottom: 0!important;">
+            <h4><i class="fa fa-info"></i> Lưu ý:</h4>
+            Đây là trang thông tin điểm số của môn học này!
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-6 col-md-9">
+            <div class="card">
+                <div class="card-header">
+                    <i class="fa fa-trophy fa-lg text-primary"></i> Điểm số môn học
+                    <div class="card-header-actions">
+                        <button type="button" class="btn btn-sm btn-outline-primary"
+                            (click)="isCollapsed = !isCollapsed">
+                            <div *ngIf="isCollapsed; then thenBlock else elseBlock"></div>
+                            <ng-template #thenBlock>Open</ng-template>
+                            <ng-template #elseBlock>Close</ng-template>
+                        </button>
+                    </div>
+                </div>
+                <div class="card-body" (collapsed)="collapsed($event)" (expanded)="expanded($event)"
+                    [collapse]="isCollapsed">
+                    <p>Thông tin sinh viên</p>
+                    <div class="bd-example">
+                        <dl class="row">
+                            <dt class="col-sm-3">Họ Tên</dt>
+                            <dd class="col-sm-9">{{student.lastName}} {{student.firstName}}</dd>
+
+                            <dt class="col-sm-3">Sinh viên</dt>
+                            <dd class="col-sm-9">
+                                <p>
+                                    MSSV: {{student.officialStudentId}}, Nhóm: {{curClass.ClassCode}}
+                                    <br/>{{student.courseName}}
+                                    <br/>{{student.schoolName}}
+                                </p>
+                            </dd>
+
+                            <dt class="col-sm-3">Ngày sinh</dt>
+                            <dd class="col-sm-9">{{formatDate(student.birthday)}}</dd>
+                        </dl>
+                    </div>
+                    <table class="table table-bordered table-striped table-sm">
+                        <thead>
+                            <tr>
+                                <th style="width:25px">#</th>
+                                <th>Điểm thành phần</th>
+                                <th colspan="2">Loại</th>
+                                <th>Tỷ lệ</th>
+                                <th>Điểm</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody *ngIf="courseScores.length > 0">
+                            <tr *ngFor="let item of courseScores; index as i;">
+                                <td>{{i+1}}</td>
+                                <td>
+                                    {{item.description}} <br/>
+                                    {{item.assignmentName}}
+                                </td>
+                                <td>
+                                    <span *ngIf="item.assignmentGroupNo == 1" class="badge badge-primary">Cá nhân</span>
+                                    <span *ngIf="item.assignmentGroupNo > 1" class="badge badge-success">Nhóm</span>
+                                </td>
+                                <td>
+                                    <span *ngIf="item.scoreType == 'QuaTrinh'" class="badge badge-warning">Quá trình</span>
+                                    <span *ngIf="item.scoreType == 'CuoiKy'" class="badge badge-danger">Cuối kỳ</span>
+                                </td>
+                                <td class="text-right">
+                                    {{item.percentage}}%
+                                </td>
+                                <td class="text-right">
+                                    <span *ngIf="item.score == null">-</span>
+                                    <span *ngIf="item.score != null">{{item.score}}</span>
+                                </td>
+                                <td>
+                                    <small *ngIf="item.score == null">Chưa có điểm</small>
+                                    <small *ngIf="item.score != null && item.score >= 5">
+                                        <i class="fa fa-check-square-o text-primary"></i> Đạt
+                                    </small>
+                                    <small *ngIf="item.score != null && item.score < 5">
+                                        <i class="fa fa-frown-o text-danger"></i> Chưa đạt
+                                    </small>
+                                </td>
+                            </tr>
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <th colspan="4" class="text-right">Tổng cộng</th>
+                                <th class="text-right">{{result.totPer}}%</th>
+                                <th class="text-right">{{result.avgScore}}</th>
+                                <td>
+                                    <small *ngIf="result.isFull == false">Chưa có kết quả</small>
+                                    <small *ngIf="result.isFull && result.avgScore >= 5">
+                                        <i class="fa fa-check-square-o text-primary"></i> Đạt
+                                    </small>
+                                    <small *ngIf="result.isFull && result.avgScore < 5">
+                                        <i class="fa fa-frown-o text-danger"></i> Chưa đạt
+                                    </small>
+                                </td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6 col-md-3">
+            <div class="card">
+                <div class="card-body">
+                    <img src="{{curClass.LogoUrl}}" height="60px"/>
+                    <address>
+                        <strong>{{curClass.ClassName}}</strong><br>
+                        <i class="fa fa-check-square-o text-primary"></i> {{curClass.ClassCode}}<br>
+                        <i class="fa fa-check-square-o text-primary"></i> {{curClass.Venue}}<br>
+                        <i class="fa fa-check-square-o text-primary"></i> {{curClass.Note}}<br />
+                        <i class="fa fa-check-square-o text-primary"></i> Học kỳ {{curClass.Semester}}, năm học {{curClass.SchoolYear}}
+                    </address>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,87 @@
+.display-5 {
+    font-size: 2.0rem;
+    font-weight: 300;
+    line-height: 1.2;
+}
+
+.display-6 {
+    font-size: 1.8rem;
+    font-weight: 300;
+    line-height: 1.2;
+}
+
+/*
+ * Component: Products List
+ * ------------------------
+ */
+
+.products-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.products-list>.item {
+    border-radius: 3px;
+    -webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
+    padding: 10px 0;
+    background: #fff;
+}
+
+.products-list>.item:before, .products-list>.item:after {
+    content: " ";
+    display: table;
+}
+
+.products-list>.item:after {
+    clear: both;
+}
+
+.products-list .product-title {
+    font-weight: 600;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis
+}
+
+.products-list .product-description {
+    display: block;
+    color: #999;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.product-list-in-box>.item {
+    -webkit-box-shadow: none;
+    box-shadow: none;
+    border-radius: 0;
+    border-bottom: 1px solid #f4f4f4;
+}
+
+.product-list-in-box>.item:last-of-type {
+    border-bottom-width: 0;
+}
+
+.label {
+    display: inline;
+    padding: .2em .6em .3em;
+    font-size: 95%;
+    line-height: 1;
+    color: #5858587e;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: baseline;
+}
+
+.pdate {
+    font-size: 100%;
+    line-height: 1.5;
+    color: #1b1b1b7e;
+}
+
+.schoolLogo {
+    max-height: 50px;
+    width: auto;
+}

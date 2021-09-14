@@ -1,0 +1,64 @@
+{
+    "error": {
+        "maxSize": "Kích thước tối đa danh sách.",
+        "existing": "Dữ liệu tồn tại.",
+        "noData": "Không có dữ liệu.",
+        "nothing": "Không có gì để cập nhật.",
+        "cannotInstall": "Không thể cài đặt lần thứ hai."
+    },
+    "success": {
+        "setupDone": "Cài đặt xong."
+    },
+    "title": {
+        "forgotYourPassword": "Quên Mật Khẩu Của Bạn",
+        "information": "Thông Tin"
+    },
+    "label": {
+        "userName": "Tài Khoản",
+        "password": "Mật Khẩu",
+        "email": "Thư Điện Tử",
+        "newPassword": "Mật Khẩu Mới",
+        "confirmPassword": "Xác Nhận Mật Khẩu",
+        "firstName": "Tên",
+        "lastName": "Họ",
+        "phoneNumber": "Số Điện Thoại"
+    },
+    "message": {
+        "enterYourEmail": "Xin hãy nhập địa chỉ thư điện tử bên dưới:",
+        "passwordNotMatch": "Mật khẩu không giống.",
+        "subject": "Chào mừng đến YEX",
+        "display": "Hệ thống tự động",
+        "dear": "Kính thưa {0},",
+        "yourAccount": "Tài khoản của bạn là {0}.",
+        "checkEmail": "Xin hãy kiểm tra hộp thư để đổi mật khẩu."
+    },
+    "link": {
+        "forgotYourPassword": "Quên mật khẩu của bạn?",
+        "dontHaveAccount": "Không có tài khoản? Tạo nó ngay.",
+        "clickSetupPassword": "Xin hãy bấm vào <a href=\"{0}forgot-password?token={1}\">đây</a> để cài đặt mật khẩu và tiếp tục.",
+        "signIn": "Đăng nhập"
+    },
+    "validation": {
+        "enterUserName": "Xin hãy nhập tài khoản hoặc thư điện tử.",
+        "enterPassword": "Xin hãy nhập mật khẩu.",
+        "enterEmail": "Xin hãy nhập địa chỉ thư điện tử.",
+        "enterValidEmail": "Xin hãy nhập địa chỉ thư điện tử hợp lệ.",
+        "enterConfirmPassword": "Xin hãy nhập xác nhận mật khẩu.",
+        "least6Chars": "Tối thiểu 6 kí tự.",
+        "least2Chars": "Tối thiểu 2 kí tự.",
+        "complexPassword": "Mật khẩu phải 8 kí tự bao gồm số, chữ in hoa, in thường và 1 kí tự đặc biệt.",
+        "enterFirstName": "Xin hãy nhập tên.",
+        "enterLastName": "Xin hãy nhập họ.",
+        "enterPhone": "Xin hãy nhập số điện thoại.",
+        "invalidEmail": "Thư điện tử không hợp lệ (tối thiểu 6 kí tự).",
+        "phoneInvalid": "Số điện thoại không hợp lệ."
+    },
+    "button": {
+        "signIn": "ĐĂNG NHẬP",
+        "signUp": "ĐĂNG KÍ",
+        "cancel": "Huỷ",
+        "next": "Tiếp",
+        "change": "Đổi",
+        "ok": "OK"
+    }
+}

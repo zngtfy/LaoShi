@@ -1,0 +1,62 @@
+POST
+https://localhost:44307/api/User/create
+{
+    "userName": "toan.nguyen",
+    "firstName": "Toan",
+    "lastName": "Nguyen",
+    "email": "toan.nguyen@tanvieta.co",
+    "password": "Qq12345!"
+}
+
+GET
+https://localhost:44307/api/User/get-config
+
+https://localhost:44307/api/User/z-auth
+{
+    "userName": "toan.nguyen@tanvieta.co",
+    "password": "Qq12345!"
+}
+
+POST
+https://localhost:44307/api/User/verify-email
+{
+    "password": "string",
+    "subject": "Welcome to YEX",
+    "display": "Auto system",
+    "body1": "Dear {0},",
+    "body2": "Your account is {0}.",
+    "body3": "Please click the <a href=\"{0}forgot-password?token={1}\">here</a> to setup your password and continue.",
+    "keyword": "toan.nguyen@tanvieta.co"
+}
+
+POST
+https://localhost:44307/api/User/forgot-password
+{
+    "userName": "a27e6c602719496db4fcaa8597acd8f9",
+    "password": "Qq12345!"
+}
+
+-------------*****-------------*****-------------
+
+PUT Auth
+https://localhost:44307/api/User/read
+{
+    "id": 1
+}
+
+POST Auth
+https://localhost:44307/api/User/read
+{
+    "page": 1,
+    "size": 5,
+    "sort": [
+        {
+            "field": "userName",
+            "direction": "DESC"
+        }
+    ],
+    "filter": {
+        "email": "co"
+    },
+    "paging": true
+}

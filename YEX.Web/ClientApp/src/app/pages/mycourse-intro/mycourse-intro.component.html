@@ -1,0 +1,308 @@
+<div class="animated fadeIn">
+    <div class="row">
+        <div class="col-sm-6 col-md-7">
+            <div class="card border-primary">
+                <div class="card-header">
+                    <i class="fa fa-check-circle-o fa-lg text-primary"></i> Giới thiệu về khóa học
+                </div>
+                <div class="card-body" *ngIf="courseInfo.class != null">
+                    <h4 class="text-dark">{{courseInfo.class.name}}</h4>
+                    <p> {{courseInfo.class.code}}</p>
+                    <div class="bd-example" *ngIf="courseInfo.subject != null">
+                        <dl class="row">
+                            <dt class="col-sm-3">Mã môn học</dt>
+                            <dd class="col-sm-9">{{courseInfo.subject.subjectCode}}</dd>
+
+                            <dt class="col-sm-3">Tên môn học</dt>
+                            <dd class="col-sm-9">
+                                <p>{{courseInfo.subject.subjectName}} <br />
+                                    <small *ngIf="courseInfo.subject.subjectType == 'LT-TH'">Hình thức: lý thuyết + thực
+                                        hành</small>
+                                    <small *ngIf="courseInfo.subject.subjectType == 'LT'">Hình thức: lý thuyết</small>
+                                    <small *ngIf="courseInfo.subject.subjectType == 'TH'">Hình thức: thực hành</small>
+                                </p>
+                            </dd>
+
+                            <dt class="col-sm-3">Tổng số tín chỉ</dt>
+                            <dd class="col-sm-9"> {{courseInfo.subject.totalCredit}}
+                                ({{courseInfo.subject.theoryCredit}} lý thuyết, {{courseInfo.subject.practiceCredit}}
+                                thực hành)</dd>
+
+                            <dt class="col-sm-3">Khoa phục trách</dt>
+                            <dd class="col-sm-9">{{courseInfo.subject.department}} - {{courseInfo.school.schoolCode}}
+                            </dd>
+
+                            <dt class="col-sm-3 text-truncate">Thông tin khác</dt>
+                            <dd class="col-sm-9">{{courseInfo.subject.description}}</dd>
+                        </dl>
+                    </div>
+                    <p> Thông tin về lớp học</p>
+                    <table class="table table-responsive-sm">
+                        <tbody>
+                            <tr>
+                                <th>Mã lớp:</th>
+                                <td>
+                                    <span class="badge badge-success">{{courseInfo.class.code}}</span> -
+                                    <span *ngIf="courseInfo.class.status == 0" class="badge badge-pill badge-secondary">
+                                        Chưa học </span>
+                                    <span *ngIf="courseInfo.class.status == 1" class="badge badge-pill badge-primary">
+                                        Đang học </span>
+                                    <span *ngIf="courseInfo.class.status == 2" class="badge badge-pill badge-success">
+                                        Đã học xong </span>
+                                    <span *ngIf="courseInfo.class.status == 4" class="badge badge-pill badge-danger"> Đã
+                                        học xong, chờ kiểm tra! </span>
+                                    <span *ngIf="courseInfo.class.status == 8" class="badge badge-pill badge-warning">
+                                        Đã học xong, đã có điểm!</span>
+                                </td>
+                                <th>Học kỳ:</th>
+                                <td>
+                                    {{courseInfo.class.semester}}
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>Tên lớp:</th>
+                                <td>
+                                    {{courseInfo.class.description}}
+                                </td>
+                                <th>Năm học:</th>
+                                <td>
+                                    {{courseInfo.class.schoolYear}}
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>Bắt đầu:</th>
+                                <td>
+                                    {{formatDate2(courseInfo.class.startDate)}}
+                                </td>
+                                <th>Kết thúc:</th>
+                                <td>
+                                    {{formatDate2(courseInfo.class.endDate)}}
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>Giảng viên phụ trách:</th>
+                                <td>
+                                    {{courseInfo.teacher.fullName}}
+                                </td>
+                                <th>Tổng số buổi:</th>
+                                <td>
+                                    {{courseInfo.class.totalSession}}
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>Điều kiện yêu cầu:</th>
+                                <td colspan="3">
+                                    {{courseInfo.class.prerequisition}}
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>Ghi chú:</th>
+                                <td colspan="3">
+                                    {{courseInfo.class.classTime}} <br />
+                                    {{courseInfo.class.note}} <br />
+                                    {{courseInfo.class.venue}}
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <!--/.col-->
+        <div class="col-sm-6 col-md-5">
+            <div *ngIf="courseInfo.school != null" class="card card-accent-primary">
+                <div class="card-header">
+                    <i class="fa fa-home fa-lg text-info"></i> Giới thiệu về cơ sở đào tạo
+                    <div class="card-header-actions">
+                        <span class="badge badge-pill badge-danger">{{courseInfo.school.schoolCode}}</span>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <img class="img-row image-right" src="{{courseInfo.school.logoUrl}}" height="100" />
+                    <div class="bd-example">
+                        <dl class="row">
+                            <dt class="col-sm-4">Khoa phụ trách</dt>
+                            <dd class="col-sm-8">{{courseInfo.subject.department}}</dd>
+
+                            <dt class="col-sm-4">Trường</dt>
+                            <dd class="col-sm-8">
+                                {{courseInfo.school.schoolName}}
+                            </dd>
+
+                            <dt class="col-sm-4">Địa chỉ</dt>
+                            <dd class="col-sm-8">{{courseInfo.school.schoolAddress}}</dd>
+
+                            <dt class="col-sm-4 text-truncate">Website</dt>
+                            <dd class="col-sm-8">{{courseInfo.school.webSite}}</dd>
+                        </dl>
+                    </div>
+                </div>
+            </div>
+            <div *ngIf="courseInfo.classMembers.length > 0" class="card card-accent-primary">
+                <div class="card-header">
+                    <i class="fa fa-users fa-lg text-info"></i> Phụ trách lớp
+                    <div class="card-header-actions">
+                        <span class="badge badge-pill badge-danger">{{courseInfo.classMembers.length}}</span>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <table class="table table-responsive-sm table-hover table-outline mb-0">
+                        <tbody>
+                            <tr *ngFor="let item of courseInfo.classMembers; index as i;">
+                                <td class="text-center">
+                                    <div class="avatar">
+                                        <img src="{{item.avatar}}" class="img-avatar" alt="{{item.email}}">
+                                        <span class="avatar-status badge-danger"></span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div> {{item.firstName}} {{item.lastName}}</div>
+                                    <div class="small text-muted">
+                                        <span> {{item.memberRole}}</span>
+                                    </div>
+                                    <div>Email: {{item.email}} </div>
+                                    <div>Tel: {{item.phone}}</div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <!--/.col-->
+    </div>
+    <!--/.row-->
+    <div class="card card-accent-info">
+        <div class="card-header">
+            <i class="fa fa-calendar fa-lg text-info"></i> Thời khóa biểu
+        </div>
+        <div class="card-body">
+            <tabset>
+                <tab *ngIf="courseInfo.sessionLts.length > 0">
+                    <ng-template tabHeading>
+                        <i class="icon-note"></i> Lý thuyết &nbsp;
+                        <span class="badge badge-success">{{courseInfo.sessionLts.length}} buổi</span>
+                    </ng-template>
+                    <table class="table table-bordered table-sm">
+                        <thead>
+                            <tr class="text-small">
+                                <th>#</th>
+                                <th>Ngày</th>
+                                <th>Thời gian</th>
+                                <th>Buổi</th>
+                                <th>Tổng số tiết</th>
+                                <th>Nội dung</th>
+                                <th>Địa điểm</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let item of courseInfo.sessionLts; index as i;" class="text-small">
+                                <td>Buổi {{i+1}}</td>
+                                <td>{{formatDate2(item.dateOfClass)}}</td>
+                                <td>{{item.fromTime}} - {{item.toTime}}</td>
+                                <td>{{getTimeofDay(item.dateOfClass,item.fromTime)}}</td>
+                                <td>{{item.totalClassUnit}}</td>
+                                <td>{{item.classContent}}</td>
+                                <td>{{item.location}}</td>
+                                <td>
+                                    <span *ngIf="item.status == 2" class="badge badge-success">Đã học</span>
+                                    <span *ngIf="item.status == 1" class="badge badge-secondary">Chưa học</span>
+                                </td>
+                            </tr>
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <th colspan="4">Tổng cộng</th>
+                                <th colspan="4">{{totalClassUnit_LT}} tiết</th>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </tab>
+                <tab *ngIf="courseInfo.sessionThs.length > 0">
+                    <ng-template tabHeading>
+                        <i class="icon-calculator"></i> Thực hành &nbsp;
+                        <span class="badge badge-pill badge-danger">{{courseInfo.sessionThs.length}} buổi</span>
+                    </ng-template>
+                    <table class="table table-bordered table-sm">
+                        <thead>
+                            <tr class="text-small">
+                                <th>#</th>
+                                <th>Ngày</th>
+                                <th>Thời gian</th>
+                                <th>Buổi</th>
+                                <th>Tổng số tiết</th>
+                                <th>Nội dung</th>
+                                <th>Địa điểm</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let item of courseInfo.sessionThs; index as i;" class="text-small">
+                                <td>Buổi {{i+1}}</td>
+                                <td>{{formatDate2(item.dateOfClass)}}</td>
+                                <td>{{item.fromTime}} - {{item.toTime}}</td>
+                                <td>{{getTimeofDay(item.dateOfClass,item.fromTime)}}</td>
+                                <td>{{item.totalClassUnit}}</td>
+                                <td>{{item.classContent}}</td>
+                                <td>{{item.location}}</td>
+                                <td>
+                                    <span *ngIf="item.status == 2" class="badge badge-success">Đã học</span>
+                                    <span *ngIf="item.status == 1" class="badge badge-secondary">Chưa học</span>
+                                </td>
+                            </tr>
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <th colspan="4">Tổng cộng</th>
+                                <th colspan="4">{{totalClassUnit_TH}} tiết</th>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </tab>
+                <tab *ngIf="courseInfo.sessionBoth.length > 0">
+                    <ng-template tabHeading>
+                        <i class="icon-calculator"></i> Thực hành &nbsp;
+                        <span class="badge badge-pill badge-danger">{{courseInfo.sessionBoth.length}} buổi</span>
+                    </ng-template>
+                    <table class="table table-bordered table-sm">
+                        <thead>
+                            <tr class="text-small">
+                                <th>#</th>
+                                <th>Ngày</th>
+                                <th>Thời gian</th>
+                                <th>Buổi</th>
+                                <th>Tổng số tiết</th>
+                                <th>Nội dung</th>
+                                <th>Địa điểm</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let item of courseInfo.sessionBoth; index as i;" class="text-small">
+                                <td>Buổi {{i+1}}</td>
+                                <td>{{formatDate2(item.dateOfClass)}}</td>
+                                <td>{{item.fromTime}} - {{item.toTime}}</td>
+                                <td>{{getTimeofDay(item.dateOfClass,item.fromTime)}}</td>
+                                <td>{{item.totalClassUnit}}</td>
+                                <td>{{item.classContent}}</td>
+                                <td>{{item.location}}</td>
+                                <td>
+                                    <span *ngIf="item.status == 2" class="badge badge-success">Đã học</span>
+                                    <span *ngIf="item.status == 1" class="badge badge-secondary">Chưa học</span>
+                                </td>
+                            </tr>
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <th colspan="4">Tổng cộng</th>
+                                <th colspan="4">{{totalClassUnit_Both}} tiết</th>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </tab>
+            </tabset>
+
+        </div>
+    </div>
+</div>

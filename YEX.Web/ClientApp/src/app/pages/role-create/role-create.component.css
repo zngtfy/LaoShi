@@ -1,0 +1,20 @@
+.header {
+    background-color: #00008b;
+}
+
+.header-content {
+    color: #00008b;
+}
+
+.custom_row {
+    margin-left: 0;
+}
+
+.set-position-button {
+    position: relative;
+    left: 85%;
+}
+
+.set-size {
+    width: 15%;
+}

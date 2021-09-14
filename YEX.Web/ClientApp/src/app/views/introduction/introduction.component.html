@@ -1,0 +1,479 @@
+<div class="container1">
+    <!--Section: Main info-->
+    <section class="mt-5 wow fadeIn">
+
+        <!--Grid row-->
+        <div class="row">
+
+            <!--Grid column-->
+            <div class="col-md-4 mb-4">
+
+                <img src="assets/img/brand/logo01a.png" class="img-fluid z-depth-1-half" alt="">
+                <!-- Main heading -->
+                <hr />
+                <h4 class="h3 mb-3">Xin chào, tôi là Hao Lee</h4>
+                <p>Đây là trang thông tin điện tử của thầy Lê Ngọc Hiếu
+                    (<strong>Hao Lee</strong>) và các thông tin khác liên quan.
+                    Trang thông tin này hỗ trợ 3 ngôn ngữ chính: Tiếng Việt Nam, Tiéng Anh và Tiếng Trung Quốc Giản thể.
+                </p>
+                <p>Hao Lee là Lê Hiếu, theo phiên âm tiếng Hoa, LaoShi là thầy giáo, theo phiên âm tiếng phổ thông Trung
+                    Quốc.
+                </p>
+                <!-- Main heading -->
+            </div>
+            <!--Grid column-->
+
+            <!--Grid column-->
+            <div class="col-md-8 mb-4">
+                <h4 class="h4 mb-3">Giới thiệu</h4>
+                <p>
+                    Lê Ngọc Hiếu đã làm việc trong ngành CNTT với tư cách là Kiến trúc sư hệ thống CNTT từ năm 2010.
+                    Hiện tại, anh đang làm giảng viên CNTT cho trường <a href="http://ou.edu.vn" target="_blank">Đại học
+                        Mở TP HCM</a>.
+                    Nghiên cứu chính là về điện toán đám mây và hiệu năng cao cân bằng tải trên đám mây để phục vụ tốt
+                    hơn;
+                    nghiên cứu về AI và các ứng dụng của AI trong dạy học, học tiếng Trung, tiếng Anh và trong kinh
+                    doanh - quản lý doanh nghiệp...<br />
+                    Bên cạnh CNTT, anh còn nghiên cứu về giáo dục, đặc biệt là giáo dục trong ngành CNTT;
+                    nghiên cứu về Kinh tế, tiếng Trung Quốc, Phương pháp giảng dạy tiếng Trung Quốc, Tiếng Anh, nghiên
+                    cứu giảng dạy tiếng Anh.
+                </p>
+                <div class="bd-example">
+                    <dl class="row">
+                        <dt class="col-sm-3">Họ Tên</dt>
+                        <dd class="col-sm-9">LÊ NGỌC HIẾU</dd>
+
+                        <dt class="col-sm-3">Địa chỉ</dt>
+                        <dd class="col-sm-9">Quận Bình Thạnh, TP.HCM</dd>
+
+                        <dt class="col-sm-3 text-truncate">Email:</dt>
+                        <dd class="col-sm-9"> occbuu@gmail.com </dd>
+
+                        <dt class="col-sm-3">Cơ quan:</dt>
+                        <dd class="col-sm-9">
+                            Trường ĐH Mở TP.HCM<br />
+                            97 Võ Văn Tần Quận 3
+                        </dd>
+                    </dl>
+                </div>
+            </div>
+            <!--Grid column-->
+
+        </div>
+        <!--Grid row-->
+
+    </section>
+    <!--Section: Main info-->
+
+    <hr class="my-5">
+
+    <!--Section: Main features & Quick Start-->
+    <section>
+
+        <h3 class="h3 text-center mb-5">Thông tin về Lê Ngọc Hiếu</h3>
+
+        <!--Grid row-->
+        <div class="row wow fadeIn">
+
+            <!--Grid column-->
+            <div class="col-lg-6 col-md-12 px-4">
+
+                <!--First row-->
+                <div class="row">
+                    <div class="col-1 mr-3">
+                        <i class="fa fa-graduation-cap fa-2x text-primary"></i>
+                    </div>
+                    <div class="col-10">
+                        <h5 class="feature-title">Quá trình đào tạo</h5>
+                        <p class="grey-text">Giới thiệu về quá trình đào tạo và học tập ...
+                        </p>
+                        <a data-toggle="modal" (click)="openEduModal()" href="javascript:void(0);">Xem chi tiết...</a>
+                    </div>
+                </div>
+                <!--/First row-->
+                <div style="height:30px"></div>
+                <!--First row-->
+                <div class="row">
+                    <div class="col-1 mr-3">
+                        <i class="icon-shield fa-2x text-success"></i>
+                    </div>
+                    <div class="col-10">
+                        <h5 class="feature-title">Quá trình công tác</h5>
+                        <p class="grey-text">Giới thiệu về quá trình công tác và làm việc ...
+                        </p>
+                        <a data-toggle="modal" (click)="openWorkModal()" href="javascript:void(0);">Xem chi tiết...</a>
+                    </div>
+                </div>
+                <!--/First row-->
+
+                <div style="height:30px"></div>
+
+                <!--Second row-->
+                <div class="row">
+                    <div class="col-1 mr-3">
+                        <i class="fa fa-book fa-2x text-danger"></i>
+                    </div>
+                    <div class="col-10">
+                        <h5 class="feature-title">Chuyên ngành làm việc</h5>
+                        <p class="grey-text">Giới thiệu về chuyên ngành và lĩnh vực làm việc...
+                        </p>
+                        <a href="javascript:void(0);" data-toggle="modal" (click)="openMajorModal()">Xem chi tiết...</a>
+                    </div>
+                </div>
+                <!--/Second row-->
+
+                <div style="height:30px"></div>
+
+                <!--Third row-->
+                <div class="row">
+                    <div class="col-1 mr-3">
+                        <i class="fa fa-info fa-2x text-warning"></i>
+                    </div>
+                    <div class="col-10">
+                        <h5 class="feature-title">Thông tin liên lạc</h5>
+                        <p class="grey-text">Thông tin liên hệ tới Lê Ngọc Hiếu...</p>
+                        <a href="javascript:void(0);" data-toggle="modal" (click)="openInfoModal()">Xem chi tiết...</a>
+                    </div>
+                </div>
+                <!--/Third row-->
+                <br />
+            </div>
+            <!--/Grid column-->
+
+            <!--Grid column-->
+            <div class="col-lg-6 col-md-12">
+                <ngx-gallery [options]="galleryOptions" [images]="introImages"></ngx-gallery>
+            </div>
+            <!--/Grid column-->
+        </div>
+        <!--/Grid row-->
+    </section>
+    <!--Section: Main features & Quick Start-->
+</div>
+
+<div bsModal #eduModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-info" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">
+                    <i class="fa fa-graduation-cap"></i>
+                    Quá trình đào tạo
+                </h4>
+                <button type="button" class="close" (click)="eduModal.hide()" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div *ngIf="curUser.id > 0">
+                    <h5>
+                        <i class="fa fa-graduation-cap text-primary"></i>
+                        Quá trình học đại học
+                    </h5>
+                    <table *ngIf="TeacherEduAll.graduate != null" class="table table-striped table-sm">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Chuyên ngành</th>
+                                <th>Nơi đào tạo</th>
+                                <th>Thời gian</th>
+                                <th>Kết quả</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let item of TeacherEduAll.graduate.data; index as i;">
+                                <td>{{i+1}}</td>
+                                <td>{{item.title}}</td>
+                                <td>
+                                    <img src="{{item.logoUrl}}" class="schoolLogo1" /> <br />
+                                    {{item.schoolName}}
+                                </td>
+                                <td>{{item.duration}}</td>
+                                <td>
+                                    <span class="badge badge-success">{{item.result}}</span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <hr />
+                    <h5>
+                        <i class="fa fa-graduation-cap text-primary"></i>
+                        Quá trình học sau đại học - Thạc sĩ
+                    </h5>
+                    <table *ngIf="TeacherEduAll.postGraduate != null" class="table table-striped table-sm">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Chuyên ngành</th>
+                                <th>Nơi đào tạo</th>
+                                <th>Thời gian</th>
+                                <th>Trình độ</th>
+                                <th>Kết quả</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let item of TeacherEduAll.postGraduate.data; index as i;">
+                                <td>{{i+1}}</td>
+                                <td>{{item.title}}</td>
+                                <td>
+                                    <img src="{{item.logoUrl}}" class="schoolLogo1" /> <br />
+                                    {{item.schoolName}}
+                                </td>
+                                <td>{{item.duration}}</td>
+                                <td>
+                                    {{item.type}}
+                                </td>
+                                <td>
+                                    <span class="badge badge-success">{{item.result}}</span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <hr />
+                    <h5>
+                        <i class="fa fa-graduation-cap text-primary"></i>
+                        Quá trình học sau đại học - Tiến sĩ
+                    </h5>
+                    <table *ngIf="TeacherEduAll.doctoral != null" class="table table-striped table-sm">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Chuyên ngành</th>
+                                <th>Nơi đào tạo</th>
+                                <th>Thời gian</th>
+                                <th>Trình độ</th>
+                                <th>Kết quả</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let item of TeacherEduAll.doctoral.data; index as i;">
+                                <td>{{i+1}}</td>
+                                <td>{{item.title}}</td>
+                                <td>
+                                    <img src="{{item.logoUrl}}" class="schoolLogo1" /> <br />
+                                    {{item.schoolName}}
+                                </td>
+                                <td>{{item.duration}}</td>
+                                <td>
+                                    {{item.type}}
+                                </td>
+                                <td>
+                                    <span class="badge badge-success">{{item.result}}</span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div *ngIf="curUser.id == 0">
+                    <alert type="danger">
+                        <strong>Thông báo!</strong> Bạn cần đăng nhập để xem thông tin!.
+                    </alert>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-secondary" (click)="eduModal.hide()">Đóng</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<div bsModal #workModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-success" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">
+                    <i class="icon-shield"></i>
+                    Quá trình công tác
+                </h4>
+                <button type="button" class="close" (click)="workModal.hide()" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" *ngIf="curUser.id > 0">
+                <h4>
+                    <i class="icon-energy icons text-danger"></i> Quá trình làm việc&hellip;
+                </h4>
+                <table *ngIf="TeacherWorkAll.working != null" class="table table-bordered table-striped table-sm">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Thời gian</th>
+                            <th>Nơi công tác</th>
+                            <th>Công việc đảm nhiệm</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let item of TeacherWorkAll.working.data; index as i;">
+                            <td>{{i+1}}</td>
+                            <td>{{item.workingTime}}</td>
+                            <td>{{item.workLocation}}</td>
+                            <td>
+                                <span class="badge badge-success">{{item.workTitle}} - {{item.workLevel}}</span>
+                                <p>{{item.description}}
+                                </p>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <hr />
+                <h4>
+                    <i class="icon-screen-desktop icons text-warning"></i> Quá trình giảng dạy&hellip;
+                </h4>
+                <table *ngIf="TeacherWorkAll.teaching != null" class="table table-bordered table-striped table-sm">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Thời gian</th>
+                            <th>Nơi công tác</th>
+                            <th>Công việc đảm nhiệm</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let item of TeacherWorkAll.teaching.data; index as i;">
+                            <td>{{i+1}}</td>
+                            <td>{{item.workingTime}}</td>
+                            <td>{{item.workLocation}}</td>
+                            <td>
+                                <span class="badge badge-success">{{item.workTitle}} - {{item.workLevel}}</span>
+                                <p>{{item.description}}
+                                </p>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="modal-body" *ngIf="curUser.id == 0">
+                <alert type="danger">
+                    <strong>Thông báo!</strong> Bạn cần đăng nhập để xem thông tin!.
+                </alert>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-secondary" (click)="workModal.hide()">Close</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<div bsModal #majorModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-danger" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">
+                    <i class="fa fa-book"></i>
+                    Chuyên ngành làm việc
+                </h4>
+                <button type="button" class="close" (click)="majorModal.hide()" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" *ngIf="curUser.id > 0">
+                <div class="row" *ngIf="TeacherMajor != null">
+                    <div *ngFor="let item of TeacherMajor.data; index as i;" class="col-sm-6 col-lg-3">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="h4 m-0">Từ {{item.startFrom}}</div>
+                                <div></div>
+                                <div class="progress progress-xs my-3">
+                                    <div class="progress-bar bg-success" role="progressbar" style="width: 25%"
+                                        aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">
+                                    </div>
+                                </div>
+                                <p>{{item.majorName}} - {{item.majorNameEng}}</p>
+                                <small class="text-muted">{{item.description}}</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!--/.row-->
+            </div>
+            <div class="modal-body" *ngIf="curUser.id == 0">
+                <alert type="danger">
+                    <strong>Thông báo!</strong> Bạn cần đăng nhập để xem thông tin!.
+                </alert>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-secondary" (click)="majorModal.hide()">Close</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<div bsModal #infoModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-warning" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">
+                    <i class="fa fa-book"></i>
+                    Thông tin liên lạc
+                </h4>
+                <button type="button" class="close" (click)="infoModal.hide()" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" *ngIf="curUser.id > 0">
+                <div class="row">
+                    <div class="col-sm-6 col-lg-7">
+                        <img src="{{TeacherInfo.avatar}}" class="img-avatar" />
+                        <br />
+                        <p>{{TeacherInfo.introduction}}</p>
+                        <table class="table table-sm table-responsive-sm">
+                            <tr>
+                                <td>
+                                    <span class="badge badge-secondary">UserId#{{TeacherInfo.userId}}</span><br />
+                                    Họ tên: {{TeacherInfo.fullName}}<br />
+                                    Ngày sinh: {{formatDate(TeacherInfo.birthday)}}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <i class="fa fa-home"></i>
+                                    {{TeacherInfo.address}}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <i class="fa fa-phone-square"></i>
+                                    {{TeacherInfo.phoneNumber}}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <i class="fa fa-envelope-o"></i>
+                                    {{TeacherInfo.email}}
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="col-sm-6 col-lg-5">
+                        <img src="{{TeacherInfo.logoUrl}}" class="schoolLogo" />
+                        <p>
+                            <strong>{{TeacherInfo.schoolName}}</strong> -
+                            <span class="badge badge-success">{{TeacherInfo.schoolCode}}</span><br />
+                            <small>
+                                {{TeacherInfo.schoolDescription}}
+                            </small>
+                        </p>
+                        <p>
+                            <i class="icon-location-pin icons"></i> {{TeacherInfo.schoolAddress}}
+                            <br />
+                            <i class="icon-phone icons"></i> {{TeacherInfo.schoolPhone}}
+                            <br />
+                            <i class="icon-globe icons"></i> {{TeacherInfo.webSite}}
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-body" *ngIf="curUser.id == 0">
+                <alert type="danger">
+                    <strong>Thông báo!</strong> Bạn cần đăng nhập để xem thông tin!.
+                </alert>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-secondary" (click)="infoModal.hide()">Close</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->

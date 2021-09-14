@@ -1,0 +1,132 @@
+<div class="bg">
+    <div class="blck"></div>
+</div>
+
+<div class="container1 bb">
+    <div class="search">
+        <h1>Sinh viên tiêu biểu</h1>
+        <div class="ii">
+            <input name="keyword" [(ngModel)]="keyword" class="ip" placeholder="Tìm kiếm theo...">
+            <button class="ipp" (click)="searchDedicateStudent()">Tìm</button>
+        </div>
+        <div class="filter">
+            <div class="btn-group btn-group-toggle" data-toggle="buttons">
+                <label class="btn btn-secondary active">
+                    <input type="radio" name="options" id="option1" checked> Tên
+                </label>
+                <label class="btn btn-secondary">
+                    <input type="radio" name="options" id="option2"> Mô tả
+                </label>
+                <label class="btn btn-secondary">
+                    <input type="radio" name="options" id="option2"> Loại giám sát
+                </label>
+            </div>
+        </div>
+    </div>
+
+    <div class="public-list">
+        <table class="table table-responsive-sm table-hover table-outline mb-0">
+            <thead class="thead-light">
+                <tr>
+                    <th class="text-center"><i class="icon-people"></i></th>
+                    <th>Sinh viên / học viên</th>
+                    <th>Đề tài</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let item of TeacherDedicateStudent.data; index as i;">
+                    <td class="text-center">
+                        <div class="avatar">
+                            <img src="{{item.avatar}}" class="img-avatar" alt="{{item.email}}">
+                            <span class="avatar-status badge-success"></span>
+                        </div>
+                    </td>
+                    <td>
+                        <div>{{item.fullname}} - {{item.officialStudentId}}</div>
+                        <div class="small text-muted">
+                            <span>{{item.schoolName}}</span> <br />
+                            Ngày sinh: {{formatDate(item.birthday)}} <br />
+                            <i class="fa fa-home text-primary"></i> {{item.address}} <br />
+                            <i class="fa fa-envelope-o text-primary"></i> {{item.email}} <br />
+                            <i class="fa fa-phone text-primary"></i> {{item.phone}}
+                        </div>
+                    </td>
+                    <td style="min-width: 250px;">
+                        <span *ngIf="item.supervisedType=='SV-TNDH'"
+                            class="badge badge-pill badge-success">{{item.supervisedType}}</span>
+                        <span *ngIf="item.supervisedType=='LV-ThS'"
+                            class="badge badge-pill badge-primary">{{item.supervisedType}}</span><br />
+                        {{item.topic}} <br />
+                        <p>
+                            Thời gian thực hiện: {{item.time}} <br />
+                            {{item.description}}
+                        </p>
+                    </td>
+                    <td>
+                        <button type="button" class="btn btn-sm btn-outline-primary"
+                            (click)="viewStudent(item.studentId)">
+                            <i class="icon-info icons"></i>
+                        </button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div _ngcontent-c32="" _nghost-c34="" class="ng-star-inserted" style="padding: 1.25rem;"
+        [hidden]="TeacherDedicateStudent.data.length==0">
+        <nav _ngcontent-c34="" class="ng2-smart-pagination-nav ng-star-inserted row">
+            <ul class="pagination">
+                <li class="page-item">
+                    <a class="page-link" href="javascript:void(0);" (click)="loadPrevStudent();">Trước</a>
+                </li>
+                <li class="page-item active">
+                    <a class="page-link">{{TeacherDedicateStudent.page}}</a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link" href="javascript:void(0);" (click)="loadNextStudent();">Sau</a>
+                </li>
+            </ul>
+            <span class="col-md-8 text-right text-italic">
+                {{TeacherDedicateStudent.totalRecords}} dòng
+            </span>
+        </nav>
+    </div>
+</div>
+
+<div bsModal #studentModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-info" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Thông tin sinh viên</h4>
+                <button type="button" class="close" (click)="studentModal.hide()" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div *ngIf="modalData != null" class="row">
+                    <div class="col-lg-5">
+                        <img src="{{modalData.avatar}}" class="img-avatar" alt="{{modalData.email}}">
+                    </div>
+                    <div class="col-lg-7">
+                        <h4>{{modalData.fullname}} - {{modalData.officialStudentId}}</h4>
+                        <h5>{{modalData.schoolName}}</h5>
+                        <br>
+                        <div class="text-muted">
+                            <p><i class="fa fa-calendar text-primary"></i> Ngày sinh: {{formatDate(modalData.birthday)}}
+                            </p>
+                            <p><i class="fa fa-home text-primary"></i> Địa chỉ: {{modalData.address}}</p>
+                            <p><i class="fa fa-envelope-o text-primary"></i> Email: {{modalData.email}}</p>
+                            <p><i class="fa fa-phone text-primary"></i> Phone: {{modalData.phone}}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" (click)="studentModal.hide()">Đóng</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->

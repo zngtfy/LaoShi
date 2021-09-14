@@ -1,0 +1,125 @@
+<div class="card">
+    <div class="card-header">
+        <i class="fa fa-code fa-lg"></i> <strong>Code management</strong>
+        <button type="button" class="btn btn-info btn-sm pull-right" data-toggle="modal"
+            (click)="openAdd()">Add</button>
+    </div>
+    <div class="card-body">
+        <div class="form-group row">
+            <label for="codeType" class="col-sm-2 col-form-label">Type</label>
+            <div class="col-sm-4">
+                <select class="form-control" id="codeType" [(ngModel)]="typeFilter"
+                    (change)="handlerTypeFilter($event)">
+                    <option value="">All</option>
+                    <option *ngFor="let a of types" [value]="a.code">{{a.displayAs}}</option>
+                </select>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-body">
+        <table class="table table-responsive-sm table-hover table-outline mb-0">
+            <thead class="thead-light">
+                <tr>
+                    <th>#</th>
+                    <th *ngIf="typeFilter == ''">Type</th>
+                    <th>Value</th>
+                    <th>Display as</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let item of data; index as i;">
+                    <td>{{i + 1}}</td>
+                    <td *ngIf="typeFilter == ''">
+                        {{item.codeType}}
+                    </td>
+                    <td *ngIf="!getIsImageType(item.codeType)">
+                        {{item.value}}
+                    </td>
+                    <td *ngIf="getIsImageType(item.codeType)">
+                        <img class="thumb-image rounded" [src]="item.thumb" />
+                    </td>
+                    <td [innerHTML]="item.displayAs"></td>
+                    <td>
+                        <button type="button" class="btn btn-outline-info btn-sm pull-right" data-toggle="modal"
+                            (click)="openEdit(item)">Edit</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <br />
+        <ul class="pagination pull-right">
+            <li class="page-item" [class.disabled]="currentPage == 1">
+                <a class="page-link" href="javascript:void(0);" (click)="search(currentPage - 1)">Trước</a>
+            </li>
+            <li *ngFor="let page of getPages(); index as i;">
+                <div class="page-item" [class.active]="currentPage == i + 1">
+                    <a class="page-link" href="javascript:void(0);" (click)="search(i + 1)">{{ i + 1 }}</a>
+                </div>
+            </li>
+            <li class="page-item" [class.disabled]="currentPage == totalPages">
+                <a class="page-link" href="javascript:void(0);" (click)="search(currentPage + 1)">Sau</a>
+            </li>
+        </ul>
+    </div>
+</div>
+
+<div bsModal #addModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-md modal-info" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" *ngIf="!isEdit">Add new code</h4>
+                <h4 class="modal-title" *ngIf="isEdit">Edit code</h4>
+                <button type="button" class="close" (click)="addModal.hide()" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group" *ngIf="!isEdit">
+                    <label for="codeType">Type</label>
+                    <select class="form-control hidden" id="codeType" [(ngModel)]="vm.codeType"
+                        (change)="handlerCodeType($event)">
+                        <option value="" disabled>-- Choose type --</option>
+                        <option *ngFor="let a of types" [value]="a.code">{{a.displayAs}}</option>
+                    </select>
+                </div>
+                <div class="form-group" *ngIf="isEdit">
+                    <label for="codeType">Type</label>
+                    <input id="codeType" type="text" class="form-control-plaintext" [(ngModel)]="vm.codeType" readonly>
+                </div>
+                <ng-container *ngIf="!isImageType">
+                    <div class="form-group">
+                        <label for="value">Value</label>
+                        <input id="value" type="text" class="form-control" [(ngModel)]="vm.value">
+                    </div>
+                    <div class="form-group">
+                        <label for="displayAs">Display as</label>
+                        <input id="displayAs" type="text" class="form-control" [(ngModel)]="vm.displayAs">
+                    </div>
+                </ng-container>
+                <ng-container *ngIf="isImageType">
+                    <div class="form-group">
+                        <label for="value">Value</label>
+                        <div class="preview-image-choose" (click)="uploader.click()" *ngIf="vm.value == null"></div>
+                        <img class="preview-image" (click)="uploader.click()" [src]="vm.value"
+                            *ngIf="vm.value != null" />
+                        <input hidden type="file" #uploader (change)="handlerUpload($event)" />
+                    </div>
+                    <div class="form-group">
+                        <label for="displayAs">Display as</label>
+                        <ckeditor [editor]="Editor" [(ngModel)]="vm.displayAs"></ckeditor>
+                    </div>
+                </ng-container>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" (click)="addModal.hide()">Cancel</button>
+                <button type="button" *ngIf="!isEdit" class="btn btn-primary" (click)="add()">Add</button>
+                <button type="button" *ngIf="isEdit" class="btn btn-primary" (click)="update()">Update</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->

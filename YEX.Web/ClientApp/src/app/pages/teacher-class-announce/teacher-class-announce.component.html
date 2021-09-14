@@ -1,0 +1,228 @@
+<div class="animated fadeIn">
+    <div class="card card-accent-primary">
+        <div class="card-body">
+            <div class="form-group row">
+                <label class="col-md-3 col-form-label" for="select1">
+                    <i class="icon-home text-primary"></i> Vui lòng chọn lớp / Khóa học
+                </label>
+                <div *ngIf="classes.length>0" class="col-md-9">
+                    <select [disabled]="show" id="select1" name="select1" class="form-control"
+                        (change)="changeClass($event)">
+                        <option value="">---- Please select ----</option>
+                        <option *ngFor="let c of classes; index as i;" value="{{i+1}}">{{c.classCode}} - {{c.className}}
+                            ({{c.schoolName}})</option>
+                    </select>
+                    <hr *ngIf="curClass!=null" />
+                    <div *ngIf="curClass!=null" class="row">
+                        <div class="col-sm-6 col-md-6">
+                            {{curClass.className}} <br />
+                            <div class="small text-muted">
+                                <i class="fa fa-check-square-o text-info"></i> {{curClass.classCode}} <br />
+                                <i class="fa fa-check-square-o text-info"></i> {{curClass.classDesc}} <br />
+                                <i class="fa fa-check-square-o text-info"></i> {{formatDate(curClass.startDate)}} -
+                                {{formatDate(curClass.endDate)}} <br />
+                                <i class="fa fa-check-square-o text-info"></i> {{curClass.venue}} <br />
+                                <i class="fa fa-check-square-o text-info"></i> Học kỳ {{curClass.semester}}, năm học:
+                                {{curClass.schoolYear}}
+                            </div>
+                        </div>
+                        <div class="col-sm-6 col-md-6">
+                            <img src="{{curClass.logoUrl}}" height="45px" /><br />
+                            {{curClass.schoolName}} <br />
+                            {{curClass.department}}
+                            <div class="small text-muted">
+                                <i class="fa fa-check-square-o text-secondary"></i> {{curClass.subjectCode}} -
+                                {{curClass.subjectName}}<br />
+                                <i class="fa fa-check-square-o text-secondary"></i> Số tín chỉ:
+                                {{curClass.totalCredit}} ({{curClass.theoryCredit}} LT, {{curClass.practiceCredit}}
+                                TH)<br />
+                                <i class="fa fa-check-square-o text-secondary"></i> {{curClass.schoolAddress}}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div *ngIf="curClass!=null" class="card-footer">
+            <div class="pull-right">
+                <button [ngStyle]="selectStyleBtn" type="button" class="btn btn-primary" (click)="selectClass()">
+                    <i class="icon-check"></i> Chọn
+                </button>
+                <button style="margin-left: 10px;" type="reset" class="btn btn-danger" (click)="unSelectClass()">
+                    <i class="fa fa-ban"></i> Reset
+                </button>
+            </div>
+            <div class="clearfix"></div>
+        </div>
+    </div>
+</div>
+<div *ngIf="curClass!=null  && show" class="animated fadeOut">
+    <div class="card border-success">
+        <div class="card-header">
+            <i class="icon-speech icons font-2xl mt-4"></i>
+            Thông báo của lớp!
+        </div>
+        <div *ngIf="announcements.totalRecords>0" class="card-body">
+            <table class="table table-sm table-bordered">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Thông báo</th>
+                        <th>Thông tin</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let item of announcements.data; index as i;">
+                        <td>{{getSTT(i)}}</td>
+                        <td style="width: 65%;">
+                            <p class="small"> 
+                                <strong class="text-primary">{{item.title}}</strong> <br/>
+                                {{item.brief}}
+                            </p>
+                            <div class="small" [innerHTML]="item.content"></div>
+                        </td>
+                        <td>
+                            <span *ngIf="item.type=='GioiThieu'" class="badge badge-success">Giới thiệu / Thông tin</span>
+                            <span *ngIf="item.type=='ThongBao'" class="badge badge-danger">Thông báo</span>
+                            <br/><br/>
+                            <div *ngIf="item.createdOn!=null" class="small">
+                                <i class="fa fa-user-o text-success"></i> Người tạo: {{item.createdByName}} <br/>
+                                <i class="fa fa-clock-o text-success"></i> Ngày tạo: {{formatDate1(item.createdOn)}} <br/>
+                            </div>
+                            <div *ngIf="item.modifiedOn!=null" class="small">
+                                <i class="fa fa-user-o text-primary"></i> Người cập nhật: {{item.modifiedByName}} <br/>
+                                <i class="fa fa-clock-o text-primary"></i> Ngày cập nhật: {{formatDate1(item.modifiedOn)}} <br/>
+                            </div>
+                        </td>
+                        <td>
+                            <button (click)="deleteAnnounce(i)" type="button"
+                                popover="Xóa thông báo [{{item.title}}] khỏi lớp !" triggers="mouseenter:mouseleave"
+                                class="btn btn-sm btn-outline-danger">
+                                <i class="fa fa-times"></i>
+                            </button>
+                            <button (click)="openEditModal(i)" style="margin-left: 5px;" type="button"
+                                popover="Chỉnh sửa thông báo [{{item.title}}] !"
+                                triggers="mouseenter:mouseleave" class="btn btn-sm btn-outline-info">
+                                <i class="fa fa-edit"></i>
+                            </button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <div *ngIf="announcements.totalPages>1" class="col-xs-12 col-12">
+                <pagination [totalItems]="announcements.totalRecords" [(ngModel)]="announcements.page"
+                    (pageChanged)="pageChanged($event)" [itemsPerPage]="announcements.size" [maxSize]="3"
+                    previousText="&lsaquo;" nextText="&rsaquo;" firstText="&laquo;" lastText="&raquo;">
+                </pagination>
+                <pre
+                    class="card card-body card-header mb-3">Bạn đang ở trang: {{announcements.page}}/{{announcements.totalPages}}</pre>
+            </div>
+        </div>
+        <div class="card-footer">
+            <div class="pull-right">
+                <button type="button" class="btn btn-success" (click)="openEditModal(null)">
+                    <i class="fa fa-plus"></i> Tạo mới thông báo
+                </button>
+            </div>
+            <div class="clearfix"></div>
+        </div>
+    </div>
+</div>
+
+<div bsModal #editModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-info" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 *ngIf="!isEdit" class="modal-title">
+                    <i class="icon icon-plus"></i> Thêm mới thông báo
+                </h5>
+                <h5 *ngIf="isEdit" class="modal-title">
+                    <i class="icon icon-note"></i> Cập nhật thông báo
+                </h5>
+                <button type="button" class="close" (click)="editModal.hide()" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="form-group col-sm-5">
+                        <label for="doctype">Loại hình</label>
+                        <select class="form-control" [(ngModel)]="editingAnnouncement.type" id="doctype" name="doctype">
+                            <option value="">------ please select -----</option>
+                            <option value="GioiThieu">Giới thiệu / Thông tin </option>
+                            <option value="ThongBao">Thông báo</option>
+                        </select>
+                    </div>
+                    <div class="form-group col-sm-7">
+                        <label for="doctitle">Tên thông báo</label>
+                        <input [(ngModel)]="editingAnnouncement.title" type="text" id="doctitle" name="doctitle"
+                            class="form-control">
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col-sm-12">
+                        <label for="docbrief">Tóm tắt</label>
+                        <textarea [(ngModel)]="editingAnnouncement.brief" id="docbrief"
+                            name="docbrief" rows="2" class="form-control">
+                        </textarea>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col-sm-12">
+                        <label for="doccontent">Tóm tắt</label>
+                        <ckeditor [editor]="Editor" [(ngModel)]="editingAnnouncement.content"></ckeditor>
+                    </div>
+                </div>
+                <div *ngIf="editingAnnouncement.id > 0" class="row text-muted small">
+                    <div class="col-sm-3">
+                        Ngày tạo: {{formatDate1(editingAnnouncement.createdOn)}}
+                    </div>
+                    <div class="col-sm-3">
+                        Người tạo: {{editingAnnouncement.createdByName}}
+                    </div>
+                    <div *ngIf="editingAnnouncement.modifiedOn!=null" class="col-sm-3">
+                        Ngày cập nhật: {{formatDate1(editingAnnouncement.modifiedOn)}}
+                    </div>
+                    <div *ngIf="editingAnnouncement.modifiedOn!=null" class="col-sm-3">
+                        Người cập nhật: {{editingAnnouncement.modifiedByName}}
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" (click)="editModal.hide()">Đóng</button>
+                <button *ngIf="isEdit" type="button" class="btn btn-primary" (click)="saveAnnounce()">
+                    <i class="fa fa-save"></i>  Lưu
+                </button>
+                <button *ngIf="!isEdit" type="button" class="btn btn-success" (click)="createAnnounce()">
+                    <i class="fa fa-plus"></i> Thêm
+                </button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<div bsModal #confirmModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="confirmModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-md modal-warning" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-2">
+                        <i class="fa fa-warning font-5xl text-danger"></i>
+                    </div>
+                    <div class="col-md-10">
+                        <p class="text-info font-2xl">
+                            Bạn có chắc xóa thông báo <strong>[{{editingAnnouncement.title}}]</strong> ??
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn  btn-secondary" (click)="confirmModal.hide()">Hủy</button>
+                <button type="button" class="btn btn-primary" (click)="deleteAnnouncement()">Đồng ý</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->

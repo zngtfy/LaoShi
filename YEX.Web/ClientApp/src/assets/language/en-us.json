@@ -1,0 +1,64 @@
+{
+    "error": {
+        "maxSize": "Maximum size of data list.",
+        "existing": "Existing data.",
+        "noData": "No data.",
+        "nothing": "Nothing to update.",
+        "cannotInstall": "Cannot install second time."
+    },
+    "success": {
+        "setupDone": "Setup done."
+    },
+    "title": {
+        "forgotYourPassword": "Forgot Your Password",
+        "information": "Information"
+    },
+    "label": {
+        "userName": "User Name",
+        "password": "Password",
+        "email": "Email",
+        "newPassword": "New Password",
+        "confirmPassword": "Confirm Password",
+        "firstName": "First Name",
+        "lastName": "Last Name",
+        "phoneNumber": "Phone Number"
+    },
+    "message": {
+        "enterYourEmail": "Please enter your email address below:",
+        "passwordNotMatch": "Password does not match.",
+        "subject": "Welcome to YEX",
+        "display": "Auto system",
+        "dear": "Dear {0},",
+        "yourAccount": "Your account is {0}.",
+        "checkEmail": "Please check email box to change your password."
+    },
+    "link": {
+        "forgotYourPassword": "Forgot your password?",
+        "dontHaveAccount": "Don't have account? Create one now.",
+        "clickSetupPassword": "Please click the <a href=\"{0}forgot-password?token={1}\">here</a> to setup your password and continue.",
+        "signIn": "Sign in"
+    },
+    "validation": {
+        "enterUserName": "Please enter user name or email.",
+        "enterPassword": "Please enter password.",
+        "enterEmail": "Please enter email address.",
+        "enterValidEmail": "Please enter valid email address.",
+        "enterConfirmPassword": "Please enter confirm password.",
+        "least6Chars": "At least 6 characters.",
+        "least2Chars": "At least 2 characters.",
+        "complexPassword": "Password must be 8 characters and include numbers, uppercase, lowercase letters and 1 special character.",
+        "enterFirstName": "Please enter first name.",
+        "enterLastName": "Please enter last name.",
+        "enterPhone": "Please enter phone number.",
+        "invalidEmail": "Invalid email (at least 6 characters).",
+        "phoneInvalid": "Phone number invalid."
+    },
+    "button": {
+        "signIn": "SIGN IN",
+        "signUp": "SIGN UP",
+        "cancel": "Cancel",
+        "next": "Next",
+        "change": "Change",
+        "ok": "OK"
+    }
+}

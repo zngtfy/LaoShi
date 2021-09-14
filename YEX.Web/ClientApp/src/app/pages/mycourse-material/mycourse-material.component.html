@@ -1,0 +1,191 @@
+<div class="animated fadeIn">
+    <div class="pad margin no-print">
+        <div class="callout callout-info" style="margin-bottom: 0!important;">
+            <h4><i class="fa fa-info"></i> Note:</h4>
+           Trang thông tin tài liệu môn học {{curClass.ClassName}}.
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-6 col-md-9">
+            <div class="card">
+                <div class="card-header">
+                    <i class="fa fa-check-circle fa-lg text-primary"></i> Giáo trình môn học
+                    <div class="card-header-actions">
+                        <button type="button" class="btn btn-sm btn-outline-primary"
+                            (click)="isCollapsed = !isCollapsed">
+                            <div *ngIf="isCollapsed; then thenBlock else elseBlock"></div>
+                            <ng-template #thenBlock>Open</ng-template>
+                            <ng-template #elseBlock>Close</ng-template>
+                        </button>
+                    </div>
+                </div>
+                <div class="card-body" (collapsed)="collapsed($event)" (expanded)="expanded($event)"
+                    [collapse]="isCollapsed">
+                    <p>
+                        Tài liệu học tập
+                    </p>
+                    <table *ngIf="courseMaterials.materials.length > 0" class="table table-bordered table-striped table-sm">
+                        <thead>
+                            <tr>
+                                <th style="width:25px">#</th>
+                                <th>Tên tài liệu</th>
+                                <th>Loại</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let item of courseMaterials.materials; index as i;">
+                                <td>{{i+1}}</td>
+                                <td>
+                                    {{item.title}}<br />
+                                    <a class="text-primary" data-toggle="modal" (click)="showInfo(item.id,'materials')" style="cursor: pointer;" >
+                                        <i class="fa fa-info-circle"></i>&nbsp; Xem chi tiết
+                                    </a>
+                                </td>
+                                <td>
+                                    <span *ngIf="item.documentType =='DCMH'" class="badge badge-primary">Đề cương</span>
+                                    <span *ngIf="item.documentType =='Book'" class="badge badge-success">Giáo trình chính</span>
+                                    <span *ngIf="item.documentType =='DocThem'" class="badge badge-secondary">Tài liệu đọc thêm</span>
+                                </td>
+                                <td>
+                                    <button (click)="downloadMaterial(item.id,'materials')" type="button" class="btn btn-brand btn-sm btn-instagram mr-1 pull-right"
+                                        style="margin-bottom: 4px">
+                                        <i class="fa fa-download"></i>
+                                        <span>Tải về</span>
+                                    </button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <br />
+                    <table *ngIf="courseMaterials.baiGiang.length > 0" class="table table-bordered table-striped table-sm">
+                        <thead>
+                            <tr>
+                                <th style="width:25px">#</th>
+                                <th>Bài giảng</th>
+                                <th width="15%"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let item of courseMaterials.baiGiang; index as i;">
+                                <td>{{i+1}}</td>
+                                <td> 
+                                    {{item.title}} <br/>
+                                    {{item.description}}
+                                </td>
+                                <td>
+                                    <button (click)="downloadMaterial(item.id,'baigiang')"  *ngIf="i%5 == 0" type="button" class="btn btn-brand btn-sm btn-reddit mr-1 pull-right"
+                                        style="margin-bottom: 4px">
+                                        <i class="fa fa-download"></i>
+                                        <span>Tải về</span>
+                                    </button>
+                                    <button (click)="downloadMaterial(item.id,'baigiang')" *ngIf="i%5 == 1" type="button" class="btn btn-brand btn-sm btn-stack-overflow mr-1 pull-right"
+                                        style="margin-bottom: 4px">
+                                        <i class="fa fa-download"></i>
+                                        <span>Tải về</span>
+                                    </button>
+                                    <button (click)="downloadMaterial(item.id,'baigiang')" *ngIf="i%5 == 2" type="button" class="btn btn-brand btn-sm btn-spotify mr-1 pull-right"
+                                        style="margin-bottom: 4px">
+                                        <i class="fa fa-download"></i>
+                                        <span>Tải về</span>
+                                    </button>
+                                    <button (click)="downloadMaterial(item.id,'baigiang')" *ngIf="i%5 == 3" type="button" class="btn btn-brand btn-sm btn-dribbble mr-1 pull-right"
+                                        style="margin-bottom: 4px">
+                                        <i class="fa fa-download"></i>
+                                        <span>Tải về</span>
+                                    </button>
+                                    <button (click)="downloadMaterial(item.id,'baigiang')" *ngIf="i%5 == 4" type="button" class="btn btn-brand btn-sm btn-behance mr-1 pull-right"
+                                        style="margin-bottom: 4px">
+                                        <i class="fa fa-download"></i>
+                                        <span>Tải về</span>
+                                    </button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <br />
+                    <div *ngIf="courseMaterials.baiTap.length > 0">
+                        <h4><i class="fa fa-pencil-square text-danger"></i> Bài tập & luyện tập </h4>
+                        <table class="table table-bordered table-sm">
+                            <tbody>
+                                <tr *ngFor="let item of courseMaterials.baiTap; index as i;">
+                                    <td>{{i+1}}</td>
+                                    <td> 
+                                        <span *ngIf="item.documentType=='BaiTap'" class="badge badge-pill badge-primary">Bài luyện tập</span> 
+                                        <span *ngIf="item.documentType=='DeThiMau'" class="badge badge-pill badge-success">Đề thi mẫu</span> 
+                                        <br/>
+                                        {{item.title}}
+                                    </td>
+                                    <td>
+                                        <button (click)="downloadMaterial(item.id,'baitap')" type="button" class="btn btn-sm btn-outline-secondary mr-1 pull-right"
+                                            style="margin-bottom: 4px">
+                                            <i class="fa fa-download"></i>
+                                            <span>Tải về</span>
+                                        </button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div *ngIf="courseMaterials.sourceCode.length > 0">
+                        <h4><i class="fa fa-share-alt-square text-success"></i> Sourcecode </h4>
+                        <table class="table table-bordered table-sm">
+                            <tbody>
+                                <tr *ngFor="let item of courseMaterials.sourceCode; index as i;">
+                                    <td>{{i+1}}</td>
+                                    <td> 
+                                        {{item.title}}
+                                    </td>
+                                    <td>
+                                        <button (click)="downloadMaterial(item.id,'code')" type="button" class="btn btn-sm btn-outline-secondary mr-1 pull-right"
+                                            style="margin-bottom: 4px">
+                                            <i class="fa fa-download"></i>
+                                            <span>Tải về</span>
+                                        </button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6 col-md-3">
+            <div class="card">
+                <div class="card-body">
+                    <img src="{{curClass.LogoUrl}}" height="60px"/>
+                    <address>
+                        <strong>{{curClass.ClassName}}</strong><br>
+                        <i class="fa fa-check-square-o text-primary"></i> {{curClass.ClassCode}}<br>
+                        <i class="fa fa-check-square-o text-primary"></i> {{curClass.Venue}}<br>
+                        <i class="fa fa-check-square-o text-primary"></i> {{curClass.Note}}<br />
+                        <i class="fa fa-check-square-o text-primary"></i> Học kỳ {{curClass.Semester}}, năm học {{curClass.SchoolYear}}
+                    </address>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div bsModal #infoModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-primary" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">
+                    <i class="fa fa-check-square-o text-light"></i> {{curDoc.title}}
+                    <small>{{curDoc.description}}</small>
+                </h4>
+                <button type="button" class="close" (click)="infoModal.hide()" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <ngx-doc-viewer [url]="doc" viewer="google" style="width:100%;height:70vh;"></ngx-doc-viewer>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" (click)="infoModal.hide()">Close</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
