@@ -24,7 +24,6 @@ namespace YEX.Web.Controllers
     using BLL.Req;
     using Newtonsoft.Json.Linq;
     using System;
-    using System.Diagnostics;
     using System.Drawing;
     using System.Drawing.Imaging;
     using System.IO;
@@ -55,7 +54,7 @@ namespace YEX.Web.Controllers
         /// <returns>Return the result</returns>
         [AllowAnonymous]
         [HttpPost("create")]
-        public IActionResult Create([FromBody]UserReq req)
+        public IActionResult Create([FromBody] UserReq req)
         {
             var m = req.ToModel(0);
 
@@ -69,7 +68,7 @@ namespace YEX.Web.Controllers
         /// <param name="req">Request</param>
         /// <returns>Return the result</returns>
         [HttpPost("read")]
-        public IActionResult Read([FromBody]PagingReq req)
+        public IActionResult Read([FromBody] PagingReq req)
         {
             req.UserId = UserId;
 
@@ -83,7 +82,7 @@ namespace YEX.Web.Controllers
         /// <param name="req">Request</param>
         /// <returns>Return the result</returns>
         [HttpPut("read")]
-        public IActionResult Read([FromBody]SimpleReq req)
+        public IActionResult Read([FromBody] SimpleReq req)
         {
             var res = _svc.Read(req.Id);
             return Ok(res);
@@ -113,11 +112,10 @@ namespace YEX.Web.Controllers
         /// <returns>Return the result</returns>
         [AllowAnonymous]
         [HttpPost("z-auth")]
-        public IActionResult SignIn([FromBody]SignInReq req)
+        public IActionResult SignIn([FromBody] SignInReq req)
         {
             var h = new HeaderDto(HttpContext.Request.Headers);
-            var res = _svc.SignIn
-                (req, h);
+            var res = _svc.SignIn(req, h);
 
             return Ok(res);
         }
@@ -129,7 +127,7 @@ namespace YEX.Web.Controllers
         /// <returns>Return the result</returns>
         [AllowAnonymous]
         [HttpPost("verify-email")]
-        public IActionResult VerifyEmail([FromBody]VerifyEmailReq req)
+        public IActionResult VerifyEmail([FromBody] VerifyEmailReq req)
         {
             var i = new ZEmail.Info(AppSetting.S.EmailUser, req.Keyword)
             {
@@ -163,7 +161,7 @@ namespace YEX.Web.Controllers
         /// <param name="req">Request body</param>
         /// <returns>Return the result</returns>
         [HttpPost("check-expired")]
-        public IActionResult CheckTokenExpired([FromBody]SimpleReq req)
+        public IActionResult CheckTokenExpired([FromBody] SimpleReq req)
         {
             var token = req.Keyword;
             BaseRsp res = null;// _svc.checkTokenExpired(token);
@@ -198,7 +196,7 @@ namespace YEX.Web.Controllers
         /// <param name="req">Request</param>
         /// <returns>Return the result</returns>
         [HttpPost("update-password")]
-        public IActionResult UpdatePassword([FromBody]PasswordReq req)
+        public IActionResult UpdatePassword([FromBody] PasswordReq req)
         {
             var id = 0;//ZToken.getId(h);
             var h = new HeaderDto(HttpContext.Request.Headers);
@@ -214,7 +212,7 @@ namespace YEX.Web.Controllers
         /// <returns>Return the result</returns>
         [AllowAnonymous]
         [HttpPost("get-info")]
-        public IActionResult GetInfo([FromBody]SimpleReq req)
+        public IActionResult GetInfo([FromBody] SimpleReq req)
         {
             var res = _svc.Read(req.Id);
             return Ok(res);
@@ -227,11 +225,11 @@ namespace YEX.Web.Controllers
         /// <returns>Return the result</returns>
         [AllowAnonymous]
         [HttpPost("upload-info")]
-        public IActionResult UploadInfo([FromBody]UserReq req)
+        public IActionResult UploadInfo([FromBody] UserReq req)
         {
             SingleRsp res = new SingleRsp();
 
-            if(req.Base64Avatar != null)
+            if (req.Base64Avatar != null)
             {
                 var bytes = Convert.FromBase64String(req.Base64Avatar);
 
@@ -279,7 +277,7 @@ namespace YEX.Web.Controllers
         /// <returns>Return the result</returns>
         [AllowAnonymous]
         [HttpPost("change-pass")]
-        public IActionResult ChangePass([FromBody]PasswordReq req)
+        public IActionResult ChangePass([FromBody] PasswordReq req)
         {
             SingleRsp res = new SingleRsp();
             res = _svc.ChangePassword((int)req.Id, req.OldPassword, req.NewPassword, true);
@@ -289,7 +287,7 @@ namespace YEX.Web.Controllers
 
         [AllowAnonymous]
         [HttpPost("send-request-reset-password")]
-        public IActionResult ForgetPassword([FromBody]SimpleReq req)
+        public IActionResult ForgetPassword([FromBody] SimpleReq req)
         {
             var res = new SingleRsp();
 
@@ -315,7 +313,7 @@ namespace YEX.Web.Controllers
 
         [AllowAnonymous]
         [HttpPost("check-request-reset-password")]
-        public IActionResult CheckReminderToken([FromBody]SimpleReq req)
+        public IActionResult CheckReminderToken([FromBody] SimpleReq req)
         {
             var res = new SingleRsp();
 
@@ -340,7 +338,7 @@ namespace YEX.Web.Controllers
 
         [AllowAnonymous]
         [HttpPost("reset-password")]
-        public IActionResult ResetPassword([FromBody]PasswordReq req)
+        public IActionResult ResetPassword([FromBody] PasswordReq req)
         {
             var res = new SingleRsp();
 
@@ -420,7 +418,7 @@ namespace YEX.Web.Controllers
                     sTemplate = sTemplate.Replace("[FullName]", recieverFullName);
                     sTemplate = sTemplate.Replace("[Username]", username);
                     sTemplate = sTemplate.Replace("[ReminderExpired]", reminderExpired.ToString());
-                    sTemplate = sTemplate.Replace("[ResetPasswordLink]", host + "reset-password/" + reminderToken);                     
+                    sTemplate = sTemplate.Replace("[ResetPasswordLink]", host + "reset-password/" + reminderToken);
 
                     /// Remark info
                     sTemplate = sTemplate.Replace("[System_admin]", conf.SystemAdmin);
